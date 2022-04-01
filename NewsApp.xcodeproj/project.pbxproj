@@ -20,6 +20,7 @@
 		68BF677727F745D500A451C3 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BF677627F745D500A451C3 /* SignUpViewController.swift */; };
 		68BF677B27F75BAC00A451C3 /* RssViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BF677A27F75BAC00A451C3 /* RssViewController.swift */; };
 		68BF677D27F762D400A451C3 /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BF677C27F762D400A451C3 /* ListViewController.swift */; };
+		68BF677F27F7796200A451C3 /* TopicModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BF677E27F7796200A451C3 /* TopicModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,6 +58,7 @@
 		68BF677627F745D500A451C3 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		68BF677A27F75BAC00A451C3 /* RssViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RssViewController.swift; sourceTree = "<group>"; };
 		68BF677C27F762D400A451C3 /* ListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListViewController.swift; sourceTree = "<group>"; };
+		68BF677E27F7796200A451C3 /* TopicModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopicModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,6 +109,7 @@
 		68BF674327F723A300A451C3 /* NewsApp */ = {
 			isa = PBXGroup;
 			children = (
+				68BF677E27F7796200A451C3 /* TopicModel.swift */,
 				68BF674427F723A300A451C3 /* AppDelegate.swift */,
 				68BF674627F723A300A451C3 /* SceneDelegate.swift */,
 				68BF674827F723A300A451C3 /* ViewController.swift */,
@@ -273,6 +276,7 @@
 				68BF677527F72EFB00A451C3 /* LoginViewController.swift in Sources */,
 				68BF674927F723A300A451C3 /* ViewController.swift in Sources */,
 				68BF674527F723A300A451C3 /* AppDelegate.swift in Sources */,
+				68BF677F27F7796200A451C3 /* TopicModel.swift in Sources */,
 				68BF677B27F75BAC00A451C3 /* RssViewController.swift in Sources */,
 				68BF674727F723A300A451C3 /* SceneDelegate.swift in Sources */,
 				68BF677727F745D500A451C3 /* SignUpViewController.swift in Sources */,

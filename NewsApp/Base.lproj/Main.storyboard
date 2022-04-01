@@ -116,7 +116,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="Flh-c2-pGO">
-                                <rect key="frame" x="0.0" y="188" width="414" height="574"/>
+                                <rect key="frame" x="0.0" y="88" width="414" height="674"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <prototypes>
@@ -150,13 +150,13 @@
                             <constraint firstItem="8ce-o9-oUk" firstAttribute="bottom" secondItem="Flh-c2-pGO" secondAttribute="bottom" constant="100" id="KeH-KA-vpm"/>
                             <constraint firstItem="GJ5-O8-qxq" firstAttribute="top" secondItem="Flh-c2-pGO" secondAttribute="bottom" constant="30" id="UG2-8t-h0y"/>
                             <constraint firstItem="8ce-o9-oUk" firstAttribute="trailing" secondItem="Flh-c2-pGO" secondAttribute="trailing" id="X6h-Jc-tRp"/>
-                            <constraint firstItem="Flh-c2-pGO" firstAttribute="top" secondItem="8ce-o9-oUk" secondAttribute="top" constant="100" id="lgU-Pl-i1K"/>
+                            <constraint firstItem="Flh-c2-pGO" firstAttribute="top" secondItem="8ce-o9-oUk" secondAttribute="top" id="lgU-Pl-i1K"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="5sb-bF-TMW"/>
                     <connections>
                         <outlet property="tableView" destination="Flh-c2-pGO" id="AsP-ZG-Gz2"/>
-                        <segue destination="hQt-iO-5Mh" kind="show" id="8IU-jd-VkZ"/>
+                        <segue destination="hQt-iO-5Mh" kind="show" identifier="goList2" id="8IU-jd-VkZ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fbx-Em-A5E" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
