@@ -98,14 +98,56 @@
                     <view key="view" contentMode="scaleToFill" id="h98-7y-kmE">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="Xee-tm-nYg">
+                                <rect key="frame" x="0.0" y="88" width="414" height="774"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="F9g-YP-qjA">
+                                        <rect key="frame" x="0.0" y="44.5" width="414" height="43.5"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="F9g-YP-qjA" id="Rxq-uE-W8K">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="IF4-Qn-jI8"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="IF4-Qn-jI8" firstAttribute="trailing" secondItem="Xee-tm-nYg" secondAttribute="trailing" id="1Vb-HV-mWj"/>
+                            <constraint firstItem="Xee-tm-nYg" firstAttribute="top" secondItem="IF4-Qn-jI8" secondAttribute="top" id="3Ap-VQ-xyD"/>
+                            <constraint firstItem="Xee-tm-nYg" firstAttribute="leading" secondItem="IF4-Qn-jI8" secondAttribute="leading" id="Eci-bu-pPF"/>
+                            <constraint firstItem="IF4-Qn-jI8" firstAttribute="bottom" secondItem="Xee-tm-nYg" secondAttribute="bottom" id="Ya1-Qf-eb0"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="4Rw-rY-wBT"/>
+                    <connections>
+                        <outlet property="tableView" destination="Xee-tm-nYg" id="KZd-za-9LX"/>
+                        <segue destination="auD-8P-aW4" kind="show" id="F6a-R3-Pws"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eaZ-vt-axm" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2164" y="390"/>
+        </scene>
+        <!--Article View Controller-->
+        <scene sceneID="EdO-dZ-J90">
+            <objects>
+                <viewController id="auD-8P-aW4" customClass="ArticleViewController" customModule="NewsApp" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="7a6-oD-Qr7">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="3G3-Jo-QVX"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="ves-Bw-HRS"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ROH-tN-5EY" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3187" y="390"/>
         </scene>
         <!--Rss View Controller-->
         <scene sceneID="t8W-MW-xBR">

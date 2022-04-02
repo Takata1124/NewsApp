@@ -18,6 +18,7 @@ class RssViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.separatorColor = .black
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
