@@ -22,6 +22,9 @@
 		68BF677D27F762D400A451C3 /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BF677C27F762D400A451C3 /* ListViewController.swift */; };
 		68BF677F27F7796200A451C3 /* TopicModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BF677E27F7796200A451C3 /* TopicModel.swift */; };
 		68BF678127F84C7B00A451C3 /* ArticleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BF678027F84C7B00A451C3 /* ArticleViewController.swift */; };
+		68BF678327F8845A00A451C3 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BF678227F8845A00A451C3 /* SettingViewController.swift */; };
+		68BF678527F884F400A451C3 /* SettingDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BF678427F884F400A451C3 /* SettingDetailViewController.swift */; };
+		68BF678727F8AA1300A451C3 /* FeedItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BF678627F8AA1300A451C3 /* FeedItem.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +64,9 @@
 		68BF677C27F762D400A451C3 /* ListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListViewController.swift; sourceTree = "<group>"; };
 		68BF677E27F7796200A451C3 /* TopicModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopicModel.swift; sourceTree = "<group>"; };
 		68BF678027F84C7B00A451C3 /* ArticleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleViewController.swift; sourceTree = "<group>"; };
+		68BF678227F8845A00A451C3 /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
+		68BF678427F884F400A451C3 /* SettingDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingDetailViewController.swift; sourceTree = "<group>"; };
+		68BF678627F8AA1300A451C3 /* FeedItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedItem.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -120,6 +126,9 @@
 				68BF677A27F75BAC00A451C3 /* RssViewController.swift */,
 				68BF677C27F762D400A451C3 /* ListViewController.swift */,
 				68BF678027F84C7B00A451C3 /* ArticleViewController.swift */,
+				68BF678227F8845A00A451C3 /* SettingViewController.swift */,
+				68BF678427F884F400A451C3 /* SettingDetailViewController.swift */,
+				68BF678627F8AA1300A451C3 /* FeedItem.swift */,
 				68BF674A27F723A300A451C3 /* Main.storyboard */,
 				68BF674D27F723A400A451C3 /* Assets.xcassets */,
 				68BF674F27F723A400A451C3 /* LaunchScreen.storyboard */,
@@ -281,7 +290,10 @@
 				68BF674527F723A300A451C3 /* AppDelegate.swift in Sources */,
 				68BF677F27F7796200A451C3 /* TopicModel.swift in Sources */,
 				68BF678127F84C7B00A451C3 /* ArticleViewController.swift in Sources */,
+				68BF678327F8845A00A451C3 /* SettingViewController.swift in Sources */,
 				68BF677B27F75BAC00A451C3 /* RssViewController.swift in Sources */,
+				68BF678527F884F400A451C3 /* SettingDetailViewController.swift in Sources */,
+				68BF678727F8AA1300A451C3 /* FeedItem.swift in Sources */,
 				68BF674727F723A300A451C3 /* SceneDelegate.swift in Sources */,
 				68BF677727F745D500A451C3 /* SignUpViewController.swift in Sources */,
 				68BF677D27F762D400A451C3 /* ListViewController.swift in Sources */,
