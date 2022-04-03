@@ -20,7 +20,7 @@ class ArticleViewController: UIViewController {
         webView = WKWebView(frame: view.frame)
         view.addSubview(webView)
    
-        let request = URLRequest(url: URL(string: "https://www.google.co.jp/")!)
+        let request = URLRequest(url: URL(string: "\(articleUrl)")!)
         webView.load(request)
     }
 }

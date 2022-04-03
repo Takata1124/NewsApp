@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ListViewController: UIViewController, XMLParserDelegate, UITableViewDelegate, UITableViewDataSource {
+class ListViewController: UIViewController, XMLParserDelegate{
     
 
     @IBOutlet weak var tableView: UITableView!
@@ -15,6 +15,7 @@ class ListViewController: UIViewController, XMLParserDelegate, UITableViewDelega
     var parser: XMLParser?
     
     var selectFeed: String = ""
+    var articleUrl: String = ""
     
     var feedUrl: String = ""
     var feedItems = [FeedItem]()
@@ -37,33 +38,14 @@ class ListViewController: UIViewController, XMLParserDelegate, UITableViewDelega
         getXMLData(urlString: feedUrl)
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return feedItems.count
-    }
-
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "tableViewCell", for: indexPath)
-        
-        if let celltext = feedItems[indexPath.row].title {
-            cell.textLabel?.text = celltext
+        if segue.identifier == "goArticle" {
+            let articleView = segue.destination as! ArticleViewController
+            articleView.articleUrl = self.articleUrl
         }
-
-        return cell
     }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 70
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        print(feedItems[indexPath.row].url)
-        
-        tableView.deselectRow(at: indexPath, animated: true)
-        performSegue(withIdentifier: "goArticle", sender: nil)
-    }
-    
+ 
     private func getFeedUrl(_ selectFeed: String) {
         
         switch selectFeed {
@@ -124,12 +106,9 @@ class ListViewController: UIViewController, XMLParserDelegate, UITableViewDelega
         } else {
             currrentElementName = elementName
         }
-//        print("開始タグ:" + elementName)
     }
     
     func parser(_ parser: XMLParser, foundCharacters string: String) {
-        
-//        print("要素:" + string)
         
         if self.feedItems.count > 0 {
             
@@ -153,7 +132,6 @@ class ListViewController: UIViewController, XMLParserDelegate, UITableViewDelega
     func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
         
         self.currrentElementName = nil
-//        print("終了タグ:" + elementName)
     }
     
     func parser(_ parser: XMLParser, parseErrorOccurred parseError: Error) {
@@ -163,6 +141,37 @@ class ListViewController: UIViewController, XMLParserDelegate, UITableViewDelega
     func parserDidEndDocument(_ parser: XMLParser) {
         
         self.tableView.reloadData()
+    }
+}
+
+
+extension ListViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return feedItems.count
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: "tableViewCell", for: indexPath)
+        
+        if let celltext = feedItems[indexPath.row].title {
+            cell.textLabel?.text = celltext
+        }
+
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 70
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+
+        self.articleUrl = feedItems[indexPath.row].url
+        
+        tableView.deselectRow(at: indexPath, animated: true)
+        performSegue(withIdentifier: "goArticle", sender: nil)
     }
 }
 

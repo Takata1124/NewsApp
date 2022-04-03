@@ -71,18 +71,33 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MOG-hw-gPm">
+                                <rect key="frame" x="157" y="323" width="100" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="gAS-j6-sAq"/>
+                                    <constraint firstAttribute="width" constant="100" id="lvb-RJ-3Zi"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="Exp-xe-BWW" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="150" id="4qV-Xt-hDV"/>
                             <constraint firstItem="LeG-mK-vCN" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="HIg-U3-5of"/>
+                            <constraint firstItem="Exp-xe-BWW" firstAttribute="top" secondItem="MOG-hw-gPm" secondAttribute="bottom" constant="75" id="L3w-cg-d8G"/>
+                            <constraint firstItem="MOG-hw-gPm" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="aLi-P2-SG6"/>
                             <constraint firstItem="Exp-xe-BWW" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="afe-1U-Ltl"/>
                             <constraint firstItem="Exp-xe-BWW" firstAttribute="top" secondItem="LeG-mK-vCN" secondAttribute="bottom" constant="150" id="yWL-j0-83o"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="V8R-lb-Awn"/>
                     <connections>
+                        <outlet property="emailTextfield" destination="YeA-ho-Rgc" id="ON8-yJ-itI"/>
+                        <outlet property="errorLabel" destination="MOG-hw-gPm" id="b2i-8Q-csJ"/>
+                        <outlet property="passwordTextfield" destination="VaT-l8-H6d" id="vfV-EU-dsu"/>
                         <segue destination="hQt-iO-5Mh" kind="show" identifier="goList" id="6VW-xh-myc"/>
                         <segue destination="ypd-Mr-Nsn" kind="show" identifier="goSignUp" id="1i2-cN-cke"/>
                     </connections>
@@ -265,11 +280,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="center" spacing="50" translatesAutoresizingMaskIntoConstraints="NO" id="aI0-jC-DLb">
-                                <rect key="frame" x="7" y="448" width="400" height="300"/>
+                                <rect key="frame" x="7" y="398" width="400" height="400"/>
                                 <subviews>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="RcD-qf-7KI">
-                                        <rect key="frame" x="50" y="0.0" width="300" height="37.5"/>
-                                        <color key="backgroundColor" systemColor="opaqueSeparatorColor"/>
+                                        <rect key="frame" x="50" y="0.0" width="300" height="40"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="300" id="xw6-f9-99z"/>
                                         </constraints>
@@ -277,8 +291,7 @@
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="sry-s8-OuS">
-                                        <rect key="frame" x="50" y="87.5" width="300" height="37.5"/>
-                                        <color key="backgroundColor" systemColor="opaqueSeparatorColor"/>
+                                        <rect key="frame" x="50" y="90" width="300" height="40"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="300" id="UwE-bc-fmi"/>
                                         </constraints>
@@ -286,7 +299,7 @@
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="evE-je-UX9">
-                                        <rect key="frame" x="164.5" y="175" width="71" height="37.5"/>
+                                        <rect key="frame" x="164.5" y="180" width="71" height="40"/>
                                         <color key="backgroundColor" systemColor="opaqueSeparatorColor"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" title="SignUp"/>
@@ -296,7 +309,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eVO-AN-B8E">
-                                        <rect key="frame" x="95" y="262.5" width="210" height="37.5"/>
+                                        <rect key="frame" x="95" y="270" width="210" height="40"/>
                                         <color key="backgroundColor" systemColor="opaqueSeparatorColor"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" title="既にアカウントをお持ちの方"/>
@@ -305,18 +318,35 @@
                                             <action selector="goSignUpView:" destination="BYZ-38-t0r" eventType="touchUpInside" id="LCJ-t8-4m9"/>
                                         </connections>
                                     </button>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yMz-67-fba">
+                                        <rect key="frame" x="100" y="360" width="200" height="40"/>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="200" id="c4B-1C-Hqb"/>
+                                        </constraints>
+                                    </view>
                                 </subviews>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="400" id="VhH-y7-rHa"/>
-                                    <constraint firstAttribute="height" constant="300" id="u9p-lg-inT"/>
+                                    <constraint firstAttribute="height" constant="400" id="u9p-lg-inT"/>
                                 </constraints>
                             </stackView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SignUp" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="b5U-k5-1om">
-                                <rect key="frame" x="57" y="248" width="300" height="50"/>
+                                <rect key="frame" x="57" y="198" width="300" height="50"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="O62-1d-Kgo"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="32"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="S2S-tL-vkR">
+                                <rect key="frame" x="57" y="298" width="300" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="960-ed-UPX"/>
+                                    <constraint firstAttribute="width" constant="300" id="KTn-st-ck1"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -327,12 +357,18 @@
                             <constraint firstItem="aI0-jC-DLb" firstAttribute="top" secondItem="b5U-k5-1om" secondAttribute="bottom" constant="150" id="0C9-62-ABx"/>
                             <constraint firstItem="aI0-jC-DLb" firstAttribute="centerY" secondItem="d7w-Lg-WkP" secondAttribute="centerY" constant="150" id="84v-hB-Xcg"/>
                             <constraint firstItem="b5U-k5-1om" firstAttribute="leading" secondItem="3l5-2Q-UY5" secondAttribute="leading" constant="57" id="AMp-Hy-6OG"/>
+                            <constraint firstItem="S2S-tL-vkR" firstAttribute="top" secondItem="b5U-k5-1om" secondAttribute="bottom" constant="50" id="fRu-Ae-hZV"/>
                             <constraint firstItem="b5U-k5-1om" firstAttribute="centerX" secondItem="aI0-jC-DLb" secondAttribute="centerX" id="oaO-px-2cF"/>
+                            <constraint firstItem="S2S-tL-vkR" firstAttribute="centerX" secondItem="d7w-Lg-WkP" secondAttribute="centerX" id="qZs-eu-Oyu"/>
                             <constraint firstItem="aI0-jC-DLb" firstAttribute="centerX" secondItem="d7w-Lg-WkP" secondAttribute="centerX" id="r2w-I0-mHk"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="CyR-BA-TvI"/>
                     <connections>
+                        <outlet property="appleView" destination="yMz-67-fba" id="1Ix-at-UzW"/>
+                        <outlet property="emailTextField" destination="RcD-qf-7KI" id="u7X-6f-tgv"/>
+                        <outlet property="errorLabel" destination="S2S-tL-vkR" id="s0e-uE-yBd"/>
+                        <outlet property="passwordTextField" destination="sry-s8-OuS" id="Kov-uJ-yKF"/>
                         <segue destination="mYC-1l-hpz" kind="show" identifier="goRss" id="k6f-80-MwC"/>
                     </connections>
                 </viewController>
@@ -342,7 +378,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="8IU-jd-VkZ"/>
+        <segue reference="6VW-xh-myc"/>
     </inferredMetricsTieBreakers>
     <resources>
         <systemColor name="opaqueSeparatorColor">
