@@ -29,6 +29,11 @@
 		68BF678527F884F400A451C3 /* SettingDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BF678427F884F400A451C3 /* SettingDetailViewController.swift */; };
 		68BF678727F8AA1300A451C3 /* FeedItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BF678627F8AA1300A451C3 /* FeedItem.swift */; };
 		68BF678C27F9BFF900A451C3 /* Validator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BF678B27F9BFF900A451C3 /* Validator.swift */; };
+		68BF679B27FAA51500A451C3 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BF679A27FAA51500A451C3 /* User.swift */; };
+		68BF679E27FAA6E900A451C3 /* EmailAddressValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BF679D27FAA6E900A451C3 /* EmailAddressValidator.swift */; };
+		68BF67A027FAA72200A451C3 /* PasswordValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BF679F27FAA72200A451C3 /* PasswordValidator.swift */; };
+		68BF67A227FAA74F00A451C3 /* NameValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BF67A127FAA74F00A451C3 /* NameValidator.swift */; };
+		68BF67A427FAA9E400A451C3 /* IdValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BF67A327FAA9E400A451C3 /* IdValidator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -77,6 +82,11 @@
 		68BF678B27F9BFF900A451C3 /* Validator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Validator.swift; sourceTree = "<group>"; };
 		68BF679527F9DA6B00A451C3 /* Pods_NewsApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Pods_NewsApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		68BF679927F9DBAB00A451C3 /* NewsApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NewsApp.entitlements; sourceTree = "<group>"; };
+		68BF679A27FAA51500A451C3 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		68BF679D27FAA6E900A451C3 /* EmailAddressValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailAddressValidator.swift; sourceTree = "<group>"; };
+		68BF679F27FAA72200A451C3 /* PasswordValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordValidator.swift; sourceTree = "<group>"; };
+		68BF67A127FAA74F00A451C3 /* NameValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameValidator.swift; sourceTree = "<group>"; };
+		68BF67A327FAA9E400A451C3 /* IdValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdValidator.swift; sourceTree = "<group>"; };
 		76235084F41210D9F6AAF859 /* Pods-NewsApp-NewsAppUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NewsApp-NewsAppUITests.debug.xcconfig"; path = "Target Support Files/Pods-NewsApp-NewsAppUITests/Pods-NewsApp-NewsAppUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		7CD6F167B975734BFA8583D3 /* Pods_NewsApp_NewsAppUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NewsApp_NewsAppUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		87E15B0BFFCC36D8FE884880 /* Pods-NewsApp-NewsAppUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NewsApp-NewsAppUITests.release.xcconfig"; path = "Target Support Files/Pods-NewsApp-NewsAppUITests/Pods-NewsApp-NewsAppUITests.release.xcconfig"; sourceTree = "<group>"; };
@@ -150,7 +160,7 @@
 			isa = PBXGroup;
 			children = (
 				68BF679927F9DBAB00A451C3 /* NewsApp.entitlements */,
-				68BF678B27F9BFF900A451C3 /* Validator.swift */,
+				68BF679C27FAA6BF00A451C3 /* Validator */,
 				68BF678A27F972EC00A451C3 /* Model */,
 				68BF678927F972CD00A451C3 /* ViewControllers */,
 				68BF674427F723A300A451C3 /* AppDelegate.swift */,
@@ -200,8 +210,21 @@
 			children = (
 				68BF677E27F7796200A451C3 /* TopicModel.swift */,
 				68BF678627F8AA1300A451C3 /* FeedItem.swift */,
+				68BF679A27FAA51500A451C3 /* User.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		68BF679C27FAA6BF00A451C3 /* Validator */ = {
+			isa = PBXGroup;
+			children = (
+				68BF678B27F9BFF900A451C3 /* Validator.swift */,
+				68BF679D27FAA6E900A451C3 /* EmailAddressValidator.swift */,
+				68BF679F27FAA72200A451C3 /* PasswordValidator.swift */,
+				68BF67A127FAA74F00A451C3 /* NameValidator.swift */,
+				68BF67A327FAA9E400A451C3 /* IdValidator.swift */,
+			);
+			path = Validator;
 			sourceTree = "<group>";
 		};
 		EBA70B6E8E54F82E722657FE /* Pods */ = {
@@ -462,13 +485,18 @@
 				68BF677F27F7796200A451C3 /* TopicModel.swift in Sources */,
 				68BF678C27F9BFF900A451C3 /* Validator.swift in Sources */,
 				68BF678127F84C7B00A451C3 /* ArticleViewController.swift in Sources */,
+				68BF679B27FAA51500A451C3 /* User.swift in Sources */,
 				68BF678327F8845A00A451C3 /* SettingViewController.swift in Sources */,
 				68BF677B27F75BAC00A451C3 /* RssViewController.swift in Sources */,
 				68BF678527F884F400A451C3 /* SettingDetailViewController.swift in Sources */,
 				68BF678727F8AA1300A451C3 /* FeedItem.swift in Sources */,
+				68BF67A027FAA72200A451C3 /* PasswordValidator.swift in Sources */,
 				68BF674727F723A300A451C3 /* SceneDelegate.swift in Sources */,
+				68BF67A427FAA9E400A451C3 /* IdValidator.swift in Sources */,
+				68BF679E27FAA6E900A451C3 /* EmailAddressValidator.swift in Sources */,
 				68BF677727F745D500A451C3 /* SignUpViewController.swift in Sources */,
 				68BF677D27F762D400A451C3 /* ListViewController.swift in Sources */,
+				68BF67A227FAA74F00A451C3 /* NameValidator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

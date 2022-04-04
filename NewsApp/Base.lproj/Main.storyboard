@@ -279,11 +279,27 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="center" spacing="50" translatesAutoresizingMaskIntoConstraints="NO" id="aI0-jC-DLb">
-                                <rect key="frame" x="7" y="398" width="400" height="400"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="center" spacing="30" translatesAutoresizingMaskIntoConstraints="NO" id="aI0-jC-DLb">
+                                <rect key="frame" x="7" y="348" width="400" height="500"/>
                                 <subviews>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="gbt-JQ-M3X">
+                                        <rect key="frame" x="50" y="0.0" width="300" height="45.5"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="300" id="8AT-hH-iBg"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="9hT-Iz-szq">
+                                        <rect key="frame" x="50" y="75.5" width="300" height="46"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="300" id="jc1-Uz-tZ7"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="RcD-qf-7KI">
-                                        <rect key="frame" x="50" y="0.0" width="300" height="40"/>
+                                        <rect key="frame" x="50" y="151.5" width="300" height="45.5"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="300" id="xw6-f9-99z"/>
                                         </constraints>
@@ -291,7 +307,7 @@
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="sry-s8-OuS">
-                                        <rect key="frame" x="50" y="90" width="300" height="40"/>
+                                        <rect key="frame" x="50" y="227" width="300" height="46"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="300" id="UwE-bc-fmi"/>
                                         </constraints>
@@ -299,7 +315,7 @@
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="evE-je-UX9">
-                                        <rect key="frame" x="164.5" y="180" width="71" height="40"/>
+                                        <rect key="frame" x="164.5" y="303" width="71" height="45.5"/>
                                         <color key="backgroundColor" systemColor="opaqueSeparatorColor"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" title="SignUp"/>
@@ -309,7 +325,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eVO-AN-B8E">
-                                        <rect key="frame" x="95" y="270" width="210" height="40"/>
+                                        <rect key="frame" x="95" y="378.5" width="210" height="46"/>
                                         <color key="backgroundColor" systemColor="opaqueSeparatorColor"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" title="既にアカウントをお持ちの方"/>
@@ -319,7 +335,7 @@
                                         </connections>
                                     </button>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yMz-67-fba">
-                                        <rect key="frame" x="100" y="360" width="200" height="40"/>
+                                        <rect key="frame" x="100" y="454.5" width="200" height="45.5"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="200" id="c4B-1C-Hqb"/>
@@ -328,11 +344,11 @@
                                 </subviews>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="400" id="VhH-y7-rHa"/>
-                                    <constraint firstAttribute="height" constant="400" id="u9p-lg-inT"/>
+                                    <constraint firstAttribute="height" constant="500" id="u9p-lg-inT"/>
                                 </constraints>
                             </stackView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SignUp" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="b5U-k5-1om">
-                                <rect key="frame" x="57" y="198" width="300" height="50"/>
+                                <rect key="frame" x="57" y="148" width="300" height="50"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="O62-1d-Kgo"/>
                                 </constraints>
@@ -341,7 +357,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="S2S-tL-vkR">
-                                <rect key="frame" x="57" y="298" width="300" height="50"/>
+                                <rect key="frame" x="57" y="248" width="300" height="50"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="960-ed-UPX"/>
                                     <constraint firstAttribute="width" constant="300" id="KTn-st-ck1"/>
@@ -368,6 +384,8 @@
                         <outlet property="appleView" destination="yMz-67-fba" id="1Ix-at-UzW"/>
                         <outlet property="emailTextField" destination="RcD-qf-7KI" id="u7X-6f-tgv"/>
                         <outlet property="errorLabel" destination="S2S-tL-vkR" id="s0e-uE-yBd"/>
+                        <outlet property="idTextField" destination="gbt-JQ-M3X" id="MtM-d6-RAI"/>
+                        <outlet property="nameTextField" destination="9hT-Iz-szq" id="jJS-gS-1UJ"/>
                         <outlet property="passwordTextField" destination="sry-s8-OuS" id="Kov-uJ-yKF"/>
                         <segue destination="mYC-1l-hpz" kind="show" identifier="goRss" id="k6f-80-MwC"/>
                     </connections>

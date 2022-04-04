@@ -11,6 +11,9 @@ import AuthenticationServices
 class SignUpViewController: UIViewController {
     
     @IBOutlet weak var errorLabel: UILabel!
+
+    @IBOutlet weak var idTextField: UITextField!
+    @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     
@@ -25,6 +28,8 @@ class SignUpViewController: UIViewController {
             errorLabel.text = errorMessage
         }
     }
+    
+    let userDefaults = UserDefaults.standard
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,6 +51,15 @@ class SignUpViewController: UIViewController {
         
         signInButton.addTarget(self, action: #selector(didTapSignUP), for: .touchUpInside)
         
+        idTextField.placeholder = "id"
+        idTextField.layer.borderColor = UIColor.black.cgColor
+        idTextField.layer.borderWidth = 1.0
+        idTextField.keyboardType = .numberPad
+        
+        nameTextField.placeholder = "username"
+        nameTextField.layer.borderColor = UIColor.black.cgColor
+        nameTextField.layer.borderWidth = 1.0
+        
         emailTextField.placeholder = "email"
         emailTextField.layer.borderColor = UIColor.black.cgColor
         emailTextField.layer.borderWidth = 1.0
@@ -53,6 +67,7 @@ class SignUpViewController: UIViewController {
         passwordTextField.placeholder = "password"
         passwordTextField.layer.borderColor = UIColor.black.cgColor
         passwordTextField.layer.borderWidth = 1.0
+        passwordTextField.keyboardType = .numberPad
     }
     
     @objc func didTapSignUP() {
@@ -67,11 +82,44 @@ class SignUpViewController: UIViewController {
         controller.performRequests()
     }
     
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
+        self.view.endEditing(true)
+    }
+    
     @IBAction func goBackLoginView(_ sender: Any) {
-        self.navigationController?.popViewController(animated: true)
+//        self.navigationController?.popViewController(animated: true)
+        print("tap")
+        
+        guard let data: Data = userDefaults.value(forKey: "User") as? Data else { return }
+        let user: User = try! JSONDecoder().decode(User.self, from: data)
+
+        print(user)
     }
     
     @IBAction func goRssView(_ sender: Any) {
+        
+        let idValidator = IdValidator(id: idTextField.text ?? "")
+        
+        switch idValidator.validate() {
+            
+        case .none: break
+        case .required(_):
+            errorMessage = "idを入力してください"
+        case .toolong(_):
+            errorMessage = "名前は4文字で入力してください"
+        }
+        
+        let nameValidator = NameValidator(name: nameTextField.text ?? "")
+        
+        switch nameValidator.validate() {
+            
+        case .none: break
+        case .required(_):
+            errorMessage = "名前を入力してください"
+        case .toolong(_):
+            errorMessage = "名前は8文字以内で入力してください"
+        }
         
         let emailValidator = EmailAddressValidator(address: emailTextField.text ?? "")
         
@@ -92,11 +140,21 @@ class SignUpViewController: UIViewController {
         case .required(_):
             errorMessage = "パスワードを入力してください"
         case .toolong(_):
-            errorMessage = "パスワードは6文字以内で入力してください"
+            errorMessage = "パスワードは6文字で入力してください"
         }
         
-        if emailValidator.isValid() && passwordValidator.isValid() {
+        if idValidator.isValid() && nameValidator.isValid() && emailValidator.isValid() && passwordValidator.isValid() {
             
+            let user: User = User(id: idTextField.text ?? "",
+                                  name: nameTextField.text ?? "",
+                                  email: emailTextField.text ?? "",
+                                  password: passwordTextField.text ?? "",
+                                  feed: "")
+            
+            guard let data: Data = try? JSONEncoder().encode(user) else { return }
+            
+            userDefaults.setValue(data, forKey: "User")
+ 
             performSegue(withIdentifier: "goRss", sender: nil)
         }
     }
@@ -130,7 +188,6 @@ extension SignUpViewController: ASAuthorizationControllerDelegate {
             break
             
         default:
-            
             break
         }
     }
