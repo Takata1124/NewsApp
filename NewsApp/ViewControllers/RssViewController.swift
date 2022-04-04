@@ -10,8 +10,14 @@ import UIKit
 class RssViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     let topicModel = TopicModel()
-    
+
+    var id: String = ""
+    var name: String = ""
+    var email: String = ""
+    var password: String = ""
     var selectFeed: String = ""
+    
+    let userDefaults = UserDefaults.standard
     
     @IBOutlet weak var tableView: UITableView!
     
@@ -46,10 +52,18 @@ class RssViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
+        tableView.deselectRow(at: indexPath, animated: true)
+        
         self.selectFeed = topicModel.topicArray[indexPath.row]
         
-        tableView.deselectRow(at: indexPath, animated: true)
-        performSegue(withIdentifier: "goList2", sender: nil)
+        let user: User = User(id: self.id, name: self.name, email: self.email, password: self.password, feed: self.selectFeed)
+        
+        guard let data: Data = try? JSONEncoder().encode(user) else { return }
+        userDefaults.setValue(data, forKey: "User")
+        
+        DispatchQueue.main.async {
+            self.performSegue(withIdentifier: "goList2", sender: nil)
+        }
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

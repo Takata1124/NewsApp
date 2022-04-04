@@ -7,8 +7,7 @@
 
 import UIKit
 
-class ListViewController: UIViewController, XMLParserDelegate{
-    
+class ListViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
     
@@ -24,18 +23,26 @@ class ListViewController: UIViewController, XMLParserDelegate{
     let item_name = "item"
     let title_name = "title"
     let link_name  = "link"
+    
+    let userDefaults = UserDefaults.standard
  
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        print(self.selectFeed)
         
         tableView.delegate = self
         tableView.dataSource = self
         tableView.separatorColor = .black
         
+        setupLayout()
+        
+        usergetFeed()
         getFeedUrl(self.selectFeed)
         getXMLData(urlString: feedUrl)
+    }
+    
+    private func setupLayout() {
+        
+        navigationItem.title = "一覧"
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -44,6 +51,13 @@ class ListViewController: UIViewController, XMLParserDelegate{
             let articleView = segue.destination as! ArticleViewController
             articleView.articleUrl = self.articleUrl
         }
+    }
+    
+    private func usergetFeed() {
+        
+        guard let data: Data = userDefaults.value(forKey: "User") as? Data else { return }
+        let user: User = try! JSONDecoder().decode(User.self, from: data)
+        self.selectFeed = user.feed
     }
  
     private func getFeedUrl(_ selectFeed: String) {
@@ -73,6 +87,14 @@ class ListViewController: UIViewController, XMLParserDelegate{
             print("urlを取得できませんでした")
         }
     }
+    
+    @IBAction func goSettingView(_ sender: Any) {
+        
+        self.performSegue(withIdentifier: "goSetting", sender: nil)
+    }
+}
+
+extension ListViewController: XMLParserDelegate {
     
     private func getXMLData(urlString: String) {
         
@@ -174,4 +196,3 @@ extension ListViewController: UITableViewDelegate, UITableViewDataSource {
         performSegue(withIdentifier: "goArticle", sender: nil)
     }
 }
-

@@ -11,7 +11,6 @@ import WebKit
 class ArticleViewController: UIViewController {
     
     var articleUrl: String = ""
-    
     var webView: WKWebView!
     
     override func viewDidLoad() {

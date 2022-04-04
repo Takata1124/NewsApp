@@ -9,33 +9,36 @@ import UIKit
 
 class LoginViewController: UIViewController, UITextFieldDelegate {
     
-    @IBOutlet weak var emailTextfield: UITextField!
+    @IBOutlet weak var idTextfield: UITextField!
     @IBOutlet weak var passwordTextfield: UITextField!
     @IBOutlet weak var errorLabel: UILabel!
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationItem.title = "Login"
-        
         setupLayout()
         
-        emailTextfield.delegate = self
+        idTextfield.delegate = self
     }
     
     private func setupLayout() {
         
-        emailTextfield.layer.borderColor = UIColor.black.cgColor
-        emailTextfield.layer.borderWidth = 1.0
+        navigationItem.title = "Login"
         
+        idTextfield.placeholder = "id"
+        idTextfield.layer.borderColor = UIColor.black.cgColor
+        idTextfield.layer.borderWidth = 1.0
+        
+        passwordTextfield.placeholder = "password"
         passwordTextfield.layer.borderColor = UIColor.black.cgColor
         passwordTextfield.layer.borderWidth = 1.0
     }
     
     @IBAction func goListView(_ sender: Any) {
+        
         performSegue(withIdentifier: "goList", sender: nil)
     }
-
+    
     @IBAction func goSignUpView(_ sender: Any) {
         performSegue(withIdentifier: "goSignUp", sender: nil)
     }

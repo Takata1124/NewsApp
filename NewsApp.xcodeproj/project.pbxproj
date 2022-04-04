@@ -10,9 +10,10 @@
 		095A345448312BF5A88A6330 /* Pods_NewsApp_NewsAppUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CD6F167B975734BFA8583D3 /* Pods_NewsApp_NewsAppUITests.framework */; };
 		0BD143CDD7378DD314FE2858 /* Pods_NewsAppTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0DBB7C9F5BF0C769AA548FDB /* Pods_NewsAppTests.framework */; };
 		5BE2C579C972A7FCA6ABCB95 /* Pods_NewsApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 68BF679527F9DA6B00A451C3 /* Pods_NewsApp.framework */; };
+		688EB31427FADB98008FB693 /* NavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688EB31327FADB98008FB693 /* NavigationViewController.swift */; };
 		68BF674527F723A300A451C3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BF674427F723A300A451C3 /* AppDelegate.swift */; };
 		68BF674727F723A300A451C3 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BF674627F723A300A451C3 /* SceneDelegate.swift */; };
-		68BF674927F723A300A451C3 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BF674827F723A300A451C3 /* ViewController.swift */; };
+		68BF674927F723A300A451C3 /* SplashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BF674827F723A300A451C3 /* SplashViewController.swift */; };
 		68BF674C27F723A300A451C3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 68BF674A27F723A300A451C3 /* Main.storyboard */; };
 		68BF674E27F723A400A451C3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 68BF674D27F723A400A451C3 /* Assets.xcassets */; };
 		68BF675127F723A400A451C3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 68BF674F27F723A400A451C3 /* LaunchScreen.storyboard */; };
@@ -57,10 +58,11 @@
 		0DBB7C9F5BF0C769AA548FDB /* Pods_NewsAppTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NewsAppTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DB5D5B7A966E16A5CDBCA54 /* Pods-NewsAppTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NewsAppTests.debug.xcconfig"; path = "Target Support Files/Pods-NewsAppTests/Pods-NewsAppTests.debug.xcconfig"; sourceTree = "<group>"; };
 		485FAFCC0121AE57B1078767 /* Pods-NewsAppTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NewsAppTests.release.xcconfig"; path = "Target Support Files/Pods-NewsAppTests/Pods-NewsAppTests.release.xcconfig"; sourceTree = "<group>"; };
+		688EB31327FADB98008FB693 /* NavigationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationViewController.swift; sourceTree = "<group>"; };
 		68BF674127F723A300A451C3 /* NewsApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NewsApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		68BF674427F723A300A451C3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		68BF674627F723A300A451C3 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		68BF674827F723A300A451C3 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		68BF674827F723A300A451C3 /* SplashViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashViewController.swift; sourceTree = "<group>"; };
 		68BF674B27F723A300A451C3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		68BF674D27F723A400A451C3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		68BF675027F723A400A451C3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -193,7 +195,7 @@
 		68BF678927F972CD00A451C3 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				68BF674827F723A300A451C3 /* ViewController.swift */,
+				68BF674827F723A300A451C3 /* SplashViewController.swift */,
 				68BF677427F72EFB00A451C3 /* LoginViewController.swift */,
 				68BF677627F745D500A451C3 /* SignUpViewController.swift */,
 				68BF677A27F75BAC00A451C3 /* RssViewController.swift */,
@@ -201,6 +203,7 @@
 				68BF678027F84C7B00A451C3 /* ArticleViewController.swift */,
 				68BF678227F8845A00A451C3 /* SettingViewController.swift */,
 				68BF678427F884F400A451C3 /* SettingDetailViewController.swift */,
+				688EB31327FADB98008FB693 /* NavigationViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -208,9 +211,9 @@
 		68BF678A27F972EC00A451C3 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				68BF677E27F7796200A451C3 /* TopicModel.swift */,
 				68BF678627F8AA1300A451C3 /* FeedItem.swift */,
 				68BF679A27FAA51500A451C3 /* User.swift */,
+				68BF677E27F7796200A451C3 /* TopicModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -480,13 +483,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				68BF677527F72EFB00A451C3 /* LoginViewController.swift in Sources */,
-				68BF674927F723A300A451C3 /* ViewController.swift in Sources */,
+				68BF674927F723A300A451C3 /* SplashViewController.swift in Sources */,
 				68BF674527F723A300A451C3 /* AppDelegate.swift in Sources */,
 				68BF677F27F7796200A451C3 /* TopicModel.swift in Sources */,
 				68BF678C27F9BFF900A451C3 /* Validator.swift in Sources */,
 				68BF678127F84C7B00A451C3 /* ArticleViewController.swift in Sources */,
 				68BF679B27FAA51500A451C3 /* User.swift in Sources */,
 				68BF678327F8845A00A451C3 /* SettingViewController.swift in Sources */,
+				688EB31427FADB98008FB693 /* NavigationViewController.swift in Sources */,
 				68BF677B27F75BAC00A451C3 /* RssViewController.swift in Sources */,
 				68BF678527F884F400A451C3 /* SettingDetailViewController.swift in Sources */,
 				68BF678727F8AA1300A451C3 /* FeedItem.swift in Sources */,

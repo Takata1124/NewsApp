@@ -17,10 +17,16 @@ class SignUpViewController: UIViewController {
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     
+    var id: String = ""
+    var name: String = ""
+    var email: String = ""
+    var password: String = ""
+    
+    let userDefaults = UserDefaults.standard
+    
     @IBOutlet weak var appleView: UIView!
     
     private let signInButton = ASAuthorizationAppleIDButton()
-
     private var errorMessage: String = "" {
         
         didSet {
@@ -28,13 +34,9 @@ class SignUpViewController: UIViewController {
             errorLabel.text = errorMessage
         }
     }
-    
-    let userDefaults = UserDefaults.standard
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        appleView.addSubview(signInButton)
 
         setupLayout()
     }
@@ -50,6 +52,8 @@ class SignUpViewController: UIViewController {
         navigationItem.title = "SignUp"
         
         signInButton.addTarget(self, action: #selector(didTapSignUP), for: .touchUpInside)
+        
+        appleView.addSubview(signInButton)
         
         idTextField.placeholder = "id"
         idTextField.layer.borderColor = UIColor.black.cgColor
@@ -88,13 +92,14 @@ class SignUpViewController: UIViewController {
     }
     
     @IBAction func goBackLoginView(_ sender: Any) {
+        
 //        self.navigationController?.popViewController(animated: true)
-        print("tap")
         
         guard let data: Data = userDefaults.value(forKey: "User") as? Data else { return }
         let user: User = try! JSONDecoder().decode(User.self, from: data)
-
         print(user)
+        
+//        userDefaults.removeObject(forKey: "User")
     }
     
     @IBAction func goRssView(_ sender: Any) {
@@ -145,17 +150,23 @@ class SignUpViewController: UIViewController {
         
         if idValidator.isValid() && nameValidator.isValid() && emailValidator.isValid() && passwordValidator.isValid() {
             
-            let user: User = User(id: idTextField.text ?? "",
-                                  name: nameTextField.text ?? "",
-                                  email: emailTextField.text ?? "",
-                                  password: passwordTextField.text ?? "",
-                                  feed: "")
-            
-            guard let data: Data = try? JSONEncoder().encode(user) else { return }
-            
-            userDefaults.setValue(data, forKey: "User")
+            self.id = idTextField.text ?? ""
+            self.name = nameTextField.text ?? ""
+            self.email = emailTextField.text ?? ""
+            self.password = passwordTextField.text ?? ""
  
             performSegue(withIdentifier: "goRss", sender: nil)
+        }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        if segue.identifier == "goRss" {
+            let rssView = segue.destination as! RssViewController
+            rssView.id = self.id
+            rssView.name = self.name
+            rssView.email = self.email
+            rssView.password = self.password
         }
     }
 }
