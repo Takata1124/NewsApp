@@ -11,14 +11,15 @@ class SettingViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     @IBOutlet weak var settingTable: UITableView!
     
-    let systemIcons = ["一覧画面表示切り替え","RSS取得間隔","購読RSS管理","文字サイズの変更","ダークモード"]
+    let userDefaults = UserDefaults.standard
+    let systemIcons = ["一覧画面表示切り替え","RSS取得間隔","購読RSS管理","文字サイズの変更","ダークモード","ログアウト"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         settingTable.delegate = self
         settingTable.dataSource = self
-        // Do any additional setup after loading the view.
+        settingTable.separatorColor = .black
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -37,6 +38,22 @@ class SettingViewController: UIViewController, UITableViewDelegate, UITableViewD
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         tableView.deselectRow(at: indexPath, animated: true)
-        performSegue(withIdentifier: "goSettingDetail", sender: nil)
+
+        recodeUserdefaults()
+        
+        self.navigationController?.popToRootViewController(animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 70
+    }
+    
+    private func recodeUserdefaults() {
+        
+        guard let data: Data = userDefaults.value(forKey: "User") as? Data else { return }
+        let user: User = try! JSONDecoder().decode(User.self, from: data)
+        let recodeUser: User = User(id: user.id, name: user.name, email: user.email, password: user.password, feed: user.feed, login: false)
+        guard let data: Data = try? JSONEncoder().encode(recodeUser) else { return }
+        userDefaults.setValue(data, forKey: "User")
     }
 }

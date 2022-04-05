@@ -93,13 +93,11 @@ class SignUpViewController: UIViewController {
     
     @IBAction func goBackLoginView(_ sender: Any) {
         
-//        self.navigationController?.popViewController(animated: true)
-        
         guard let data: Data = userDefaults.value(forKey: "User") as? Data else { return }
         let user: User = try! JSONDecoder().decode(User.self, from: data)
         print(user)
         
-//        userDefaults.removeObject(forKey: "User")
+        userDefaults.removeObject(forKey: "User")
     }
     
     @IBAction func goRssView(_ sender: Any) {

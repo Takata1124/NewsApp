@@ -70,12 +70,12 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MOG-hw-gPm">
-                                <rect key="frame" x="157" y="323" width="100" height="50"/>
+                                <rect key="frame" x="57" y="323" width="300" height="50"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="gAS-j6-sAq"/>
-                                    <constraint firstAttribute="width" constant="100" id="lvb-RJ-3Zi"/>
+                                    <constraint firstAttribute="width" constant="300" id="lvb-RJ-3Zi"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -94,8 +94,8 @@
                     <navigationItem key="navigationItem" id="V8R-lb-Awn"/>
                     <connections>
                         <outlet property="errorLabel" destination="MOG-hw-gPm" id="b2i-8Q-csJ"/>
-                        <outlet property="idTextfield" destination="YeA-ho-Rgc" id="EMJ-Zp-zGQ"/>
-                        <outlet property="passwordTextfield" destination="VaT-l8-H6d" id="vfV-EU-dsu"/>
+                        <outlet property="idTextField" destination="YeA-ho-Rgc" id="nwF-wU-IZG"/>
+                        <outlet property="passwordTextField" destination="VaT-l8-H6d" id="eTd-4A-OUF"/>
                         <segue destination="hQt-iO-5Mh" kind="show" identifier="goList" id="6VW-xh-myc"/>
                         <segue destination="ypd-Mr-Nsn" kind="show" identifier="goSignUp" id="1i2-cN-cke"/>
                     </connections>
@@ -433,7 +433,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="8IU-jd-VkZ"/>
+        <segue reference="6VW-xh-myc"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="gearshape" catalog="system" width="128" height="121"/>

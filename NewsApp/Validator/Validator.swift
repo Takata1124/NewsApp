@@ -10,6 +10,7 @@ import Foundation
 protocol Validator {
     
     associatedtype ResultType: ValidationResult
+    
     func validate() -> ResultType
 }
 

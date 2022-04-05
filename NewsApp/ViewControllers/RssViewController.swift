@@ -56,14 +56,12 @@ class RssViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         
         self.selectFeed = topicModel.topicArray[indexPath.row]
         
-        let user: User = User(id: self.id, name: self.name, email: self.email, password: self.password, feed: self.selectFeed)
+        let user: User = User(id: self.id, name: self.name, email: self.email, password: self.password, feed: self.selectFeed, login: true)
         
         guard let data: Data = try? JSONEncoder().encode(user) else { return }
         userDefaults.setValue(data, forKey: "User")
         
-        DispatchQueue.main.async {
-            self.performSegue(withIdentifier: "goList2", sender: nil)
-        }
+        self.performSegue(withIdentifier: "goList2", sender: nil)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

@@ -35,5 +35,5 @@ enum EmailAddressValidateResult: ValidationResult {
     case required(String)
     case invalidFormat(String)
     
-    var isOk: Bool {  if case .none = self { return true } else { return false } }
+    var isOk: Bool { if case .none = self { return true } else { return false } }
 }
