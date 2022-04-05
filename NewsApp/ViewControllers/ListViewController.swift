@@ -32,7 +32,7 @@ class ListViewController: UIViewController {
         
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.separatorColor = .black
+        tableView.separatorColor = UIColor.modeTextColor
         
         setupLayout()
         
@@ -146,8 +146,8 @@ extension ListViewController: XMLParserDelegate {
             case link_name:
                 lastItem.url = string
                 
-            default: break
-                
+            default:
+                break
             }
         }
     }

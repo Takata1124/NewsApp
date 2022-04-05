@@ -56,22 +56,27 @@ class SignUpViewController: UIViewController {
         appleView.addSubview(signInButton)
         
         idTextField.placeholder = "id"
-        idTextField.layer.borderColor = UIColor.black.cgColor
         idTextField.layer.borderWidth = 1.0
         idTextField.keyboardType = .numberPad
         
         nameTextField.placeholder = "username"
-        nameTextField.layer.borderColor = UIColor.black.cgColor
         nameTextField.layer.borderWidth = 1.0
         
         emailTextField.placeholder = "email"
-        emailTextField.layer.borderColor = UIColor.black.cgColor
         emailTextField.layer.borderWidth = 1.0
         
         passwordTextField.placeholder = "password"
-        passwordTextField.layer.borderColor = UIColor.black.cgColor
         passwordTextField.layer.borderWidth = 1.0
         passwordTextField.keyboardType = .numberPad
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        
+        idTextField.layer.borderColor = UIColor.dynamicColor(light: .black, dark: .white).cgColor
+        nameTextField.layer.borderColor = UIColor.dynamicColor(light: .black, dark: .white).cgColor
+        emailTextField.layer.borderColor = UIColor.dynamicColor(light: .black, dark: .white).cgColor
+        passwordTextField.layer.borderColor = UIColor.dynamicColor(light: .black, dark: .white).cgColor
     }
     
     @objc func didTapSignUP() {

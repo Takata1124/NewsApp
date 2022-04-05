@@ -55,7 +55,6 @@ class RssViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         tableView.deselectRow(at: indexPath, animated: true)
         
         self.selectFeed = topicModel.topicArray[indexPath.row]
-        
         let user: User = User(id: self.id, name: self.name, email: self.email, password: self.password, feed: self.selectFeed, login: true)
         
         guard let data: Data = try? JSONEncoder().encode(user) else { return }

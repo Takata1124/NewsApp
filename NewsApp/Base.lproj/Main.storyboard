@@ -3,6 +3,7 @@
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -24,6 +25,7 @@
                                         <constraints>
                                             <constraint firstAttribute="width" constant="300" id="8UU-wd-FtU"/>
                                         </constraints>
+                                        <color key="textColor" name="modeTextColor"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
@@ -32,6 +34,7 @@
                                         <constraints>
                                             <constraint firstAttribute="width" constant="300" id="ezt-5w-VZK"/>
                                         </constraints>
+                                        <color key="textColor" name="modeTextColor"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
@@ -104,22 +107,20 @@
             </objects>
             <point key="canvasLocation" x="257" y="102"/>
         </scene>
-        <!--設定-->
+        <!--Setting View Controller-->
         <scene sceneID="6CA-zp-PYe">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="EGy-bH-QjW" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <viewController id="iTw-sR-Pai" customClass="SettingViewController" customModule="NewsApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="9eq-TW-zu4">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" estimatedSectionHeaderHeight="-1" sectionFooterHeight="18" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="vpj-Ev-cOu">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" estimatedSectionHeaderHeight="-1" sectionFooterHeight="28" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="vpj-Ev-cOu">
                                 <rect key="frame" x="0.0" y="88" width="414" height="774"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="settingTableViewCell" textLabel="axQ-rm-oPl" style="IBUITableViewCellStyleDefault" id="0we-2c-5AJ">
-                                        <rect key="frame" x="0.0" y="49.5" width="414" height="43.5"/>
+                                        <rect key="frame" x="0.0" y="44.5" width="414" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="0we-2c-5AJ" id="HH6-EN-poW">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
@@ -148,20 +149,19 @@
                             <constraint firstItem="Zo9-6i-wId" firstAttribute="bottom" secondItem="vpj-Ev-cOu" secondAttribute="bottom" id="mkc-YY-JtX"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="設定" id="s4m-cz-MK2"/>
                     <connections>
                         <outlet property="settingTable" destination="vpj-Ev-cOu" id="nIG-qM-bey"/>
                         <segue destination="LFP-oI-jUc" kind="show" identifier="goSettingDetail" id="9vD-lR-04F"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="EGy-bH-QjW" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2261" y="1290"/>
         </scene>
         <!--Setting Detail View Controller-->
         <scene sceneID="V04-Fv-mC7">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Y5O-du-oex" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-                <viewController id="LFP-oI-jUc" customClass="SettingDetailViewController" customModule="NewsApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="settingDetailStoryboard" id="LFP-oI-jUc" customClass="SettingDetailViewController" customModule="NewsApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Phm-4W-FRq">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -170,6 +170,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="c3V-xA-Cij"/>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Y5O-du-oex" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3342" y="1290"/>
         </scene>
@@ -216,6 +217,7 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="4Rw-rY-wBT">
+                        <barButtonItem key="leftBarButtonItem" image="list.dash" catalog="system" id="ZfX-a7-x2Y"/>
                         <barButtonItem key="rightBarButtonItem" title="Item" image="gearshape" catalog="system" id="qzr-iQ-xpP">
                             <connections>
                                 <action selector="goSettingView:" destination="hQt-iO-5Mh" id="Ps2-xC-RmK"/>
@@ -295,7 +297,6 @@
         <!--Navigation View Controller-->
         <scene sceneID="cVr-gB-QVV">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="VuE-NR-Lbm" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <navigationController id="rpr-r4-PcB" customClass="NavigationViewController" customModule="NewsApp" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="rsZ-F2-tTU">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
@@ -305,6 +306,7 @@
                         <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="cKM-zd-4fa"/>
                     </connections>
                 </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="VuE-NR-Lbm" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-746" y="103"/>
         </scene>
@@ -437,6 +439,10 @@
     </inferredMetricsTieBreakers>
     <resources>
         <image name="gearshape" catalog="system" width="128" height="121"/>
+        <image name="list.dash" catalog="system" width="128" height="85"/>
+        <namedColor name="modeTextColor">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <systemColor name="opaqueSeparatorColor">
             <color red="0.77647058823529413" green="0.77647058823529413" blue="0.78431372549019607" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>

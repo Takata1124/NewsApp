@@ -19,7 +19,9 @@ class SettingViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         settingTable.delegate = self
         settingTable.dataSource = self
-        settingTable.separatorColor = .black
+        settingTable.separatorColor = UIColor.modeTextColor
+        
+        navigationItem.title = "設定"
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -38,10 +40,11 @@ class SettingViewController: UIViewController, UITableViewDelegate, UITableViewD
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         tableView.deselectRow(at: indexPath, animated: true)
-
-        recodeUserdefaults()
         
-        self.navigationController?.popToRootViewController(animated: true)
+        let selectCell = systemIcons[indexPath.row]
+        print(selectCell)
+        
+        selectView(selectCell: selectCell)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -55,5 +58,26 @@ class SettingViewController: UIViewController, UITableViewDelegate, UITableViewD
         let recodeUser: User = User(id: user.id, name: user.name, email: user.email, password: user.password, feed: user.feed, login: false)
         guard let data: Data = try? JSONEncoder().encode(recodeUser) else { return }
         userDefaults.setValue(data, forKey: "User")
+    }
+    
+//    let systemIcons = ["一覧画面表示切り替え","RSS取得間隔","購読RSS管理","文字サイズの変更","ダークモード","ログアウト"]
+    
+    private func selectView(selectCell: String) {
+        
+        switch selectCell {
+            
+        case "文字サイズの変更":
+            self.performSegue(withIdentifier: "goSettingDetail", sender: nil)
+            
+        case "ダークモード":
+            self.performSegue(withIdentifier: "goSettingDetail", sender: nil)
+            
+        case "ログアウト":
+            recodeUserdefaults()
+            self.navigationController?.popToRootViewController(animated: true)
+            
+        default:
+            print("default")
+        }
     }
 }

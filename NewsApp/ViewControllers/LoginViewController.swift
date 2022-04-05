@@ -62,14 +62,21 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         navigationItem.title = "Login"
         
         idTextField.placeholder = "id"
-        idTextField.layer.borderColor = UIColor.black.cgColor
         idTextField.layer.borderWidth = 1.0
+        idTextField.keyboardType = .numberPad
         
         passwordTextField.placeholder = "password"
-        passwordTextField.layer.borderColor = UIColor.black.cgColor
         passwordTextField.layer.borderWidth = 1.0
+        passwordTextField.keyboardType = .numberPad
     }
-
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        
+        idTextField.layer.borderColor = UIColor.dynamicColor(light: .black, dark: .white).cgColor
+        passwordTextField.layer.borderColor = UIColor.dynamicColor(light: .black, dark: .white).cgColor
+    }
+    
     @IBAction func goListView(_ sender: Any) {
         
         if self.user == nil { return }
