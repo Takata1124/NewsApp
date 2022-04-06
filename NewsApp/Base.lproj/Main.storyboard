@@ -150,13 +150,13 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="settingTable" destination="vpj-Ev-cOu" id="nIG-qM-bey"/>
+                        <outlet property="settingTableView" destination="vpj-Ev-cOu" id="NLn-Fe-IKJ"/>
                         <segue destination="LFP-oI-jUc" kind="show" identifier="goSettingDetail" id="9vD-lR-04F"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EGy-bH-QjW" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2261" y="1290"/>
+            <point key="canvasLocation" x="2260.8695652173915" y="1289.7321428571429"/>
         </scene>
         <!--Setting Detail View Controller-->
         <scene sceneID="V04-Fv-mC7">
@@ -183,7 +183,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="Xee-tm-nYg">
-                                <rect key="frame" x="0.0" y="88" width="414" height="774"/>
+                                <rect key="frame" x="0.0" y="88" width="414" height="699"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <prototypes>
@@ -206,18 +206,56 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
+                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="6zc-GT-QMf">
+                                <rect key="frame" x="0.0" y="787" width="414" height="75"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pHu-Yz-ksW">
+                                        <rect key="frame" x="0.0" y="22" width="103.5" height="31"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="NEW">
+                                            <color key="baseForegroundColor" name="modeTextColor"/>
+                                        </buttonConfiguration>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="my4-8u-89s">
+                                        <rect key="frame" x="103.5" y="0.0" width="103.5" height="75"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="75" id="0bo-uI-Xa0"/>
+                                        </constraints>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" image="star.fill" catalog="system" title="">
+                                            <color key="baseForegroundColor" name="modeTextColor"/>
+                                        </buttonConfiguration>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Has-dM-sjd">
+                                        <rect key="frame" x="207" y="22" width="103.5" height="31"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" image="checkmark" catalog="system">
+                                            <color key="baseForegroundColor" name="modeTextColor"/>
+                                        </buttonConfiguration>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3PN-3z-uW8">
+                                        <rect key="frame" x="310.5" y="22" width="103.5" height="31"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" image="square.and.arrow.up" catalog="system">
+                                            <color key="baseForegroundColor" name="modeTextColor"/>
+                                        </buttonConfiguration>
+                                    </button>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="IF4-Qn-jI8"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="IF4-Qn-jI8" firstAttribute="trailing" secondItem="Xee-tm-nYg" secondAttribute="trailing" id="1Vb-HV-mWj"/>
                             <constraint firstItem="Xee-tm-nYg" firstAttribute="top" secondItem="IF4-Qn-jI8" secondAttribute="top" id="3Ap-VQ-xyD"/>
+                            <constraint firstItem="6zc-GT-QMf" firstAttribute="leading" secondItem="IF4-Qn-jI8" secondAttribute="leading" id="5Hq-oO-MGE"/>
                             <constraint firstItem="Xee-tm-nYg" firstAttribute="leading" secondItem="IF4-Qn-jI8" secondAttribute="leading" id="Eci-bu-pPF"/>
-                            <constraint firstItem="IF4-Qn-jI8" firstAttribute="bottom" secondItem="Xee-tm-nYg" secondAttribute="bottom" id="Ya1-Qf-eb0"/>
+                            <constraint firstItem="6zc-GT-QMf" firstAttribute="top" secondItem="Xee-tm-nYg" secondAttribute="bottom" id="GiN-th-Qfi"/>
+                            <constraint firstItem="IF4-Qn-jI8" firstAttribute="bottom" secondItem="6zc-GT-QMf" secondAttribute="bottom" id="egy-rS-tEj"/>
+                            <constraint firstItem="IF4-Qn-jI8" firstAttribute="trailing" secondItem="6zc-GT-QMf" secondAttribute="trailing" id="lMJ-WU-tgV"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="4Rw-rY-wBT">
-                        <barButtonItem key="leftBarButtonItem" image="list.dash" catalog="system" id="ZfX-a7-x2Y"/>
                         <barButtonItem key="rightBarButtonItem" title="Item" image="gearshape" catalog="system" id="qzr-iQ-xpP">
                             <connections>
                                 <action selector="goSettingView:" destination="hQt-iO-5Mh" id="Ps2-xC-RmK"/>
@@ -232,7 +270,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eaZ-vt-axm" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2262" y="390"/>
+            <point key="canvasLocation" x="2260.8695652173915" y="389.73214285714283"/>
         </scene>
         <!--Article View Controller-->
         <scene sceneID="EdO-dZ-J90">
@@ -438,8 +476,10 @@
         <segue reference="6VW-xh-myc"/>
     </inferredMetricsTieBreakers>
     <resources>
+        <image name="checkmark" catalog="system" width="128" height="114"/>
         <image name="gearshape" catalog="system" width="128" height="121"/>
-        <image name="list.dash" catalog="system" width="128" height="85"/>
+        <image name="square.and.arrow.up" catalog="system" width="115" height="128"/>
+        <image name="star.fill" catalog="system" width="128" height="116"/>
         <namedColor name="modeTextColor">
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>

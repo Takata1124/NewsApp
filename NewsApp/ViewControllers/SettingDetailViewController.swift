@@ -9,8 +9,10 @@ import UIKit
 
 class SettingDetailViewController: UIViewController {
     
-    let appDelegate = UIApplication.shared.windows.first
-
+    
+    let appDelegate:AppDelegate = UIApplication.shared.delegate as! AppDelegate
+    let appDelegateWindow = UIApplication.shared.windows.first
+    
     let letterSlider: UISlider = {
         let slider = UISlider(frame: CGRect(x:0, y:0, width:350, height:30))
         slider.backgroundColor = UIColor.white
@@ -22,33 +24,50 @@ class SettingDetailViewController: UIViewController {
         return slider
     }()
     
+    let valueLabel: UILabel = {
+        let label = UILabel(frame: CGRect(x: UIScreen.main.bounds.width / 2, y: 100, width: 100, height: 50))
+        label.backgroundColor = .white
+        return label
+    }()
+    
     let uiswitch: UISwitch = {
         let uiswitch = UISwitch(frame: CGRect(x: 0, y: 0 , width: 49, height: 31))
         uiswitch.addTarget(self, action: #selector(changeSwitch), for: UIControl.Event.valueChanged)
         return uiswitch
     }()
     
+    private var currentValue: String = "" {
+        
+        didSet {
+            valueLabel.text = currentValue
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = UIColor.modeColor
         
-//        view.addSubview(letterSlider)
-        view.addSubview(uiswitch)
+        view.addSubview(letterSlider)
+        view.addSubview(valueLabel)
+        //        view.addSubview(uiswitch)
     }
     
     override func viewDidLayoutSubviews() {
         
-//        letterSlider.center = view.center
+        letterSlider.value = Float(appDelegate.letterSize)
+        letterSlider.center = view.center
         
-        uiswitchLayout()
+        valueLabel.text = String(appDelegate.letterSize)
+        
+        //        uiswitchLayout()
     }
     
     private func uiswitchLayout() {
         
         uiswitch.center = view.center
         
-        if appDelegate?.overrideUserInterfaceStyle == .dark {
+        if appDelegateWindow?.overrideUserInterfaceStyle == .dark {
             uiswitch.isOn = true
         } else {
             uiswitch.isOn = false
@@ -62,16 +81,18 @@ class SettingDetailViewController: UIViewController {
             let onCheck: Bool = sender.isOn
             
             if onCheck {
-                appDelegate?.overrideUserInterfaceStyle = .dark
+                appDelegateWindow?.overrideUserInterfaceStyle = .dark
             } else {
-                appDelegate?.overrideUserInterfaceStyle = .light
+                appDelegateWindow?.overrideUserInterfaceStyle = .light
             }
         }
     }
     
     @objc func onStartPointlabel(_ sender:UISlider!) {
         
-        print(sender.value)
+        //        print(sender.value)
+        appDelegate.letterSize = Int(sender.value)
+        currentValue = String(String(sender.value).prefix(2))
     }
 }
 

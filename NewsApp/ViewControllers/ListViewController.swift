@@ -26,6 +26,8 @@ class ListViewController: UIViewController {
     let link_name  = "link"
     
     let userDefaults = UserDefaults.standard
+    
+    let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
  
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,9 +43,22 @@ class ListViewController: UIViewController {
         getXMLData(urlString: feedUrl)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        tableView.reloadData()
+    }
+    
     private func setupLayout() {
         
-        navigationItem.title = "一覧"
+        let feed = rssFeed()
+        navigationItem.title = feed
+    }
+    
+    private func rssFeed() -> String {
+        
+        guard let data: Data = userDefaults.value(forKey: "User") as? Data else { return "一覧" }
+        let user: User = try! JSONDecoder().decode(User.self, from: data)
+        let feed = user.feed
+        return feed
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -111,7 +126,6 @@ extension ListViewController: XMLParserDelegate {
             self.parser?.parse()
             
         } else {
-            
             print("failed to parse XML")
         }
     }
@@ -167,7 +181,6 @@ extension ListViewController: XMLParserDelegate {
     }
 }
 
-
 extension ListViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -180,6 +193,8 @@ extension ListViewController: UITableViewDelegate, UITableViewDataSource {
         
         if let celltext = feedItems[indexPath.row].title {
             cell.textLabel?.text = celltext
+            cell.accessoryType = .none
+            cell.textLabel?.font = UIFont.systemFont(ofSize: CGFloat(appDelegate.letterSize))
         }
 
         return cell

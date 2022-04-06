@@ -9,30 +9,38 @@ import UIKit
 
 class SettingViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    @IBOutlet weak var settingTable: UITableView!
+    @IBOutlet weak var settingTableView: UITableView!
     
     let userDefaults = UserDefaults.standard
-    let systemIcons = ["一覧画面表示切り替え","RSS取得間隔","購読RSS管理","文字サイズの変更","ダークモード","ログアウト"]
+    let settingList = ["一覧画面表示切り替え","RSS取得間隔","購読RSS管理","文字サイズの変更","ダークモード","ログアウト"]
+    
+    let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        settingTable.delegate = self
-        settingTable.dataSource = self
-        settingTable.separatorColor = UIColor.modeTextColor
+        settingTableView.delegate = self
+        settingTableView.dataSource = self
+        settingTableView.separatorColor = UIColor.modeTextColor
         
         navigationItem.title = "設定"
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        
+        settingTableView.reloadData()
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return systemIcons.count
+        return settingList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = settingTable.dequeueReusableCell(withIdentifier: "settingTableViewCell", for: indexPath)
-        cell.textLabel?.text = systemIcons[indexPath.row]
+        let cell = settingTableView.dequeueReusableCell(withIdentifier: "settingTableViewCell", for: indexPath)
+        cell.textLabel?.text = settingList[indexPath.row]
+        cell.textLabel?.font = UIFont.systemFont(ofSize: CGFloat(appDelegate.letterSize))
         
         return cell
     }
@@ -41,8 +49,7 @@ class SettingViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         tableView.deselectRow(at: indexPath, animated: true)
         
-        let selectCell = systemIcons[indexPath.row]
-        print(selectCell)
+        let selectCell = settingList[indexPath.row]
         
         selectView(selectCell: selectCell)
     }
@@ -60,11 +67,18 @@ class SettingViewController: UIViewController, UITableViewDelegate, UITableViewD
         userDefaults.setValue(data, forKey: "User")
     }
     
-//    let systemIcons = ["一覧画面表示切り替え","RSS取得間隔","購読RSS管理","文字サイズの変更","ダークモード","ログアウト"]
-    
     private func selectView(selectCell: String) {
         
         switch selectCell {
+            
+        case "一覧画面表示切り替え":
+            self.performSegue(withIdentifier: "goSettingDetail", sender: nil)
+            
+        case "RSS取得間隔":
+            self.performSegue(withIdentifier: "goSettingDetail", sender: nil)
+            
+        case "購読RSS管理":
+            self.performSegue(withIdentifier: "goSettingDetail", sender: nil)
             
         case "文字サイズの変更":
             self.performSegue(withIdentifier: "goSettingDetail", sender: nil)
