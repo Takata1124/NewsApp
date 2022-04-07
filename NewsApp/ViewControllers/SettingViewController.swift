@@ -13,6 +13,7 @@ class SettingViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     let userDefaults = UserDefaults.standard
     let settingList = ["一覧画面表示切り替え","RSS取得間隔","購読RSS管理","文字サイズの変更","ダークモード","ログアウト"]
+    var selectCell: String = ""
     
     let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
     
@@ -29,6 +30,14 @@ class SettingViewController: UIViewController, UITableViewDelegate, UITableViewD
     override func viewWillAppear(_ animated: Bool) {
         
         settingTableView.reloadData()
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        if segue.identifier == "goSettingDetail" {
+            let settingDetailViewController = segue.destination as! SettingDetailViewController
+            settingDetailViewController.selectCell = self.selectCell
+        }
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -48,8 +57,7 @@ class SettingViewController: UIViewController, UITableViewDelegate, UITableViewD
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         tableView.deselectRow(at: indexPath, animated: true)
-        
-        let selectCell = settingList[indexPath.row]
+        self.selectCell = settingList[indexPath.row]
         
         selectView(selectCell: selectCell)
     }
@@ -78,7 +86,7 @@ class SettingViewController: UIViewController, UITableViewDelegate, UITableViewD
             self.performSegue(withIdentifier: "goSettingDetail", sender: nil)
             
         case "購読RSS管理":
-            self.performSegue(withIdentifier: "goSettingDetail", sender: nil)
+            self.performSegue(withIdentifier: "goTable", sender: nil)
             
         case "文字サイズの変更":
             self.performSegue(withIdentifier: "goSettingDetail", sender: nil)

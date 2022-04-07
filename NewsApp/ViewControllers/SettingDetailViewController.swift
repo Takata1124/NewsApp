@@ -9,9 +9,10 @@ import UIKit
 
 class SettingDetailViewController: UIViewController {
     
-    
-    let appDelegate:AppDelegate = UIApplication.shared.delegate as! AppDelegate
+    let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
     let appDelegateWindow = UIApplication.shared.windows.first
+    
+    var selectCell: String = ""
     
     let letterSlider: UISlider = {
         let slider = UISlider(frame: CGRect(x:0, y:0, width:350, height:30))
@@ -25,8 +26,14 @@ class SettingDetailViewController: UIViewController {
     }()
     
     let valueLabel: UILabel = {
-        let label = UILabel(frame: CGRect(x: UIScreen.main.bounds.width / 2, y: 100, width: 100, height: 50))
-        label.backgroundColor = .white
+        let label = UILabel(frame: CGRect(x: UIScreen.main.bounds.width / 2 - 50, y: 300, width: 100, height: 50))
+        label.textAlignment = .center
+        return label
+    }()
+    
+    let modeLabel: UILabel = {
+        let label = UILabel(frame: CGRect(x: UIScreen.main.bounds.width / 2 - 50, y: 300, width: 100, height: 50))
+        label.textAlignment = .center
         return label
     }()
     
@@ -34,6 +41,19 @@ class SettingDetailViewController: UIViewController {
         let uiswitch = UISwitch(frame: CGRect(x: 0, y: 0 , width: 49, height: 31))
         uiswitch.addTarget(self, action: #selector(changeSwitch), for: UIControl.Event.valueChanged)
         return uiswitch
+    }()
+    
+    let tableSwitch: UISwitch = {
+        let tableswitch = UISwitch(frame: CGRect(x: 0, y: 0 , width: 49, height: 31))
+        tableswitch.addTarget(self, action: #selector(tableChange(sender:)), for: UIControl.Event.valueChanged)
+        return tableswitch
+    }()
+    
+    var tableCategory: UILabel = {
+        let label = UILabel(frame: CGRect(x: UIScreen.main.bounds.width / 2 - 150, y: 300, width: 300, height: 50))
+        label.text = "TableView"
+        label.textAlignment = .center
+        return label
     }()
     
     private var currentValue: String = "" {
@@ -47,31 +67,70 @@ class SettingDetailViewController: UIViewController {
         super.viewDidLoad()
         
         view.backgroundColor = UIColor.modeColor
-        
-        view.addSubview(letterSlider)
-        view.addSubview(valueLabel)
-        //        view.addSubview(uiswitch)
     }
     
     override func viewDidLayoutSubviews() {
         
-        letterSlider.value = Float(appDelegate.letterSize)
-        letterSlider.center = view.center
+        selectCategorySetting(selectCell: self.selectCell)
+    }
+    
+    private func selectCategorySetting(selectCell: String) {
         
-        valueLabel.text = String(appDelegate.letterSize)
-        
-        //        uiswitchLayout()
+        switch selectCell {
+            
+        case "一覧画面表示切り替え":
+            tableswitchLayout()
+            
+        case "RSS取得間隔":
+            print("RSS取得間隔")
+            
+        case "購読RSS管理":
+            print("購読RSS管理")
+            
+        case "文字サイズの変更":
+            uisliderLayout()
+            
+        case "ダークモード":
+            uiswitchLayout()
+            
+        default:
+            print("default")
+        }
     }
     
     private func uiswitchLayout() {
+        
+        view.addSubview(modeLabel)
+        view.addSubview(uiswitch)
         
         uiswitch.center = view.center
         
         if appDelegateWindow?.overrideUserInterfaceStyle == .dark {
             uiswitch.isOn = true
+            modeLabel.text = "dark"
         } else {
             uiswitch.isOn = false
+            modeLabel.text = "light"
         }
+    }
+    
+    private func uisliderLayout() {
+        
+        view.addSubview(letterSlider)
+        view.addSubview(valueLabel)
+        
+        letterSlider.value = Float(appDelegate.letterSize)
+        letterSlider.center = view.center
+        
+        valueLabel.text = String(appDelegate.letterSize)
+    }
+    
+    private func tableswitchLayout() {
+        
+        view.addSubview(tableSwitch)
+        view.addSubview(tableCategory)
+        
+        tableSwitch.center = view.center
     }
     
     @objc func changeSwitch(sender: UISwitch) {
@@ -88,9 +147,19 @@ class SettingDetailViewController: UIViewController {
         }
     }
     
+    @objc func tableChange(sender: UISwitch) {
+        
+        let onCheck: Bool = sender.isOn
+        
+        if onCheck {
+            tableCategory.text = "CollectionView"
+        } else {
+            tableCategory.text = "TableView"
+        }
+    }
+    
     @objc func onStartPointlabel(_ sender:UISlider!) {
         
-        //        print(sender.value)
         appDelegate.letterSize = Int(sender.value)
         currentValue = String(String(sender.value).prefix(2))
     }
