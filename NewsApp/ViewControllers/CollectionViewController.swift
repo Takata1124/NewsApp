@@ -13,10 +13,11 @@ class CollectionViewController: UIViewController {
     
     @IBOutlet weak var toggleButton: UIBarButtonItem!
     @IBOutlet weak var collectionView: UICollectionView!
-    
-    private var cellType: CellType = .List
+//
+//    private var cellType: CellType = .List
     
     private let userDefaults = UserDefaults.standard
+    private let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
     
     let bounds = UIScreen.main.bounds
     let nib = UINib(nibName: "CollectionViewCell", bundle: nil)
@@ -46,8 +47,15 @@ class CollectionViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        
+
         collectionView.reloadData()
+        
+        print("reload")
+        
+        DispatchQueue.main.async {
+            
+            self.exchangeAnimation()
+        }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -70,10 +78,9 @@ class CollectionViewController: UIViewController {
         let feed = rssFeed()
         navigationItem.title = feed
         
-        toggleButton.title = cellType.toggleButtonItemTitle
+        toggleButton.title = appDelegate.cellType.toggleButtonItemTitle
  
-        collectionView.collectionViewLayout = cellType.layoutFromSuperviewRect(rect: bounds)
-        
+        collectionView.collectionViewLayout = appDelegate.cellType.layoutFromSuperviewRect(rect: bounds)
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView!.register(nib, forCellWithReuseIdentifier: "Cell")
@@ -119,35 +126,40 @@ class CollectionViewController: UIViewController {
         
         self.performSegue(withIdentifier: "goSetting", sender: nil)
     }
-    
-    
+
     @IBAction func collectionChange(_ sender: Any) {
         
-        switch cellType {
+        switch appDelegate.cellType {
             
         case .List:
-            cellType = .Grid
+            appDelegate.cellType = .Grid
+            
         case .Grid:
-            cellType = .List
+            appDelegate.cellType = .List
         }
+        
+        exchangeAnimation()
+    }
+    
+    private func exchangeAnimation() {
         
         UIView.animate(withDuration: 0.5, animations: { [weak self] in
             
             guard let `self` = self else { return }
             
-            self.collectionView?.collectionViewLayout = self.cellType.layoutFromSuperviewRect(rect: self.collectionView!.frame)
-            
+            self.collectionView?.collectionViewLayout = self.appDelegate.cellType.layoutFromSuperviewRect(rect: self.collectionView!.frame)
             self.collectionView?.visibleCells.forEach { cell in
                 
                 guard let _cell = cell as? CollectionViewCell else { return }
                 
-                _cell.updateConstraintsWithCellType(cellType: self.cellType)
+                _cell.updateConstraintsWithCellType(cellType: self.appDelegate.cellType)
             }
             
         }, completion: { [weak self] _ in
+            
             guard let `self` = self else { return }
             
-            self.toggleButton.title = self.cellType.toggleButtonItemTitle
+            self.toggleButton.title = self.appDelegate.cellType.toggleButtonItemTitle
         })
     }
 }
@@ -163,7 +175,10 @@ extension CollectionViewController: UICollectionViewDataSource, UICollectionView
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! CollectionViewCell
         
         let feeditem = feedItems[indexPath.row]
-        cell.configureWithItem(item: feeditem, cellType: cellType)
+
+        cell.textLabel.font = UIFont.systemFont(ofSize: CGFloat(appDelegate.letterSize))
+        cell.dateLabel.font = UIFont.systemFont(ofSize: CGFloat(10))
+        cell.configureWithItem(item: feeditem, cellType: appDelegate.cellType)
         
         return cell
     }

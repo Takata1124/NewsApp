@@ -31,11 +31,11 @@ extension CollectionViewController: XMLParserDelegate {
     func parserDidStartDocument(_ parser: XMLParser) {
         print("XML解析開始しました")
     }
-
+    
     func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String] = [:]) {
         
         self.currrentElementName = nil
-
+        
         if elementName == item_name {
             self.feedItems.append(FeedItem())
         } else {
@@ -59,7 +59,17 @@ extension CollectionViewController: XMLParserDelegate {
                 lastItem.url = string
                 
             case pubDate_name:
-                lastItem.pubDate = string
+                let dateFormatter = DateFormatter()
+                dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+                dateFormatter.dateFormat = "EEE, dd MMM yyyy hh:mm:ss Z"
+                let date = dateFormatter.date(from: string) ?? Date()
+                dateFormatter.locale = NSLocale(localeIdentifier: "ja_JP") as Locale
+                dateFormatter.dateFormat = "yyyy/MM/dd HH:mm Z"
+                let dateString = dateFormatter.string(from: date)
+
+                print(dateString.prefix(16))
+                
+                lastItem.pubDate = String(dateString.prefix(16))
                 
             default:
                 break

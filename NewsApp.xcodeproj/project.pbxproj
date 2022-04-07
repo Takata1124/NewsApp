@@ -198,6 +198,7 @@
 				68BF678927F972CD00A451C3 /* ViewControllers */,
 				68BF674427F723A300A451C3 /* AppDelegate.swift */,
 				68BF674627F723A300A451C3 /* SceneDelegate.swift */,
+				68BF677C27F762D400A451C3 /* ListViewController.swift */,
 				688EB31E27FEA102008FB693 /* CollectionViewCell.xib */,
 				68BF674A27F723A300A451C3 /* Main.storyboard */,
 				68BF674D27F723A400A451C3 /* Assets.xcassets */,
@@ -231,12 +232,11 @@
 				68BF677427F72EFB00A451C3 /* LoginViewController.swift */,
 				68BF677627F745D500A451C3 /* SignUpViewController.swift */,
 				68BF677A27F75BAC00A451C3 /* RssViewController.swift */,
-				68BF677C27F762D400A451C3 /* ListViewController.swift */,
+				688EB31B27FE8DA7008FB693 /* CollectionViewController.swift */,
 				68BF678027F84C7B00A451C3 /* ArticleViewController.swift */,
 				68BF678227F8845A00A451C3 /* SettingViewController.swift */,
 				68BF678427F884F400A451C3 /* SettingDetailViewController.swift */,
 				688EB31327FADB98008FB693 /* NavigationViewController.swift */,
-				688EB31B27FE8DA7008FB693 /* CollectionViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";

@@ -192,14 +192,14 @@
                                 <rect key="frame" x="0.0" y="787" width="414" height="75"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Wmp-l8-IAh">
-                                        <rect key="frame" x="0.0" y="22" width="83" height="31"/>
+                                        <rect key="frame" x="0.0" y="22" width="103.5" height="31"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" title="NEW">
                                             <color key="baseForegroundColor" name="modeTextColor"/>
                                         </buttonConfiguration>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Nrp-hG-20Y">
-                                        <rect key="frame" x="83" y="0.0" width="82.5" height="75"/>
+                                        <rect key="frame" x="103.5" y="0.0" width="103.5" height="75"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="75" id="hck-Uu-h9O"/>
                                         </constraints>
@@ -209,21 +209,14 @@
                                         </buttonConfiguration>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FtU-jt-66b">
-                                        <rect key="frame" x="165.5" y="22" width="83" height="31"/>
+                                        <rect key="frame" x="207" y="22" width="103.5" height="31"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" image="checkmark" catalog="system">
                                             <color key="baseForegroundColor" name="modeTextColor"/>
                                         </buttonConfiguration>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SaP-yr-7Gv">
-                                        <rect key="frame" x="248.5" y="22" width="82.5" height="31"/>
-                                        <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" image="square.and.arrow.up" catalog="system">
-                                            <color key="baseForegroundColor" name="modeTextColor"/>
-                                        </buttonConfiguration>
-                                    </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rom-8p-KUe">
-                                        <rect key="frame" x="331" y="22" width="83" height="31"/>
+                                        <rect key="frame" x="310.5" y="22" width="103.5" height="31"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" image="gearshape" catalog="system">
                                             <color key="baseForegroundColor" name="modeTextColor"/>
@@ -284,109 +277,6 @@
             </objects>
             <point key="canvasLocation" x="3342" y="1209"/>
         </scene>
-        <!--List View Controller-->
-        <scene sceneID="bur-W3-AcW">
-            <objects>
-                <viewController storyboardIdentifier="ListStoryboard" useStoryboardIdentifierAsRestorationIdentifier="YES" id="hQt-iO-5Mh" customClass="ListViewController" customModule="NewsApp" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="h98-7y-kmE">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="Xee-tm-nYg">
-                                <rect key="frame" x="0.0" y="44" width="414" height="743"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="tableViewCell" textLabel="ziW-7j-1UV" style="IBUITableViewCellStyleDefault" id="F9g-YP-qjA">
-                                        <rect key="frame" x="0.0" y="44.5" width="414" height="43.5"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="F9g-YP-qjA" id="Rxq-uE-W8K">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="ziW-7j-1UV">
-                                                    <rect key="frame" x="20" y="0.0" width="374" height="43.5"/>
-                                                    <autoresizingMask key="autoresizingMask"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="0.0"/>
-                                                    <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                        </tableViewCellContentView>
-                                    </tableViewCell>
-                                </prototypes>
-                            </tableView>
-                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="6zc-GT-QMf">
-                                <rect key="frame" x="0.0" y="787" width="414" height="75"/>
-                                <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pHu-Yz-ksW">
-                                        <rect key="frame" x="0.0" y="22" width="83" height="31"/>
-                                        <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" title="NEW">
-                                            <color key="baseForegroundColor" name="modeTextColor"/>
-                                        </buttonConfiguration>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RTk-V0-fz5">
-                                        <rect key="frame" x="83" y="22" width="82.5" height="31"/>
-                                        <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" title="List">
-                                            <color key="baseForegroundColor" name="modeTextColor"/>
-                                        </buttonConfiguration>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="my4-8u-89s">
-                                        <rect key="frame" x="165.5" y="0.0" width="83" height="75"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="75" id="0bo-uI-Xa0"/>
-                                        </constraints>
-                                        <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" image="star.fill" catalog="system" title="">
-                                            <color key="baseForegroundColor" name="modeTextColor"/>
-                                        </buttonConfiguration>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Has-dM-sjd">
-                                        <rect key="frame" x="248.5" y="22" width="82.5" height="31"/>
-                                        <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" image="checkmark" catalog="system">
-                                            <color key="baseForegroundColor" name="modeTextColor"/>
-                                        </buttonConfiguration>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3PN-3z-uW8">
-                                        <rect key="frame" x="331" y="22" width="83" height="31"/>
-                                        <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" image="square.and.arrow.up" catalog="system">
-                                            <color key="baseForegroundColor" name="modeTextColor"/>
-                                        </buttonConfiguration>
-                                    </button>
-                                </subviews>
-                            </stackView>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="IF4-Qn-jI8"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <constraints>
-                            <constraint firstItem="IF4-Qn-jI8" firstAttribute="trailing" secondItem="Xee-tm-nYg" secondAttribute="trailing" id="1Vb-HV-mWj"/>
-                            <constraint firstItem="Xee-tm-nYg" firstAttribute="top" secondItem="IF4-Qn-jI8" secondAttribute="top" id="3Ap-VQ-xyD"/>
-                            <constraint firstItem="6zc-GT-QMf" firstAttribute="leading" secondItem="IF4-Qn-jI8" secondAttribute="leading" id="5Hq-oO-MGE"/>
-                            <constraint firstItem="Xee-tm-nYg" firstAttribute="leading" secondItem="IF4-Qn-jI8" secondAttribute="leading" id="Eci-bu-pPF"/>
-                            <constraint firstItem="6zc-GT-QMf" firstAttribute="top" secondItem="Xee-tm-nYg" secondAttribute="bottom" id="GiN-th-Qfi"/>
-                            <constraint firstItem="IF4-Qn-jI8" firstAttribute="bottom" secondItem="6zc-GT-QMf" secondAttribute="bottom" id="egy-rS-tEj"/>
-                            <constraint firstItem="IF4-Qn-jI8" firstAttribute="trailing" secondItem="6zc-GT-QMf" secondAttribute="trailing" id="lMJ-WU-tgV"/>
-                        </constraints>
-                    </view>
-                    <navigationItem key="navigationItem" id="4Rw-rY-wBT">
-                        <barButtonItem key="rightBarButtonItem" title="Item" image="gearshape" catalog="system" id="qzr-iQ-xpP">
-                            <connections>
-                                <action selector="goSettingView:" destination="hQt-iO-5Mh" id="Ps2-xC-RmK"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
-                    <connections>
-                        <outlet property="tableView" destination="Xee-tm-nYg" id="KZd-za-9LX"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="eaZ-vt-axm" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1219" y="1675"/>
-        </scene>
         <!--Article View Controller-->
         <scene sceneID="EdO-dZ-J90">
             <objects>
@@ -397,7 +287,11 @@
                         <viewLayoutGuide key="safeArea" id="3G3-Jo-QVX"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
-                    <navigationItem key="navigationItem" id="ves-Bw-HRS"/>
+                    <navigationItem key="navigationItem" id="ves-Bw-HRS">
+                        <barButtonItem key="rightBarButtonItem" title="Item" image="star" catalog="system" id="REw-Sw-MOm">
+                            <color key="tintColor" systemColor="labelColor"/>
+                        </barButtonItem>
+                    </navigationItem>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ROH-tN-5EY" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -593,11 +487,14 @@
     <resources>
         <image name="checkmark" catalog="system" width="128" height="114"/>
         <image name="gearshape" catalog="system" width="128" height="121"/>
-        <image name="square.and.arrow.up" catalog="system" width="115" height="128"/>
+        <image name="star" catalog="system" width="128" height="116"/>
         <image name="star.fill" catalog="system" width="128" height="116"/>
         <namedColor name="modeTextColor">
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
+        <systemColor name="labelColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
         <systemColor name="opaqueSeparatorColor">
             <color red="0.77647058823529413" green="0.77647058823529413" blue="0.78431372549019607" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>

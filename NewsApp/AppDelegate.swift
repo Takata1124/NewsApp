@@ -12,6 +12,7 @@ import AuthenticationServices
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var letterSize: Int = 13
+    var cellType: CellType = .List
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.

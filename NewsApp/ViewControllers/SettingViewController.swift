@@ -7,7 +7,7 @@
 
 import UIKit
 
-class SettingViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class SettingViewController: UIViewController {
     
     @IBOutlet weak var settingTableView: UITableView!
     
@@ -39,33 +39,7 @@ class SettingViewController: UIViewController, UITableViewDelegate, UITableViewD
             settingDetailViewController.selectCell = self.selectCell
         }
     }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
-        return settingList.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        let cell = settingTableView.dequeueReusableCell(withIdentifier: "settingTableViewCell", for: indexPath)
-        cell.textLabel?.text = settingList[indexPath.row]
-        cell.textLabel?.font = UIFont.systemFont(ofSize: CGFloat(appDelegate.letterSize))
-        
-        return cell
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        tableView.deselectRow(at: indexPath, animated: true)
-        self.selectCell = settingList[indexPath.row]
-        
-        selectView(selectCell: selectCell)
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 70
-    }
-    
+
     private func recodeUserdefaults() {
         
         guard let data: Data = userDefaults.value(forKey: "User") as? Data else { return }
@@ -101,5 +75,34 @@ class SettingViewController: UIViewController, UITableViewDelegate, UITableViewD
         default:
             print("default")
         }
+    }
+}
+
+extension SettingViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
+        return settingList.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        let cell = settingTableView.dequeueReusableCell(withIdentifier: "settingTableViewCell", for: indexPath)
+        cell.textLabel?.text = settingList[indexPath.row]
+        cell.textLabel?.font = UIFont.systemFont(ofSize: CGFloat(appDelegate.letterSize))
+        
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        tableView.deselectRow(at: indexPath, animated: true)
+        self.selectCell = settingList[indexPath.row]
+        
+        selectView(selectCell: selectCell)
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 70
     }
 }

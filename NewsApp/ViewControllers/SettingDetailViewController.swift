@@ -9,8 +9,8 @@ import UIKit
 
 class SettingDetailViewController: UIViewController {
     
-    let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
-    let appDelegateWindow = UIApplication.shared.windows.first
+    private let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
+    private let appDelegateWindow = UIApplication.shared.windows.first
     
     var selectCell: String = ""
     
@@ -130,6 +130,14 @@ class SettingDetailViewController: UIViewController {
         view.addSubview(tableSwitch)
         view.addSubview(tableCategory)
         
+        if appDelegate.cellType == .Grid {
+            tableSwitch.isOn = true
+            tableCategory.text = "CollectionView"
+        } else {
+            tableSwitch.isOn = false
+            tableCategory.text = "TableView"
+        }
+        
         tableSwitch.center = view.center
     }
     
@@ -152,8 +160,10 @@ class SettingDetailViewController: UIViewController {
         let onCheck: Bool = sender.isOn
         
         if onCheck {
+            appDelegate.cellType = .Grid
             tableCategory.text = "CollectionView"
         } else {
+            appDelegate.cellType = .List
             tableCategory.text = "TableView"
         }
     }
