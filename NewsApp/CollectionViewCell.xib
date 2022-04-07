@@ -15,24 +15,9 @@
             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                 <rect key="frame" x="0.0" y="0.0" width="454" height="132"/>
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                <subviews>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RNn-mO-cfg">
-                        <rect key="frame" x="206" y="55.5" width="42" height="21"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                        <nil key="textColor"/>
-                        <nil key="highlightedColor"/>
-                    </label>
-                </subviews>
             </view>
             <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
-            <constraints>
-                <constraint firstItem="RNn-mO-cfg" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="7sY-fX-IQ4"/>
-                <constraint firstItem="RNn-mO-cfg" firstAttribute="centerY" secondItem="gTV-IL-0wX" secondAttribute="centerY" id="YFr-VT-lHe"/>
-            </constraints>
             <size key="customSize" width="454" height="132"/>
-            <connections>
-                <outlet property="textLabel" destination="RNn-mO-cfg" id="0rl-jr-Y5s"/>
-            </connections>
             <point key="canvasLocation" x="424.63768115942031" y="87.053571428571431"/>
         </collectionViewCell>
     </objects>

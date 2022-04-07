@@ -86,7 +86,7 @@ class SettingViewController: UIViewController, UITableViewDelegate, UITableViewD
             self.performSegue(withIdentifier: "goSettingDetail", sender: nil)
             
         case "購読RSS管理":
-            self.performSegue(withIdentifier: "goTable", sender: nil)
+            self.performSegue(withIdentifier: "goSettingDetail", sender: nil)
             
         case "文字サイズの変更":
             self.performSegue(withIdentifier: "goSettingDetail", sender: nil)

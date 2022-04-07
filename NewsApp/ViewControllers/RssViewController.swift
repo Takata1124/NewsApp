@@ -29,14 +29,6 @@ class RssViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         tableView.separatorColor = .black
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
-        if segue.identifier == "goList2" {
-            let listView = segue.destination as! ListViewController
-            listView.selectFeed = self.selectFeed
-        }
-    }
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         return topicModel.topicArray.count
@@ -60,7 +52,7 @@ class RssViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         guard let data: Data = try? JSONEncoder().encode(user) else { return }
         userDefaults.setValue(data, forKey: "User")
         
-        self.performSegue(withIdentifier: "goList2", sender: nil)
+        self.performSegue(withIdentifier: "goCollection", sender: nil)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

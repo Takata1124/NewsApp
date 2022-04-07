@@ -15,6 +15,8 @@
 		688EB31C27FE8DA7008FB693 /* CollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688EB31B27FE8DA7008FB693 /* CollectionViewController.swift */; };
 		688EB31F27FEA102008FB693 /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688EB31D27FEA102008FB693 /* CollectionViewCell.swift */; };
 		688EB32027FEA102008FB693 /* CollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 688EB31E27FEA102008FB693 /* CollectionViewCell.xib */; };
+		688EB32227FF25BD008FB693 /* CellType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688EB32127FF25BD008FB693 /* CellType.swift */; };
+		688EB32527FF26A8008FB693 /* Extensions_CollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688EB32427FF26A8008FB693 /* Extensions_CollectionViewController.swift */; };
 		68BF674527F723A300A451C3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BF674427F723A300A451C3 /* AppDelegate.swift */; };
 		68BF674727F723A300A451C3 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BF674627F723A300A451C3 /* SceneDelegate.swift */; };
 		68BF674927F723A300A451C3 /* SplashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BF674827F723A300A451C3 /* SplashViewController.swift */; };
@@ -67,6 +69,8 @@
 		688EB31B27FE8DA7008FB693 /* CollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewController.swift; sourceTree = "<group>"; };
 		688EB31D27FEA102008FB693 /* CollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
 		688EB31E27FEA102008FB693 /* CollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CollectionViewCell.xib; sourceTree = "<group>"; };
+		688EB32127FF25BD008FB693 /* CellType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellType.swift; sourceTree = "<group>"; };
+		688EB32427FF26A8008FB693 /* Extensions_CollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions_CollectionViewController.swift; sourceTree = "<group>"; };
 		68BF674127F723A300A451C3 /* NewsApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NewsApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		68BF674427F723A300A451C3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		68BF674627F723A300A451C3 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -144,6 +148,23 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		688EB32327FF2665008FB693 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				688EB31527FCAE72008FB693 /* Extensions_UIColor.swift */,
+				688EB32427FF26A8008FB693 /* Extensions_CollectionViewController.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		688EB32627FF2DCC008FB693 /* ViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				688EB31D27FEA102008FB693 /* CollectionViewCell.swift */,
+			);
+			path = ViewCell;
+			sourceTree = "<group>";
+		};
 		68BF673827F723A300A451C3 = {
 			isa = PBXGroup;
 			children = (
@@ -170,13 +191,13 @@
 			isa = PBXGroup;
 			children = (
 				68BF679927F9DBAB00A451C3 /* NewsApp.entitlements */,
-				688EB31527FCAE72008FB693 /* Extensions_UIColor.swift */,
+				688EB32627FF2DCC008FB693 /* ViewCell */,
+				688EB32327FF2665008FB693 /* Extensions */,
 				68BF679C27FAA6BF00A451C3 /* Validator */,
 				68BF678A27F972EC00A451C3 /* Model */,
 				68BF678927F972CD00A451C3 /* ViewControllers */,
 				68BF674427F723A300A451C3 /* AppDelegate.swift */,
 				68BF674627F723A300A451C3 /* SceneDelegate.swift */,
-				688EB31D27FEA102008FB693 /* CollectionViewCell.swift */,
 				688EB31E27FEA102008FB693 /* CollectionViewCell.xib */,
 				68BF674A27F723A300A451C3 /* Main.storyboard */,
 				68BF674D27F723A400A451C3 /* Assets.xcassets */,
@@ -226,6 +247,7 @@
 				68BF678627F8AA1300A451C3 /* FeedItem.swift */,
 				68BF679A27FAA51500A451C3 /* User.swift */,
 				68BF677E27F7796200A451C3 /* TopicModel.swift */,
+				688EB32127FF25BD008FB693 /* CellType.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -501,6 +523,7 @@
 				68BF677F27F7796200A451C3 /* TopicModel.swift in Sources */,
 				68BF678C27F9BFF900A451C3 /* Validator.swift in Sources */,
 				68BF678127F84C7B00A451C3 /* ArticleViewController.swift in Sources */,
+				688EB32527FF26A8008FB693 /* Extensions_CollectionViewController.swift in Sources */,
 				688EB31F27FEA102008FB693 /* CollectionViewCell.swift in Sources */,
 				68BF679B27FAA51500A451C3 /* User.swift in Sources */,
 				68BF678327F8845A00A451C3 /* SettingViewController.swift in Sources */,
@@ -514,6 +537,7 @@
 				68BF67A427FAA9E400A451C3 /* IdValidator.swift in Sources */,
 				68BF679E27FAA6E900A451C3 /* EmailAddressValidator.swift in Sources */,
 				68BF677727F745D500A451C3 /* SignUpViewController.swift in Sources */,
+				688EB32227FF25BD008FB693 /* CellType.swift in Sources */,
 				68BF677D27F762D400A451C3 /* ListViewController.swift in Sources */,
 				68BF67A227FAA74F00A451C3 /* NameValidator.swift in Sources */,
 				688EB31627FCAE72008FB693 /* Extensions_UIColor.swift in Sources */,

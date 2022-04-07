@@ -50,7 +50,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         self.userPassword = self.user!.password
         
         if self.user!.login == true {
-            performSegue(withIdentifier: "goList", sender: nil)
+            performSegue(withIdentifier: "goCollection", sender: nil)
         }
         else {
             return
@@ -126,7 +126,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             let recodeUser: User = User(id: self.user!.id, name: self.user!.name, email: self.user!.email, password: self.user!.password, feed: self.user!.feed, login: true)
             guard let data: Data = try? JSONEncoder().encode(recodeUser) else { return }
             userDefaults.setValue(data, forKey: "User")
-            performSegue(withIdentifier: "goList", sender: nil)
+            
+            performSegue(withIdentifier: "goCollection", sender: nil)
         }
     }
     

@@ -9,43 +9,64 @@ import UIKit
 
 class CollectionViewCell: UICollectionViewCell {
     
+    let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
+    
     static let identifier = "collectionViewCell"
     
-    private var item: Item?
+    private var feedItem: FeedItem?
     
-    @IBOutlet weak var textLabel: UILabel!
+    let textLabel: UILabel = {
+       let label = UILabel()
+        label.numberOfLines = 0
+        return label
+    }()
     
     override func awakeFromNib() {
         super.awakeFromNib()
+
+        self.textLabel.font = UIFont.systemFont(ofSize: CGFloat(appDelegate.letterSize))
         
         self.layer.borderWidth = 0.5
         self.layer.borderColor = UIColor.dynamicColor(light: .black, dark: .white).cgColor
+  
+        self.addSubview(textLabel)
     }
     
-    func configureWithItem(item: Item, cellType: CellType) {
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        
+        self.layer.borderColor = UIColor.dynamicColor(light: .black, dark: .white).cgColor
+        
+    }
+    
+    func configureWithItem(item: FeedItem, cellType: CellType) {
 
-        self.item = item
+        self.feedItem = item
         updateConstraintsWithCellType(cellType: cellType)
+        
     }
     
     func updateConstraintsWithCellType(cellType: CellType) {
         
-        if let item = self.item {
-            textLabel?.text = item.id
+        if let item = self.feedItem {
+            textLabel.text = item.title
             //                nameLabel?.text = item.name
         }
         
         switch cellType {
         case .List:
-            print("good")
+            textLabel.frame = CGRect(x: self.bounds.width / 2 - 150, y: self.bounds.height / 2 - 25, width: 300, height: 50)
+            textLabel.textAlignment = .center
 //            backgroundColor = UIColor.white
 //            idLabel.textColor = UIColor.red
 //            nameLabel.textColor = UIColor.black
 //            nameLabelCenterXLayoutConstraint?.constant = -100
 //            nameLabelCenterYLayoutConstraint?.constant = 0
 //            bottomView.hidden = false
+            
         case .Grid:
-            print("great")
+            textLabel.frame = CGRect(x: self.bounds.width / 2 - 75, y: self.bounds.height / 2 -  25, width: 150, height: 50)
+            textLabel.textAlignment = .left
 //            backgroundColor = UIColor.darkGray
 //            idLabel.textColor = UIColor.blue
 //            nameLabel.textColor = UIColor.brown

@@ -11,4 +11,5 @@ class FeedItem {
     
     var title: String!
     var url: String!
+    var pubDate: String!
 }
