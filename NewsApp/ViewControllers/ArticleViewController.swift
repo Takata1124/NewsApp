@@ -10,16 +10,26 @@ import WebKit
 
 class ArticleViewController: UIViewController {
     
+    var titleName: String = ""
     var articleUrl: String = ""
-    var webView: WKWebView!
+    let webView = WKWebView()
     
+    @IBOutlet weak var tempView: UIView!
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        webView = WKWebView(frame: view.frame)
-        view.addSubview(webView)
-   
+        navigationItem.title = "\(titleName)"
+        
+        view.addSubview(tempView)
+        tempView.addSubview(webView)
+//
         let request = URLRequest(url: URL(string: "\(articleUrl)")!)
         webView.load(request)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        
+        webView.frame = tempView.bounds
     }
 }

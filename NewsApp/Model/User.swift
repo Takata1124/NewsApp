@@ -15,4 +15,5 @@ struct User: Codable {
     let password: String
     let feed: String
     let login: Bool
+//    let firstLogin: Bool
 }

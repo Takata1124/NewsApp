@@ -17,19 +17,19 @@ extension CollectionViewController: XMLParserDelegate {
         }
         
         let parser = XMLParser(contentsOf: url)
+        
         if parser != nil {
             
             self.parser = parser
             self.parser?.delegate = self
             self.parser?.parse()
-            
         } else {
             print("failed to parse XML")
         }
     }
     
     func parserDidStartDocument(_ parser: XMLParser) {
-        print("XML解析開始しました")
+//        print("XML解析開始しました")
     }
     
     func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String] = [:]) {
@@ -53,7 +53,7 @@ extension CollectionViewController: XMLParserDelegate {
                 
             case title_name:
                 let tempString = lastItem.title
-                lastItem.title = (tempString != nil) ? tempString! + string:  string
+                lastItem.title = (tempString != nil) ? tempString! + string: string
                 
             case link_name:
                 lastItem.url = string
@@ -66,9 +66,6 @@ extension CollectionViewController: XMLParserDelegate {
                 dateFormatter.locale = NSLocale(localeIdentifier: "ja_JP") as Locale
                 dateFormatter.dateFormat = "yyyy/MM/dd HH:mm Z"
                 let dateString = dateFormatter.string(from: date)
-
-                print(dateString.prefix(16))
-                
                 lastItem.pubDate = String(dateString.prefix(16))
                 
             default:

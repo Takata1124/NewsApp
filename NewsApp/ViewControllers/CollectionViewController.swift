@@ -6,15 +6,12 @@
 //
 
 import UIKit
-
-
+import RealmSwift
 
 class CollectionViewController: UIViewController {
     
     @IBOutlet weak var toggleButton: UIBarButtonItem!
     @IBOutlet weak var collectionView: UICollectionView!
-//
-//    private var cellType: CellType = .List
     
     private let userDefaults = UserDefaults.standard
     private let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
@@ -35,6 +32,9 @@ class CollectionViewController: UIViewController {
     let pubDate_name = "pubDate"
     
     var articleUrl: String = ""
+    var titleName: String = ""
+    
+    let realm = try! Realm()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,16 +44,14 @@ class CollectionViewController: UIViewController {
         usergetFeed()
         getFeedUrl(self.selectFeed)
         getXMLData(urlString: feedUrl)
+        fetchFeedDate()
     }
     
     override func viewWillAppear(_ animated: Bool) {
-
+        
         collectionView.reloadData()
         
-        print("reload")
-        
         DispatchQueue.main.async {
-            
             self.exchangeAnimation()
         }
     }
@@ -63,6 +61,7 @@ class CollectionViewController: UIViewController {
         if segue.identifier == "goArticle" {
             let articleView = segue.destination as! ArticleViewController
             articleView.articleUrl = self.articleUrl
+            articleView.titleName = self.titleName
         }
     }
     
@@ -79,7 +78,7 @@ class CollectionViewController: UIViewController {
         navigationItem.title = feed
         
         toggleButton.title = appDelegate.cellType.toggleButtonItemTitle
- 
+        
         collectionView.collectionViewLayout = appDelegate.cellType.layoutFromSuperviewRect(rect: bounds)
         collectionView.delegate = self
         collectionView.dataSource = self
@@ -126,14 +125,13 @@ class CollectionViewController: UIViewController {
         
         self.performSegue(withIdentifier: "goSetting", sender: nil)
     }
-
+    
     @IBAction func collectionChange(_ sender: Any) {
         
         switch appDelegate.cellType {
             
         case .List:
             appDelegate.cellType = .Grid
-            
         case .Grid:
             appDelegate.cellType = .List
         }
@@ -158,9 +156,29 @@ class CollectionViewController: UIViewController {
         }, completion: { [weak self] _ in
             
             guard let `self` = self else { return }
-            
             self.toggleButton.title = self.appDelegate.cellType.toggleButtonItemTitle
         })
+    }
+    
+    private func saveFeedData(feedItems: [FeedItem]) {
+        
+        feedItems.forEach { item in
+            
+            let realmFeedItem = RealmFeedItem()
+            realmFeedItem.title = item.title
+            realmFeedItem.url = item.url
+            realmFeedItem.pubDate = item.pubDate
+            
+            try! realm.write({
+                realm.add(realmFeedItem)
+            })
+        }
+    }
+    
+    private func fetchFeedDate() {
+        
+        let result = realm.objects(RealmFeedItem.self)
+        print(result)
     }
 }
 
@@ -175,7 +193,7 @@ extension CollectionViewController: UICollectionViewDataSource, UICollectionView
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! CollectionViewCell
         
         let feeditem = feedItems[indexPath.row]
-
+        
         cell.textLabel.font = UIFont.systemFont(ofSize: CGFloat(appDelegate.letterSize))
         cell.dateLabel.font = UIFont.systemFont(ofSize: CGFloat(10))
         cell.configureWithItem(item: feeditem, cellType: appDelegate.cellType)
@@ -186,8 +204,8 @@ extension CollectionViewController: UICollectionViewDataSource, UICollectionView
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         self.articleUrl = feedItems[indexPath.row].url
+        self.titleName = feedItems[indexPath.row].title
         
         performSegue(withIdentifier: "goArticle", sender: nil)
     }
 }
-

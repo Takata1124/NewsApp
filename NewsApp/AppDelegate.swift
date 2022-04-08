@@ -19,7 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         UINavigationBar.appearance().tintColor = UIColor.modeTextColor  
         UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: UIColor.modeTextColor]
-        UINavigationBar.appearance().barTintColor = UIColor.lightGray
+//        UINavigationBar.appearance().barTintColor = UIColor.lightGray
 
         return true
     }

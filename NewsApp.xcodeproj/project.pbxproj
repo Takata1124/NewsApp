@@ -17,6 +17,7 @@
 		688EB32027FEA102008FB693 /* CollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 688EB31E27FEA102008FB693 /* CollectionViewCell.xib */; };
 		688EB32227FF25BD008FB693 /* CellType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688EB32127FF25BD008FB693 /* CellType.swift */; };
 		688EB32527FF26A8008FB693 /* Extensions_CollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688EB32427FF26A8008FB693 /* Extensions_CollectionViewController.swift */; };
+		688EB32B27FFEEE1008FB693 /* RealmFeedItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688EB32A27FFEEE1008FB693 /* RealmFeedItem.swift */; };
 		68BF674527F723A300A451C3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BF674427F723A300A451C3 /* AppDelegate.swift */; };
 		68BF674727F723A300A451C3 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BF674627F723A300A451C3 /* SceneDelegate.swift */; };
 		68BF674927F723A300A451C3 /* SplashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BF674827F723A300A451C3 /* SplashViewController.swift */; };
@@ -71,6 +72,7 @@
 		688EB31E27FEA102008FB693 /* CollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CollectionViewCell.xib; sourceTree = "<group>"; };
 		688EB32127FF25BD008FB693 /* CellType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellType.swift; sourceTree = "<group>"; };
 		688EB32427FF26A8008FB693 /* Extensions_CollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions_CollectionViewController.swift; sourceTree = "<group>"; };
+		688EB32A27FFEEE1008FB693 /* RealmFeedItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmFeedItem.swift; sourceTree = "<group>"; };
 		68BF674127F723A300A451C3 /* NewsApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NewsApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		68BF674427F723A300A451C3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		68BF674627F723A300A451C3 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -248,6 +250,7 @@
 				68BF679A27FAA51500A451C3 /* User.swift */,
 				68BF677E27F7796200A451C3 /* TopicModel.swift */,
 				688EB32127FF25BD008FB693 /* CellType.swift */,
+				688EB32A27FFEEE1008FB693 /* RealmFeedItem.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -523,6 +526,7 @@
 				68BF677F27F7796200A451C3 /* TopicModel.swift in Sources */,
 				68BF678C27F9BFF900A451C3 /* Validator.swift in Sources */,
 				68BF678127F84C7B00A451C3 /* ArticleViewController.swift in Sources */,
+				688EB32B27FFEEE1008FB693 /* RealmFeedItem.swift in Sources */,
 				688EB32527FF26A8008FB693 /* Extensions_CollectionViewController.swift in Sources */,
 				688EB31F27FEA102008FB693 /* CollectionViewCell.swift in Sources */,
 				68BF679B27FAA51500A451C3 /* User.swift in Sources */,
