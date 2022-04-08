@@ -192,11 +192,12 @@
                                 <rect key="frame" x="0.0" y="787" width="414" height="75"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Wmp-l8-IAh">
-                                        <rect key="frame" x="0.0" y="22" width="103.5" height="31"/>
+                                        <rect key="frame" x="0.0" y="30.5" width="103.5" height="14"/>
                                         <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" title="NEW">
-                                            <color key="baseForegroundColor" name="modeTextColor"/>
-                                        </buttonConfiguration>
+                                        <buttonConfiguration key="configuration" style="plain"/>
+                                        <connections>
+                                            <action selector="newOrder:" destination="QBX-42-9ku" eventType="touchUpInside" id="sZD-uj-Wjh"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Nrp-hG-20Y">
                                         <rect key="frame" x="103.5" y="0.0" width="103.5" height="75"/>
@@ -252,6 +253,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="collectionView" destination="x9a-6d-0Xh" id="rjK-mn-SBE"/>
+                        <outlet property="orderButton" destination="Wmp-l8-IAh" id="VFR-2s-6Xk"/>
                         <outlet property="toggleButton" destination="PdL-nR-b0d" id="pZO-OU-thQ"/>
                         <segue destination="iTw-sR-Pai" kind="show" identifier="goSetting" id="g4p-2m-1Qa"/>
                         <segue destination="auD-8P-aW4" kind="show" identifier="goArticle" id="P9l-Iz-hfT"/>
@@ -294,6 +296,9 @@
                                         <buttonConfiguration key="configuration" style="plain" image="arrowshape.turn.up.left.fill" catalog="system">
                                             <color key="baseForegroundColor" name="modeTextColor"/>
                                         </buttonConfiguration>
+                                        <connections>
+                                            <action selector="backViewAction:" destination="auD-8P-aW4" eventType="touchUpInside" id="ayT-Sz-zyv"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ze9-CT-9dD">
                                         <rect key="frame" x="138" y="0.0" width="138" height="75"/>

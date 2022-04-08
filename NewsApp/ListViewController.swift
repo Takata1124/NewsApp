@@ -140,7 +140,7 @@ extension ListViewController: XMLParserDelegate {
         self.currrentElementName = nil
 
         if elementName == item_name {
-            self.feedItems.append(FeedItem())
+            self.feedItems.append(FeedItem(title: "", url: "", pubDate: ""))
         } else {
             currrentElementName = elementName
         }

@@ -67,6 +67,7 @@ class SettingDetailViewController: UIViewController {
         super.viewDidLoad()
         
         view.backgroundColor = UIColor.modeColor
+        navigationItem.title = "\(selectCell)"
     }
     
     override func viewDidLayoutSubviews() {

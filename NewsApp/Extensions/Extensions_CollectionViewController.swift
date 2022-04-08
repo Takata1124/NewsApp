@@ -29,7 +29,7 @@ extension CollectionViewController: XMLParserDelegate {
     }
     
     func parserDidStartDocument(_ parser: XMLParser) {
-//        print("XML解析開始しました")
+        print("XML解析開始しました")
     }
     
     func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String] = [:]) {
@@ -37,7 +37,7 @@ extension CollectionViewController: XMLParserDelegate {
         self.currrentElementName = nil
         
         if elementName == item_name {
-            self.feedItems.append(FeedItem())
+            self.feedItems.append(FeedItem(title: "", url: "", pubDate: ""))
         } else {
             currrentElementName = elementName
         }

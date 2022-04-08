@@ -6,16 +6,24 @@
 //
 
 import UIKit
+import RealmSwift
 
-class SettingViewController: UIViewController {
+protocol DeleteProtocol {
+    
+    func deleteData()
+}
+
+class SettingViewController: UIViewController, UINavigationControllerDelegate {
     
     @IBOutlet weak var settingTableView: UITableView!
     
     let userDefaults = UserDefaults.standard
-    let settingList = ["一覧画面表示切り替え","RSS取得間隔","購読RSS管理","文字サイズの変更","ダークモード","ログアウト"]
+    let settingList = ["一覧画面表示切り替え","RSS取得間隔","購読RSS管理","文字サイズの変更","ダークモード","記事データの削除","ログアウト"]
     var selectCell: String = ""
     
     let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
+    
+    private let realm = try! Realm()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,7 +47,7 @@ class SettingViewController: UIViewController {
             settingDetailViewController.selectCell = self.selectCell
         }
     }
-
+    
     private func recodeUserdefaults() {
         
         guard let data: Data = userDefaults.value(forKey: "User") as? Data else { return }
@@ -67,6 +75,14 @@ class SettingViewController: UIViewController {
             
         case "ダークモード":
             self.performSegue(withIdentifier: "goSettingDetail", sender: nil)
+            
+        case "記事データの削除":
+            
+            try! realm.write {
+                realm.deleteAll()
+            }
+            
+            self.navigationController?.popViewController(animated: true)
             
         case "ログアウト":
             recodeUserdefaults()

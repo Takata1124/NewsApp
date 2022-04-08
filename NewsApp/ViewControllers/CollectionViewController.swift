@@ -9,12 +9,14 @@ import UIKit
 import RealmSwift
 
 class CollectionViewController: UIViewController {
-    
+ 
     @IBOutlet weak var toggleButton: UIBarButtonItem!
     @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var orderButton: UIButton!
     
     private let userDefaults = UserDefaults.standard
     private let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
+    private let refreshControl = UIRefreshControl()
     
     let bounds = UIScreen.main.bounds
     let nib = UINib(nibName: "CollectionViewCell", bundle: nil)
@@ -23,7 +25,15 @@ class CollectionViewController: UIViewController {
     
     var selectFeed: String = ""
     var feedUrl: String = ""
-    var feedItems = [FeedItem]()
+    
+    var feedTitles: [String] = []
+    var feedItems = [FeedItem]() {
+        didSet {
+            filterFunc(feedItems: feedItems)
+        }
+    }
+    var filterdFeedItems = [FeedItem]()
+    
     var currrentElementName: String?
     
     let item_name = "item"
@@ -36,14 +46,14 @@ class CollectionViewController: UIViewController {
     
     let realm = try! Realm()
     
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupLayout()
         
         usergetFeed()
-        getFeedUrl(self.selectFeed)
-        getXMLData(urlString: feedUrl)
         fetchFeedDate()
     }
     
@@ -77,13 +87,60 @@ class CollectionViewController: UIViewController {
         let feed = rssFeed()
         navigationItem.title = feed
         
+        orderButton.setTitle("New", for: .normal)
+        orderButton.tintColor = .modeTextColor
+        
         toggleButton.title = appDelegate.cellType.toggleButtonItemTitle
         
         collectionView.collectionViewLayout = appDelegate.cellType.layoutFromSuperviewRect(rect: bounds)
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView!.register(nib, forCellWithReuseIdentifier: "Cell")
+        
+        collectionView.refreshControl = refreshControl
+        refreshControl.addTarget(self, action: #selector(CollectionViewController.refresh(sender:)), for: .valueChanged)
     }
+    
+    private func filterFunc(feedItems: [FeedItem]) {
+        
+        feedItems.forEach { feed in
+            
+            if feed.title != "" {
+                if !feedTitles.contains(feed.title) {
+                    filterdFeedItems.append(feed)
+                    
+                    saveFeedData(feedItems: filterdFeedItems)
+                    
+                    feedTitles.append(feed.title)
+                    let tempArry = Array(Set(feedTitles))
+                    feedTitles = tempArry
+                }
+            }
+        }
+    }
+    
+    @objc func refresh(sender: UIRefreshControl) {
+        
+        getFeedUrl(self.selectFeed)
+        getXMLData(urlString: feedUrl)
+        
+        refreshControl.endRefreshing()
+    }
+
+    @IBAction func newOrder(_ sender: Any) {
+        
+        filterdFeedItems.sort { item_1, item_2 in
+            item_1.pubDate > item_2.pubDate
+        }
+        
+        DispatchQueue.main.async {
+            
+            self.collectionView.reloadData()
+            self.orderButton.setTitle("Old", for: .normal)
+        }
+        
+    }
+    
     
     private func getFeedUrl(_ selectFeed: String) {
         
@@ -162,6 +219,10 @@ class CollectionViewController: UIViewController {
     
     private func saveFeedData(feedItems: [FeedItem]) {
         
+        try! realm.write {
+            realm.deleteAll()
+        }
+        
         feedItems.forEach { item in
             
             let realmFeedItem = RealmFeedItem()
@@ -178,21 +239,26 @@ class CollectionViewController: UIViewController {
     private func fetchFeedDate() {
         
         let result = realm.objects(RealmFeedItem.self)
-        print(result)
+        
+        result.forEach { item in
+            feedTitles.append(item.title)
+            let feeditem = FeedItem(title: item.title, url: item.url, pubDate: item.pubDate)
+            filterdFeedItems.append(feeditem)
+        }
     }
 }
 
 extension CollectionViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return feedItems.count
+        return filterdFeedItems.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! CollectionViewCell
         
-        let feeditem = feedItems[indexPath.row]
+        let feeditem = filterdFeedItems[indexPath.row]
         
         cell.textLabel.font = UIFont.systemFont(ofSize: CGFloat(appDelegate.letterSize))
         cell.dateLabel.font = UIFont.systemFont(ofSize: CGFloat(10))
@@ -203,8 +269,8 @@ extension CollectionViewController: UICollectionViewDataSource, UICollectionView
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        self.articleUrl = feedItems[indexPath.row].url
-        self.titleName = feedItems[indexPath.row].title
+        self.articleUrl = filterdFeedItems[indexPath.row].url
+        self.titleName = filterdFeedItems[indexPath.row].title
         
         performSegue(withIdentifier: "goArticle", sender: nil)
     }

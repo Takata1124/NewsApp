@@ -19,17 +19,28 @@ class ArticleViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationItem.title = "\(titleName)"
-        
-        view.addSubview(tempView)
-        tempView.addSubview(webView)
-//
-        let request = URLRequest(url: URL(string: "\(articleUrl)")!)
-        webView.load(request)
+        setupLayout()
     }
     
     override func viewDidLayoutSubviews() {
         
         webView.frame = tempView.bounds
     }
+    
+    private func setupLayout() {
+        
+        navigationItem.title = "\(titleName)"
+        
+        view.addSubview(tempView)
+        tempView.addSubview(webView)
+
+        let request = URLRequest(url: URL(string: "\(articleUrl)")!)
+        webView.load(request)
+    }
+    
+    @IBAction func backViewAction(_ sender: Any) {
+        
+        self.navigationController?.popViewController(animated: true)
+    }
+    
 }

@@ -30,13 +30,16 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         
         setupLayout()
-        
-        idTextField.delegate = self
     }
     
     override func viewWillAppear(_ animated: Bool) {
         
         alreadyUserLogin()
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
+        self.view.endEditing(true)
     }
     
     private func alreadyUserLogin() {
@@ -64,6 +67,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         idTextField.placeholder = "id"
         idTextField.layer.borderWidth = 1.0
         idTextField.keyboardType = .numberPad
+        idTextField.delegate = self
         
         passwordTextField.placeholder = "password"
         passwordTextField.layer.borderWidth = 1.0

@@ -12,4 +12,11 @@ class FeedItem {
     var title: String!
     var url: String!
     var pubDate: String!
+    
+    init(title: String, url: String, pubDate: String) {
+        
+        self.title = title
+        self.url = url
+        self.pubDate = pubDate
+    }
 }
