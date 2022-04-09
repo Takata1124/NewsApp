@@ -7,10 +7,12 @@
 
 import UIKit
 
-class SettingDetailViewController: UIViewController {
-    
+class SettingDetailViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
+
     private let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
     private let appDelegateWindow = UIApplication.shared.windows.first
+    
+    private var timeArray: [String] = []
     
     var selectCell: String = ""
     
@@ -37,9 +39,9 @@ class SettingDetailViewController: UIViewController {
         return label
     }()
     
-    let uiswitch: UISwitch = {
+    let modeSwitch: UISwitch = {
         let uiswitch = UISwitch(frame: CGRect(x: 0, y: 0 , width: 49, height: 31))
-        uiswitch.addTarget(self, action: #selector(changeSwitch), for: UIControl.Event.valueChanged)
+        uiswitch.addTarget(self, action: #selector(modeChange), for: UIControl.Event.valueChanged)
         return uiswitch
     }()
     
@@ -56,23 +58,61 @@ class SettingDetailViewController: UIViewController {
         return label
     }()
     
+    var subscriptSwitch: UISwitch = {
+        let uiswitch = UISwitch(frame: CGRect(x: 0, y: 0 , width: 49, height: 31))
+        uiswitch.addTarget(self, action: #selector(subscriptionChange(sender:)), for: UIControl.Event.valueChanged)
+        return uiswitch
+    }()
+    
+    var subscriptLabel: UILabel = {
+        let label = UILabel(frame: CGRect(x: UIScreen.main.bounds.width / 2 - 150, y: 300, width: 300, height: 50))
+        label.text = "Off"
+        label.textAlignment = .center
+        return label
+    }()
+    
+    let timePickerView: UIPickerView = {
+        let pickerView = UIPickerView()
+        pickerView.layer.borderWidth = 1.0
+        pickerView.layer.borderColor = UIColor.modeTextColor.cgColor
+        pickerView.frame = CGRect(x: 0, y: 0, width: 200, height: 200)
+        return pickerView
+    }()
+    
     private var currentValue: String = "" {
         
         didSet {
             valueLabel.text = currentValue
         }
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = UIColor.modeColor
         navigationItem.title = "\(selectCell)"
+        
+        setupTimeLayout()
+        
+        timePickerView.delegate = self
+        timePickerView.dataSource = self
     }
     
     override func viewDidLayoutSubviews() {
         
         selectCategorySetting(selectCell: self.selectCell)
+    }
+
+    private func setupTimeLayout() {
+        
+        for i in 0..<25 {
+            
+            let i: String = "\(i)"
+            timeArray.append(i)
+        }
+        
+        timeArray.append("48")
+        timeArray.append("72")
     }
     
     private func selectCategorySetting(selectCell: String) {
@@ -83,39 +123,54 @@ class SettingDetailViewController: UIViewController {
             tableswitchLayout()
             
         case "RSS取得間隔":
-            print("RSS取得間隔")
+            timeArraySetupLayout()
             
         case "購読RSS管理":
-            print("購読RSS管理")
+            subscriptSetupLayout()
             
         case "文字サイズの変更":
-            uisliderLayout()
+            sliderLayout()
             
         case "ダークモード":
-            uiswitchLayout()
+            modeSetupLayout()
             
         default:
             print("default")
         }
     }
     
-    private func uiswitchLayout() {
+    private func subscriptSetupLayout() {
+        
+        view.addSubview(subscriptLabel)
+        view.addSubview(subscriptSwitch)
+        
+        subscriptSwitch.center = view.center
+    }
+    
+    private func timeArraySetupLayout() {
+        
+        view.addSubview(timePickerView)
+        
+        timePickerView.center = view.center
+    }
+    
+    private func modeSetupLayout() {
         
         view.addSubview(modeLabel)
-        view.addSubview(uiswitch)
+        view.addSubview(modeSwitch)
         
-        uiswitch.center = view.center
+        modeSwitch.center = view.center
         
         if appDelegateWindow?.overrideUserInterfaceStyle == .dark {
-            uiswitch.isOn = true
+            modeSwitch.isOn = true
             modeLabel.text = "dark"
         } else {
-            uiswitch.isOn = false
+            modeSwitch.isOn = false
             modeLabel.text = "light"
         }
     }
     
-    private func uisliderLayout() {
+    private func sliderLayout() {
         
         view.addSubview(letterSlider)
         view.addSubview(valueLabel)
@@ -142,7 +197,7 @@ class SettingDetailViewController: UIViewController {
         tableSwitch.center = view.center
     }
     
-    @objc func changeSwitch(sender: UISwitch) {
+    @objc func modeChange(sender: UISwitch) {
         
         if #available(iOS 13.0, *) {
             
@@ -153,6 +208,17 @@ class SettingDetailViewController: UIViewController {
             } else {
                 appDelegateWindow?.overrideUserInterfaceStyle = .light
             }
+        }
+    }
+    
+    @objc func subscriptionChange(sender: UISwitch) {
+        
+        let onCheck: Bool = sender.isOn
+        
+        if onCheck {
+            subscriptLabel.text = "On"
+        } else {
+            subscriptLabel.text = "Off"
         }
     }
     
@@ -174,6 +240,23 @@ class SettingDetailViewController: UIViewController {
         appDelegate.letterSize = Int(sender.value)
         currentValue = String(String(sender.value).prefix(2))
     }
+    
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return timeArray.count
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return timeArray[row]
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        print(timeArray[row])
+    }
+
 }
 
 

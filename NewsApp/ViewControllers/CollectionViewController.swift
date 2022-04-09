@@ -46,8 +46,8 @@ class CollectionViewController: UIViewController {
     
     let realm = try! Realm()
     
-    
-    
+    var buttonTitle: String = "New"
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -87,7 +87,7 @@ class CollectionViewController: UIViewController {
         let feed = rssFeed()
         navigationItem.title = feed
         
-        orderButton.setTitle("New", for: .normal)
+        orderButton.setTitle(buttonTitle, for: .normal)
         orderButton.tintColor = .modeTextColor
         
         toggleButton.title = appDelegate.cellType.toggleButtonItemTitle
@@ -105,12 +105,12 @@ class CollectionViewController: UIViewController {
         
         feedItems.forEach { feed in
             
-            if feed.title != "" {
+            if feed.title != "" && !feed.title.contains("Yahoo!ニュース・トピックス") {
                 if !feedTitles.contains(feed.title) {
                     filterdFeedItems.append(feed)
                     
                     saveFeedData(feedItems: filterdFeedItems)
-                    
+
                     feedTitles.append(feed.title)
                     let tempArry = Array(Set(feedTitles))
                     feedTitles = tempArry
@@ -129,19 +129,35 @@ class CollectionViewController: UIViewController {
 
     @IBAction func newOrder(_ sender: Any) {
         
-        filterdFeedItems.sort { item_1, item_2 in
-            item_1.pubDate > item_2.pubDate
-        }
-        
-        DispatchQueue.main.async {
+        if buttonTitle == "New" {
+            filterdFeedItems.sort { item_1, item_2 in
+                item_1.pubDate > item_2.pubDate
+            }
             
-            self.collectionView.reloadData()
-            self.orderButton.setTitle("Old", for: .normal)
+            buttonTitle = "Old"
+            
+            DispatchQueue.main.async {
+                
+                self.collectionView.reloadData()
+                self.orderButton.setTitle(self.buttonTitle, for: .normal)
+            }
+        } else {
+            
+            filterdFeedItems.sort { item_1, item_2 in
+                item_1.pubDate < item_2.pubDate
+            }
+            
+            buttonTitle = "New"
+            
+            DispatchQueue.main.async {
+                
+                self.collectionView.reloadData()
+                self.orderButton.setTitle(self.buttonTitle, for: .normal)
+            }
         }
         
     }
-    
-    
+
     private func getFeedUrl(_ selectFeed: String) {
         
         switch selectFeed {
@@ -242,8 +258,11 @@ class CollectionViewController: UIViewController {
         
         result.forEach { item in
             feedTitles.append(item.title)
-            let feeditem = FeedItem(title: item.title, url: item.url, pubDate: item.pubDate)
-            filterdFeedItems.append(feeditem)
+           
+            if !item.title.contains("Yahoo!ニュース・トピックス") {
+                let feeditem = FeedItem(title: item.title, url: item.url, pubDate: item.pubDate)
+                filterdFeedItems.append(feeditem)
+            }
         }
     }
 }
@@ -251,6 +270,7 @@ class CollectionViewController: UIViewController {
 extension CollectionViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        
         return filterdFeedItems.count
     }
     

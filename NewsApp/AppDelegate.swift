@@ -7,19 +7,43 @@
 
 import UIKit
 import AuthenticationServices
+import BackgroundTasks
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var letterSize: Int = 13
     var cellType: CellType = .List
+    var InterbalTime: Double = 3
+    let userdefaults = UserDefaults.standard
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
-        UINavigationBar.appearance().tintColor = UIColor.modeTextColor  
+        UINavigationBar.appearance().tintColor = UIColor.modeTextColor
         UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: UIColor.modeTextColor]
-//        UINavigationBar.appearance().barTintColor = UIColor.lightGray
+        //        UINavigationBar.appearance().barTintColor = UIColor.lightGray
+        
+        BGTaskScheduler.shared.register(forTaskWithIdentifier: "com.MeasurementSample.refresh", using: nil) { task in
+
+            self.handleAppRefresh(task: task as! BGAppRefreshTask)
+        }
+        
+        BGTaskScheduler.shared.getPendingTaskRequests { requests in
+            
+            print(requests)
+            if requests == [] {
+                
+                if var data: Data = self.userdefaults.value(forKey: "count") as? Data
+                {
+                } else {
+                    self.userdefaults.set(0, forKey: "count")
+                    self.scheduleAppRefresh()
+                }
+            }
+        }
+        
+        print(userdefaults.object(forKey: "count") as Any)
 
         return true
     }
@@ -36,6 +60,36 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the user discards a scene session.
         // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
+    }
+    
+    private func handleAppRefresh(task: BGAppRefreshTask) {
+  
+        scheduleAppRefresh()
+        
+        var value: Int = userdefaults.object(forKey: "count") as! Int
+        value = value + 1
+        
+        userdefaults.set(value, forKey: "count")
+        
+        print("call to Task")
+        
+        task.setTaskCompleted(success: true)
+    }
+    
+    private func scheduleAppRefresh() {
+        
+        print("taskの登録")
+        
+        let request = BGAppRefreshTaskRequest(identifier: "com.MeasurementSample.refresh")
+        
+        request.earliestBeginDate = Date(timeIntervalSinceNow: InterbalTime * 60)
+        
+        do {
+            try BGTaskScheduler.shared.submit(request)
+            
+        } catch {
+            print("Could not schedule app refresh: \(error)")
+        }
     }
 }
 
