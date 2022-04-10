@@ -14,28 +14,29 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var letterSize: Int = 13
     var cellType: CellType = .List
-    var InterbalTime: Double = 3
+    var InterbalTime: Double = 1
     let userdefaults = UserDefaults.standard
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
         
         UINavigationBar.appearance().tintColor = UIColor.modeTextColor
         UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: UIColor.modeTextColor]
-        //        UINavigationBar.appearance().barTintColor = UIColor.lightGray
         
         BGTaskScheduler.shared.register(forTaskWithIdentifier: "com.MeasurementSample.refresh", using: nil) { task in
-
+            
             self.handleAppRefresh(task: task as! BGAppRefreshTask)
         }
         
         BGTaskScheduler.shared.getPendingTaskRequests { requests in
             
             print(requests)
+            
             if requests == [] {
                 
-                if var data: Data = self.userdefaults.value(forKey: "count") as? Data
+                if var data: Int = self.userdefaults.value(forKey: "count") as? Int
                 {
+                    print("throw")
+                    self.scheduleAppRefresh()
                 } else {
                     self.userdefaults.set(0, forKey: "count")
                     self.scheduleAppRefresh()
@@ -44,7 +45,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         
         print(userdefaults.object(forKey: "count") as Any)
-
+        
         return true
     }
     
@@ -63,17 +64,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     private func handleAppRefresh(task: BGAppRefreshTask) {
-  
+        
+        print("Call to task")
+        
         scheduleAppRefresh()
         
-        var value: Int = userdefaults.object(forKey: "count") as! Int
-        value = value + 1
+        let operationQueue = OperationQueue()
+        let operation = getXMLDataOperation()
         
-        userdefaults.set(value, forKey: "count")
+        task.expirationHandler = {
+            operationQueue.cancelAllOperations()
+        }
         
-        print("call to Task")
-        
-        task.setTaskCompleted(success: true)
+        operation.completionBlock = {
+            task.setTaskCompleted(success: !operation.isCancelled)
+        }
+
+        operationQueue.addOperation(operation)
     }
     
     private func scheduleAppRefresh() {
@@ -81,15 +88,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         print("taskの登録")
         
         let request = BGAppRefreshTaskRequest(identifier: "com.MeasurementSample.refresh")
-        
         request.earliestBeginDate = Date(timeIntervalSinceNow: InterbalTime * 60)
         
         do {
             try BGTaskScheduler.shared.submit(request)
-            
         } catch {
             print("Could not schedule app refresh: \(error)")
         }
     }
 }
-
