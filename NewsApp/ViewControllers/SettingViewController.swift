@@ -8,17 +8,12 @@
 import UIKit
 import RealmSwift
 
-protocol DeleteProtocol {
-    
-    func deleteData()
-}
-
 class SettingViewController: UIViewController, UINavigationControllerDelegate {
     
     @IBOutlet weak var settingTableView: UITableView!
     
     let userDefaults = UserDefaults.standard
-    let settingList = ["一覧画面表示切り替え","RSS取得間隔","購読RSS管理","文字サイズの変更","ダークモード","記事データの削除","ログアウト"]
+    let settingList = ["一覧画面表示切り替え","RSS取得間隔","購読RSS管理","文字サイズの変更","ダークモード","記事データの削除","購読データの削除","ログアウト"]
     var selectCell: String = ""
     
     let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
@@ -78,8 +73,20 @@ class SettingViewController: UIViewController, UINavigationControllerDelegate {
             
         case "記事データの削除":
             
+            let results = realm.objects(RealmFeedItem.self)
+            
             try! realm.write {
-                realm.deleteAll()
+                realm.delete(results)
+            }
+            
+            self.navigationController?.popViewController(animated: true)
+            
+        case "購読データの削除":
+            
+            let results = realm.objects(StoreFeedItem.self)
+            
+            try! realm.write {
+                realm.delete(results)
             }
             
             self.navigationController?.popViewController(animated: true)

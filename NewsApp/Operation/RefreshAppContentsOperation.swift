@@ -8,21 +8,6 @@
 import Foundation
 import RealmSwift
 
-class RefreshAppContentsOperation: Operation {
-    
-    let userdefaults = UserDefaults.standard
-    
-    override init() {
-        
-        var value: Int = userdefaults.object(forKey: "count") as! Int
-        value = value + 1
-        
-        print(value)
-        
-        userdefaults.set(value, forKey: "count")
-    }
-}
-
 class getXMLDataOperation: Operation, XMLParserDelegate {
     
     private var currrentElementName: String?
@@ -30,31 +15,44 @@ class getXMLDataOperation: Operation, XMLParserDelegate {
     
     private var feedUrl: String = ""
     private var feedItems = [FeedItem]()
+    private var feedTitles = [String]()
     private var selectFeed: String = ""
     
     private let item_name = "item"
     private let title_name = "title"
     private let link_name  = "link"
+    private let pubDate_name = "pubDate"
     
-    var parser: XMLParser?
+    private let realm = try! Realm()
     
-    override init() {
+    private var parser: XMLParser?
+    
+    override func main() {
         
         var value: Int = userdefaults.object(forKey: "count") as! Int
         value = value + 1
-        
         userdefaults.set(value, forKey: "count")
         
-        print(value)
-    }
-    
-    override func start() {
-        print("go")
-  
+        fetchStoreFeedItem()
         usergetFeed()
         getFeedUrl(self.selectFeed)
         getXMLData(urlString: feedUrl)
-        print(feedItems)
+        saveXMLData(feeditems: feedItems)
+    }
+    
+    private func fetchStoreFeedItem() {
+
+        let result = realm.objects(StoreFeedItem.self)
+        result.forEach { item in
+            feedTitles.append(item.title)
+        }
+    }
+    
+    private func usergetFeed() {
+        
+        guard let data: Data = userdefaults.value(forKey: "User") as? Data else { return }
+        let user: User = try! JSONDecoder().decode(User.self, from: data)
+        self.selectFeed = user.feed
     }
     
     private func getXMLData(urlString: String) {
@@ -75,14 +73,7 @@ class getXMLDataOperation: Operation, XMLParserDelegate {
             print("failed to parse XML")
         }
     }
-    
-    private func usergetFeed() {
-        
-        guard let data: Data = userdefaults.value(forKey: "User") as? Data else { return }
-        let user: User = try! JSONDecoder().decode(User.self, from: data)
-        self.selectFeed = user.feed
-    }
- 
+
     private func getFeedUrl(_ selectFeed: String) {
         
         switch selectFeed {
@@ -141,6 +132,16 @@ class getXMLDataOperation: Operation, XMLParserDelegate {
             case link_name:
                 lastItem.url = string
                 
+            case pubDate_name:
+                let dateFormatter = DateFormatter()
+                dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+                dateFormatter.dateFormat = "EEE, dd MMM yyyy hh:mm:ss Z"
+                let date = dateFormatter.date(from: string) ?? Date()
+                dateFormatter.locale = NSLocale(localeIdentifier: "ja_JP") as Locale
+                dateFormatter.dateFormat = "yyyy/MM/dd HH:mm Z"
+                let dateString = dateFormatter.string(from: date)
+                lastItem.pubDate = String(dateString.prefix(16))
+                
             default:
                 break
             }
@@ -157,13 +158,26 @@ class getXMLDataOperation: Operation, XMLParserDelegate {
     }
     
     func parserDidEndDocument(_ parser: XMLParser) {
-        
     }
     
     private func saveXMLData(feeditems: [FeedItem]) {
-        
-        feeditems.forEach { item in
-            print(item)
+
+        feedItems.forEach { item in
+            
+            if feeditems.contains(where: { storeItem in
+                storeItem.title == item.title
+            }) {
+                return
+            } else {
+                let storeFeedItem = StoreFeedItem()
+                storeFeedItem.title = item.title
+                storeFeedItem.url = item.url
+                storeFeedItem.pubDate = item.pubDate
+                
+                try! realm.write({
+                    realm.add(storeFeedItem)
+                })
+            }
         }
     }
 }

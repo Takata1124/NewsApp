@@ -7,8 +7,12 @@
 
 import Foundation
 
-class FeedItem {
+class FeedItem: Equatable {
     
+    static func == (lhs: FeedItem, rhs: FeedItem) -> Bool {
+        return lhs.title == rhs.title
+    }
+
     var title: String!
     var url: String!
     var pubDate: String!

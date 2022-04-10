@@ -8,6 +8,7 @@
 import UIKit
 import AuthenticationServices
 import BackgroundTasks
+import RealmSwift
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -35,7 +36,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 
                 if var data: Int = self.userdefaults.value(forKey: "count") as? Int
                 {
-                    print("throw")
                     self.scheduleAppRefresh()
                 } else {
                     self.userdefaults.set(0, forKey: "count")
@@ -45,6 +45,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         
         print(userdefaults.object(forKey: "count") as Any)
+        
+        let realm = try! Realm()
+        let object = realm.objects(StoreFeedItem.self)
+        print(object)
         
         return true
     }

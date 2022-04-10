@@ -7,7 +7,7 @@
 
 import UIKit
 
-class RssViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class RssViewController: UIViewController {
 
     let topicModel = TopicModel()
 
@@ -28,6 +28,9 @@ class RssViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         tableView.dataSource = self
         tableView.separatorColor = .black
     }
+}
+
+extension RssViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         

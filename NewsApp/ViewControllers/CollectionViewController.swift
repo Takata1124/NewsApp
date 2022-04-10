@@ -27,12 +27,15 @@ class CollectionViewController: UIViewController {
     var feedUrl: String = ""
     
     var feedTitles: [String] = []
+    
     var feedItems = [FeedItem]() {
         didSet {
             filterFunc(feedItems: feedItems)
         }
     }
-    var filterdFeedItems = [FeedItem]()
+    
+    var filterdFeedItems: [FeedItem] = []
+    var storeFeedItem: [FeedItem] = []
     
     var currrentElementName: String?
     
@@ -44,7 +47,7 @@ class CollectionViewController: UIViewController {
     var articleUrl: String = ""
     var titleName: String = ""
     
-    let realm = try! Realm()
+    private let realm = try! Realm()
     
     var buttonTitle: String = "New"
 
@@ -96,19 +99,19 @@ class CollectionViewController: UIViewController {
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView!.register(nib, forCellWithReuseIdentifier: "Cell")
-        
         collectionView.refreshControl = refreshControl
+        
         refreshControl.addTarget(self, action: #selector(CollectionViewController.refresh(sender:)), for: .valueChanged)
     }
     
     private func filterFunc(feedItems: [FeedItem]) {
-        
+
         feedItems.forEach { feed in
-            
+
             if feed.title != "" && !feed.title.contains("Yahoo!ニュース・トピックス") {
                 if !feedTitles.contains(feed.title) {
                     filterdFeedItems.append(feed)
-                    
+
                     saveFeedData(feedItems: filterdFeedItems)
 
                     feedTitles.append(feed.title)
@@ -118,13 +121,26 @@ class CollectionViewController: UIViewController {
             }
         }
     }
-    
+
     @objc func refresh(sender: UIRefreshControl) {
         
-        getFeedUrl(self.selectFeed)
-        getXMLData(urlString: feedUrl)
-        
+        if filterdFeedItems == [] {
+            
+            getFeedUrl(self.selectFeed)
+            getXMLData(urlString: feedUrl)
+        } else {
+            
+            comparedFeedItem()
+        }
+  
         refreshControl.endRefreshing()
+    }
+    
+    private func comparedFeedItem() {
+        
+        let tempFeedItem = realm.objects(StoreFeedItem.self)
+        print(tempFeedItem)
+  
     }
 
     @IBAction func newOrder(_ sender: Any) {
@@ -155,7 +171,6 @@ class CollectionViewController: UIViewController {
                 self.orderButton.setTitle(self.buttonTitle, for: .normal)
             }
         }
-        
     }
 
     private func getFeedUrl(_ selectFeed: String) {
@@ -234,9 +249,11 @@ class CollectionViewController: UIViewController {
     }
     
     private func saveFeedData(feedItems: [FeedItem]) {
+
+        let selectRealmItem = realm.objects(RealmFeedItem.self)
         
         try! realm.write {
-            realm.deleteAll()
+            realm.delete(selectRealmItem)
         }
         
         feedItems.forEach { item in
