@@ -17,6 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var cellType: CellType = .List
     var InterbalTime: Double = 1
     let userdefaults = UserDefaults.standard
+    var newDataAlert: Bool = false
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
@@ -34,7 +35,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
             if requests == [] {
                 
-                if var data: Int = self.userdefaults.value(forKey: "count") as? Int
+                if var value: Int = self.userdefaults.value(forKey: "count") as? Int
                 {
                     self.scheduleAppRefresh()
                 } else {
@@ -45,10 +46,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         
         print(userdefaults.object(forKey: "count") as Any)
+        print(userdefaults.array(forKey: "date") as Any)
         
         let realm = try! Realm()
         let object = realm.objects(StoreFeedItem.self)
         print(object)
+        
+        let dt = Date()
+        print(dt)
         
         return true
     }
@@ -73,8 +78,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         scheduleAppRefresh()
         
+        if var dateArray = self.userdefaults.value(forKey: "date") as? [Date] {
+            let nowDay = Date()
+            var tempArray = userdefaults.array(forKey: "date")
+            tempArray?.append(nowDay)
+            self.userdefaults.set(tempArray, forKey: "date")
+        } else {
+            let nowDay = Date()
+            var dtArray: [Date] = []
+            dtArray.append(nowDay)
+            self.userdefaults.set(dtArray, forKey: "date")
+        }
+        
         let operationQueue = OperationQueue()
         let operation = getXMLDataOperation()
+        
+        operationQueue.maxConcurrentOperationCount = 1
         
         task.expirationHandler = {
             operationQueue.cancelAllOperations()

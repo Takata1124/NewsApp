@@ -27,20 +27,23 @@ class getXMLDataOperation: Operation, XMLParserDelegate {
     
     private var parser: XMLParser?
     
-    override func main() {
+    override init() {
         
         var value: Int = userdefaults.object(forKey: "count") as! Int
         value = value + 1
         userdefaults.set(value, forKey: "count")
-        
-        fetchStoreFeedItem()
+    }
+    
+    override func main() {
+
+        fetchStoreFeedTitle()
         usergetFeed()
         getFeedUrl(self.selectFeed)
         getXMLData(urlString: feedUrl)
         saveXMLData(feeditems: feedItems)
     }
     
-    private func fetchStoreFeedItem() {
+    private func fetchStoreFeedTitle() {
 
         let result = realm.objects(StoreFeedItem.self)
         result.forEach { item in
@@ -163,17 +166,15 @@ class getXMLDataOperation: Operation, XMLParserDelegate {
     private func saveXMLData(feeditems: [FeedItem]) {
 
         feedItems.forEach { item in
-            
-            if feeditems.contains(where: { storeItem in
-                storeItem.title == item.title
-            }) {
+  
+            if feedTitles.contains(item.title) {
                 return
             } else {
                 let storeFeedItem = StoreFeedItem()
                 storeFeedItem.title = item.title
                 storeFeedItem.url = item.url
                 storeFeedItem.pubDate = item.pubDate
-                
+     
                 try! realm.write({
                     realm.add(storeFeedItem)
                 })

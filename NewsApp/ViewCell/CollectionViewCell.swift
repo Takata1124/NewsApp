@@ -15,6 +15,25 @@ class CollectionViewCell: UICollectionViewCell {
     
     private var feedItem: FeedItem?
     
+    private var imageName: String = "star" {
+        didSet {
+            
+        }
+    }
+    
+    private (set) var star : Bool {
+        get {
+            return self.star
+        }
+        set {
+            if newValue == true {
+                self.imageName = "star.fill"
+            } else {
+                self.imageName = "star"
+            }
+        }
+    }
+    
     let textLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
@@ -27,14 +46,22 @@ class CollectionViewCell: UICollectionViewCell {
         return label
     }()
     
+    let starImage: UIImageView = {
+        let image = UIImageView()
+        image.image = UIImage(systemName: "star.fill")
+        image.tintColor = .modeTextColor
+        return image
+    }()
+    
     override func awakeFromNib() {
         super.awakeFromNib()
- 
+        
         self.layer.borderWidth = 0.5
         self.layer.borderColor = UIColor.dynamicColor(light: .black, dark: .white).cgColor
         
         self.addSubview(textLabel)
         self.addSubview(dateLabel)
+        self.addSubview(starImage)
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -63,12 +90,14 @@ class CollectionViewCell: UICollectionViewCell {
             textLabel.textAlignment = .left
             dateLabel.frame = CGRect(x: self.bounds.width / 2 - 150, y: self.bounds.height / 2, width: 300, height: 50)
             dateLabel.textAlignment = .right
+            starImage.frame = CGRect(x: self.bounds.width - 50, y: self.bounds.height / 2 - 10, width: 20, height: 20)
             
         case .Grid:
             textLabel.frame = CGRect(x: self.bounds.width / 2 - 75, y: self.bounds.height / 2 -  25, width: 150, height: 50)
             textLabel.textAlignment = .left
             dateLabel.frame = CGRect(x: self.bounds.width / 2 - 75, y: self.bounds.height * 1.5 / 2, width: 150, height: 50)
             dateLabel.textAlignment = .right
+            starImage.frame = CGRect(x: 20, y: 20, width: 20, height: 20)
         }
     }
 }

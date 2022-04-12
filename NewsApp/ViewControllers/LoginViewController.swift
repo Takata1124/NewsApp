@@ -13,10 +13,10 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var errorLabel: UILabel!
     
-    var user: User?
-    let userDefaults = UserDefaults.standard
-    var userId: String = ""
-    var userPassword: String = ""
+    private var user: User?
+    private let userDefaults = UserDefaults.standard
+    private var userId: String = ""
+    private var userPassword: String = ""
     
     private var errorMessage: String = "" {
         

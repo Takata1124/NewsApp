@@ -9,7 +9,7 @@ import UIKit
 
 class RssViewController: UIViewController {
 
-    let topicModel = TopicModel()
+    let rssArray :[String] = ["主要","国内","国際","経済","エンタメ","スポーツ","IT","科学","地域"]
 
     var id: String = ""
     var name: String = ""
@@ -34,13 +34,13 @@ extension RssViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return topicModel.topicArray.count
+        return rssArray.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "tableViewCell", for: indexPath)
-        cell.textLabel?.text = topicModel.topicArray[indexPath.row]
+        cell.textLabel?.text = rssArray[indexPath.row]
         
         return cell
     }
@@ -49,7 +49,7 @@ extension RssViewController: UITableViewDelegate, UITableViewDataSource {
         
         tableView.deselectRow(at: indexPath, animated: true)
         
-        self.selectFeed = topicModel.topicArray[indexPath.row]
+        self.selectFeed = rssArray[indexPath.row]
         let user: User = User(id: self.id, name: self.name, email: self.email, password: self.password, feed: self.selectFeed, login: true)
         
         guard let data: Data = try? JSONEncoder().encode(user) else { return }

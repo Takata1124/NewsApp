@@ -10,10 +10,10 @@ import RealmSwift
 
 class CollectionViewController: UIViewController {
  
-    @IBOutlet weak var toggleButton: UIBarButtonItem!
     @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var nortificationButton: UIBarButtonItem!
     @IBOutlet weak var orderButton: UIButton!
-    
+
     private let userDefaults = UserDefaults.standard
     private let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
     private let refreshControl = UIRefreshControl()
@@ -27,7 +27,6 @@ class CollectionViewController: UIViewController {
     var feedUrl: String = ""
     
     var feedTitles: [String] = []
-    
     var feedItems = [FeedItem]() {
         didSet {
             filterFunc(feedItems: feedItems)
@@ -36,7 +35,6 @@ class CollectionViewController: UIViewController {
     
     var filterdFeedItems: [FeedItem] = []
     var storeFeedItem: [FeedItem] = []
-    
     var currrentElementName: String?
     
     let item_name = "item"
@@ -46,23 +44,21 @@ class CollectionViewController: UIViewController {
     
     var articleUrl: String = ""
     var titleName: String = ""
+    var buttonTitle: String = "New"
     
     private let realm = try! Realm()
-    
-    var buttonTitle: String = "New"
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupLayout()
-        
         usergetFeed()
         fetchFeedDate()
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        
-        collectionView.reloadData()
+
+        self.collectionView.reloadData()
         
         DispatchQueue.main.async {
             self.exchangeAnimation()
@@ -93,7 +89,12 @@ class CollectionViewController: UIViewController {
         orderButton.setTitle(buttonTitle, for: .normal)
         orderButton.tintColor = .modeTextColor
         
-        toggleButton.title = appDelegate.cellType.toggleButtonItemTitle
+        if appDelegate.newDataAlert {
+            nortificationButton.image = UIImage(systemName: "bell.fill")
+        } else {
+            nortificationButton.image = UIImage(systemName: "bell")
+        }
+        nortificationButton.image = UIImage(systemName: "bell")
         
         collectionView.collectionViewLayout = appDelegate.cellType.layoutFromSuperviewRect(rect: bounds)
         collectionView.delegate = self
@@ -140,7 +141,12 @@ class CollectionViewController: UIViewController {
         
         let tempFeedItem = realm.objects(StoreFeedItem.self)
         print(tempFeedItem)
-  
+        tempFeedItem.forEach { storeItem in
+            if !feedTitles.contains(storeItem.title) && !storeItem.title.contains("Yahoo!ニュース・トピックス") {
+                let tempItem = FeedItem(title: storeItem.title, url: storeItem.url, pubDate: storeItem.pubDate)
+                filterdFeedItems.append(tempItem)
+            }
+        }
     }
 
     @IBAction func newOrder(_ sender: Any) {
@@ -149,24 +155,19 @@ class CollectionViewController: UIViewController {
             filterdFeedItems.sort { item_1, item_2 in
                 item_1.pubDate > item_2.pubDate
             }
-            
-            buttonTitle = "Old"
-            
             DispatchQueue.main.async {
-                
+                self.buttonTitle = "Old"
                 self.collectionView.reloadData()
                 self.orderButton.setTitle(self.buttonTitle, for: .normal)
             }
+            
         } else {
             
             filterdFeedItems.sort { item_1, item_2 in
                 item_1.pubDate < item_2.pubDate
             }
-            
-            buttonTitle = "New"
-            
             DispatchQueue.main.async {
-                
+                self.buttonTitle = "New"
                 self.collectionView.reloadData()
                 self.orderButton.setTitle(self.buttonTitle, for: .normal)
             }
@@ -214,19 +215,6 @@ class CollectionViewController: UIViewController {
         self.performSegue(withIdentifier: "goSetting", sender: nil)
     }
     
-    @IBAction func collectionChange(_ sender: Any) {
-        
-        switch appDelegate.cellType {
-            
-        case .List:
-            appDelegate.cellType = .Grid
-        case .Grid:
-            appDelegate.cellType = .List
-        }
-        
-        exchangeAnimation()
-    }
-    
     private func exchangeAnimation() {
         
         UIView.animate(withDuration: 0.5, animations: { [weak self] in
@@ -244,7 +232,6 @@ class CollectionViewController: UIViewController {
         }, completion: { [weak self] _ in
             
             guard let `self` = self else { return }
-            self.toggleButton.title = self.appDelegate.cellType.toggleButtonItemTitle
         })
     }
     

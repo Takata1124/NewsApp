@@ -14,4 +14,3 @@ class StoreFeedItem: Object {
     @objc dynamic var url = ""
     @objc dynamic var pubDate = ""
 }
-

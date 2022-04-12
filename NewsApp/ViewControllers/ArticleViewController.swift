@@ -43,4 +43,10 @@ class ArticleViewController: UIViewController {
         self.navigationController?.popViewController(animated: true)
     }
     
+    @IBAction func presentShareSheet(_ sender: Any) {
+        let activityVC = UIActivityViewController(activityItems: ["\(articleUrl)"], applicationActivities: nil)
+        activityVC.popoverPresentationController?.sourceView = self.view
+        
+        self.present(activityVC, animated: true, completion: nil)
+    }
 }

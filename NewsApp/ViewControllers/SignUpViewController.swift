@@ -100,7 +100,6 @@ class SignUpViewController: UIViewController {
         
         guard let data: Data = userDefaults.value(forKey: "User") as? Data else { return }
         let user: User = try! JSONDecoder().decode(User.self, from: data)
-        print(user)
         
         userDefaults.removeObject(forKey: "User")
     }

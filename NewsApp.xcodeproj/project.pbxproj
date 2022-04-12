@@ -20,6 +20,7 @@
 		688EB32B27FFEEE1008FB693 /* RealmFeedItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688EB32A27FFEEE1008FB693 /* RealmFeedItem.swift */; };
 		688EB32D28028EFB008FB693 /* RefreshAppContentsOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688EB32C28028EFB008FB693 /* RefreshAppContentsOperation.swift */; };
 		688EB32F28031B1A008FB693 /* StoreFeedItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688EB32E28031B1A008FB693 /* StoreFeedItem.swift */; };
+		688EB33328045487008FB693 /* SettingDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688EB33228045487008FB693 /* SettingDetailView.swift */; };
 		68BF674527F723A300A451C3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BF674427F723A300A451C3 /* AppDelegate.swift */; };
 		68BF674727F723A300A451C3 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BF674627F723A300A451C3 /* SceneDelegate.swift */; };
 		68BF674927F723A300A451C3 /* SplashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BF674827F723A300A451C3 /* SplashViewController.swift */; };
@@ -32,7 +33,6 @@
 		68BF677527F72EFB00A451C3 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BF677427F72EFB00A451C3 /* LoginViewController.swift */; };
 		68BF677727F745D500A451C3 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BF677627F745D500A451C3 /* SignUpViewController.swift */; };
 		68BF677B27F75BAC00A451C3 /* RssViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BF677A27F75BAC00A451C3 /* RssViewController.swift */; };
-		68BF677F27F7796200A451C3 /* TopicModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BF677E27F7796200A451C3 /* TopicModel.swift */; };
 		68BF678127F84C7B00A451C3 /* ArticleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BF678027F84C7B00A451C3 /* ArticleViewController.swift */; };
 		68BF678327F8845A00A451C3 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BF678227F8845A00A451C3 /* SettingViewController.swift */; };
 		68BF678527F884F400A451C3 /* SettingDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BF678427F884F400A451C3 /* SettingDetailViewController.swift */; };
@@ -76,6 +76,7 @@
 		688EB32A27FFEEE1008FB693 /* RealmFeedItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmFeedItem.swift; sourceTree = "<group>"; };
 		688EB32C28028EFB008FB693 /* RefreshAppContentsOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshAppContentsOperation.swift; sourceTree = "<group>"; };
 		688EB32E28031B1A008FB693 /* StoreFeedItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreFeedItem.swift; sourceTree = "<group>"; };
+		688EB33228045487008FB693 /* SettingDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingDetailView.swift; sourceTree = "<group>"; };
 		68BF674127F723A300A451C3 /* NewsApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NewsApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		68BF674427F723A300A451C3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		68BF674627F723A300A451C3 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -92,7 +93,6 @@
 		68BF677427F72EFB00A451C3 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		68BF677627F745D500A451C3 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		68BF677A27F75BAC00A451C3 /* RssViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RssViewController.swift; sourceTree = "<group>"; };
-		68BF677E27F7796200A451C3 /* TopicModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopicModel.swift; sourceTree = "<group>"; };
 		68BF678027F84C7B00A451C3 /* ArticleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleViewController.swift; sourceTree = "<group>"; };
 		68BF678227F8845A00A451C3 /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		68BF678427F884F400A451C3 /* SettingDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingDetailViewController.swift; sourceTree = "<group>"; };
@@ -177,6 +177,24 @@
 			path = Operation;
 			sourceTree = "<group>";
 		};
+		688EB33128044823008FB693 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				688EB33228045487008FB693 /* SettingDetailView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		688EB3342805AC70008FB693 /* Storyboard */ = {
+			isa = PBXGroup;
+			children = (
+				68BF674F27F723A400A451C3 /* LaunchScreen.storyboard */,
+				68BF674A27F723A300A451C3 /* Main.storyboard */,
+				688EB31E27FEA102008FB693 /* CollectionViewCell.xib */,
+			);
+			path = Storyboard;
+			sourceTree = "<group>";
+		};
 		68BF673827F723A300A451C3 = {
 			isa = PBXGroup;
 			children = (
@@ -202,6 +220,8 @@
 		68BF674327F723A300A451C3 /* NewsApp */ = {
 			isa = PBXGroup;
 			children = (
+				688EB3342805AC70008FB693 /* Storyboard */,
+				688EB33128044823008FB693 /* View */,
 				688EB33028031C46008FB693 /* Operation */,
 				68BF679927F9DBAB00A451C3 /* NewsApp.entitlements */,
 				688EB32627FF2DCC008FB693 /* ViewCell */,
@@ -211,10 +231,7 @@
 				68BF678927F972CD00A451C3 /* ViewControllers */,
 				68BF674427F723A300A451C3 /* AppDelegate.swift */,
 				68BF674627F723A300A451C3 /* SceneDelegate.swift */,
-				688EB31E27FEA102008FB693 /* CollectionViewCell.xib */,
-				68BF674A27F723A300A451C3 /* Main.storyboard */,
 				68BF674D27F723A400A451C3 /* Assets.xcassets */,
-				68BF674F27F723A400A451C3 /* LaunchScreen.storyboard */,
 				68BF675227F723A400A451C3 /* Info.plist */,
 			);
 			path = NewsApp;
@@ -258,7 +275,6 @@
 			children = (
 				68BF678627F8AA1300A451C3 /* FeedItem.swift */,
 				68BF679A27FAA51500A451C3 /* User.swift */,
-				68BF677E27F7796200A451C3 /* TopicModel.swift */,
 				688EB32127FF25BD008FB693 /* CellType.swift */,
 				688EB32A27FFEEE1008FB693 /* RealmFeedItem.swift */,
 				688EB32E28031B1A008FB693 /* StoreFeedItem.swift */,
@@ -535,7 +551,6 @@
 				688EB32F28031B1A008FB693 /* StoreFeedItem.swift in Sources */,
 				68BF674927F723A300A451C3 /* SplashViewController.swift in Sources */,
 				68BF674527F723A300A451C3 /* AppDelegate.swift in Sources */,
-				68BF677F27F7796200A451C3 /* TopicModel.swift in Sources */,
 				68BF678C27F9BFF900A451C3 /* Validator.swift in Sources */,
 				68BF678127F84C7B00A451C3 /* ArticleViewController.swift in Sources */,
 				688EB32B27FFEEE1008FB693 /* RealmFeedItem.swift in Sources */,
@@ -547,6 +562,7 @@
 				68BF677B27F75BAC00A451C3 /* RssViewController.swift in Sources */,
 				688EB31C27FE8DA7008FB693 /* CollectionViewController.swift in Sources */,
 				68BF678527F884F400A451C3 /* SettingDetailViewController.swift in Sources */,
+				688EB33328045487008FB693 /* SettingDetailView.swift in Sources */,
 				68BF678727F8AA1300A451C3 /* FeedItem.swift in Sources */,
 				68BF67A027FAA72200A451C3 /* PasswordValidator.swift in Sources */,
 				68BF674727F723A300A451C3 /* SceneDelegate.swift in Sources */,
