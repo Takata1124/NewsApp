@@ -17,8 +17,8 @@ struct PasswordValidator: Validator {
             return .required("パスワードが入力されていません")
         }
         
-        if password.count != 6 {
-            return .toolong(6)
+        if password.count != 8 {
+            return .toolong(8)
         }
         
         return .none

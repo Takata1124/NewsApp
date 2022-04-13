@@ -9,15 +9,9 @@ import UIKit
 
 class RssViewController: UIViewController {
 
-    let rssArray :[String] = ["主要","国内","国際","経済","エンタメ","スポーツ","IT","科学","地域"]
-
     var id: String = ""
-    var name: String = ""
-    var email: String = ""
     var password: String = ""
     var selectFeed: String = ""
-    
-    let userDefaults = UserDefaults.standard
     
     @IBOutlet weak var tableView: UITableView!
     
@@ -34,13 +28,13 @@ extension RssViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return rssArray.count
+        return RssModel.shared.rssArray.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "tableViewCell", for: indexPath)
-        cell.textLabel?.text = rssArray[indexPath.row]
+        cell.textLabel?.text = RssModel.shared.rssArray[indexPath.row]
         
         return cell
     }
@@ -49,13 +43,17 @@ extension RssViewController: UITableViewDelegate, UITableViewDataSource {
         
         tableView.deselectRow(at: indexPath, animated: true)
         
-        self.selectFeed = rssArray[indexPath.row]
-        let user: User = User(id: self.id, name: self.name, email: self.email, password: self.password, feed: self.selectFeed, login: true)
-        
-        guard let data: Data = try? JSONEncoder().encode(user) else { return }
-        userDefaults.setValue(data, forKey: "User")
-        
-        self.performSegue(withIdentifier: "goCollection", sender: nil)
+        RssModel.shared.saveUseData(id: self.id, password: self.password, indexPath: indexPath) { success in
+            
+            if success {
+                DispatchQueue.main.async {
+                    self.performSegue(withIdentifier: "goCollection", sender: nil)
+                }
+            } else {
+                print("Rssの登録に失敗しました")
+            }
+            
+        }
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

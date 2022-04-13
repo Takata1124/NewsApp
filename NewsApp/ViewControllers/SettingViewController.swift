@@ -13,7 +13,7 @@ class SettingViewController: UIViewController, UINavigationControllerDelegate {
     @IBOutlet weak var settingTableView: UITableView!
     
     let userDefaults = UserDefaults.standard
-    let settingList = ["一覧画面表示切り替え","RSS取得間隔","購読RSS管理","文字サイズの変更","ダークモード","記事データの削除","購読データの削除","ログアウト"]
+    let settingList = ["一覧画面表示切り替え","RSS取得間隔","購読RSS管理","文字サイズの変更","ダークモード","記事データの削除","購読データの削除","ユーザー情報の削除","ログアウト"]
     var selectCell: String = ""
     
     let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
@@ -43,13 +43,23 @@ class SettingViewController: UIViewController, UINavigationControllerDelegate {
         }
     }
     
-    private func recodeUserdefaults() {
+    private func recodeUserdefaults(completion: @escaping() -> Void) {
         
         guard let data: Data = userDefaults.value(forKey: "User") as? Data else { return }
         let user: User = try! JSONDecoder().decode(User.self, from: data)
-        let recodeUser: User = User(id: user.id, name: user.name, email: user.email, password: user.password, feed: user.feed, login: false)
+        let recodeUser: User = User(id: user.id, password: user.password, feed: user.feed, login: false)
         guard let data: Data = try? JSONEncoder().encode(recodeUser) else { return }
-        userDefaults.setValue(data, forKey: "User")
+        userDefaults.set(data, forKey: "User")
+        
+        completion()
+    }
+    
+    private func removeUserDefaults(completion: @escaping() -> Void) {
+        
+        guard let data: Data = userDefaults.value(forKey: "User") as? Data else { return }
+        userDefaults.removeObject(forKey: "User")
+        
+        completion()
     }
     
     private func selectView(selectCell: String) {
@@ -91,9 +101,20 @@ class SettingViewController: UIViewController, UINavigationControllerDelegate {
             
             self.navigationController?.popViewController(animated: true)
             
+        case "ユーザー情報の削除":
+            
+            removeUserDefaults {
+                DispatchQueue.main.async {
+                    self.navigationController?.popToRootViewController(animated: true)
+                }
+            }
+
         case "ログアウト":
-            recodeUserdefaults()
-            self.navigationController?.popToRootViewController(animated: true)
+            recodeUserdefaults {
+                DispatchQueue.main.async {
+                    self.navigationController?.popToRootViewController(animated: true)
+                }
+            }
             
         default:
             print("default")

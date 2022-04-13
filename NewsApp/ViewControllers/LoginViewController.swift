@@ -15,8 +15,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     private var user: User?
     private let userDefaults = UserDefaults.standard
-    private var userId: String = ""
-    private var userPassword: String = ""
     
     private var errorMessage: String = "" {
         
@@ -30,6 +28,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         
         setupLayout()
+        
+        LoginModel.shared.notificationCenter.addObserver(self, selector: #selector(self.handleErrorMessage(_:)), name: Notification.Name(rawValue: LoginModel.notificationName), object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -42,21 +42,10 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         self.view.endEditing(true)
     }
     
-    private func alreadyUserLogin() {
+    @objc func handleErrorMessage(_ notification: Notification) {
         
-        guard let data: Data = userDefaults.value(forKey: "User") as? Data else {
-            errorMessage = "ユーザー情報がありません"
-            return
-        }
-        self.user = try! JSONDecoder().decode(User.self, from: data)
-        self.userId = self.user!.id
-        self.userPassword = self.user!.password
-        
-        if self.user!.login == true {
-            performSegue(withIdentifier: "goCollection", sender: nil)
-        }
-        else {
-            return
+        if let errormessage = notification.object as? String {
+            self.errorMessage = errormessage
         }
     }
     
@@ -64,12 +53,10 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         
         navigationItem.title = "Login"
         
-        idTextField.placeholder = "id"
         idTextField.layer.borderWidth = 1.0
         idTextField.keyboardType = .numberPad
         idTextField.delegate = self
         
-        passwordTextField.placeholder = "password"
         passwordTextField.layer.borderWidth = 1.0
         passwordTextField.keyboardType = .numberPad
     }
@@ -81,57 +68,25 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         passwordTextField.layer.borderColor = UIColor.dynamicColor(light: .black, dark: .white).cgColor
     }
     
-    @IBAction func goListView(_ sender: Any) {
+    private func alreadyUserLogin() {
         
-        if self.user == nil { return }
-        
-        let idValidator = IdValidator(id: idTextField.text ?? "")
-        
-        switch idValidator.validate() {
-            
-        case .none: break
-        case .required(_):
-            errorMessage = "idを入力してください"
-        case .toolong(_):
-            errorMessage = "名前は4文字で入力してください"
-        }
-        
-        let passwordValidator = PasswordValidator(password: passwordTextField.text ?? "")
-        
-        switch passwordValidator.validate() {
-            
-        case .none: break
-        case .required(_):
-            errorMessage = "パスワードを入力してください"
-        case .toolong(_):
-            errorMessage = "パスワードは6文字で入力してください"
-        }
-        
-        if idValidator.isValid() && passwordValidator.isValid() {
-            
-            confirmUserLogin(id: idTextField.text!, password: passwordTextField.text!)
+        LoginModel.shared.alreadyConfirmLogin { success in
+            if success {
+                self.performSegue(withIdentifier: "goCollection", sender: nil)
+            } else {
+                return
+            }
         }
     }
-    
-    private func confirmUserLogin(id: String, password: String) {
+
+    @IBAction func goListView(_ sender: Any) {
         
-        if userId != id {
-            errorMessage = "idが違います"
-            print("idが違います")
-        }
-        
-        if userPassword != password {
-            errorMessage = "passwordが違います"
-            print("passwordが違います")
-        }
-        
-        if userId == id && userPassword == password {
-            
-            let recodeUser: User = User(id: self.user!.id, name: self.user!.name, email: self.user!.email, password: self.user!.password, feed: self.user!.feed, login: true)
-            guard let data: Data = try? JSONEncoder().encode(recodeUser) else { return }
-            userDefaults.setValue(data, forKey: "User")
-            
-            performSegue(withIdentifier: "goCollection", sender: nil)
+        LoginModel.shared.LoginAction(idText: idTextField.text ?? "", passwordText: passwordTextField.text ?? "") { success in
+            if success {
+                self.performSegue(withIdentifier: "goCollection", sender: nil)
+            } else {
+                print("Rss選択に移れませんでした")
+            }
         }
     }
     
