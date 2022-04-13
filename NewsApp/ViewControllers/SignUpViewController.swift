@@ -11,7 +11,6 @@ import AuthenticationServices
 class SignUpViewController: UIViewController {
     
     @IBOutlet weak var errorLabel: UILabel!
-
     @IBOutlet weak var idTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     
@@ -19,8 +18,6 @@ class SignUpViewController: UIViewController {
     var password: String = ""
     
     let userDefaults = UserDefaults.standard
-    
-    private let signInButton = ASAuthorizationAppleIDButton()
     
     private var errorMessage: String = "" {
         
