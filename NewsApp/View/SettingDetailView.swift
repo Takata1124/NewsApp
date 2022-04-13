@@ -42,12 +42,12 @@ class SettingDetailView: UIView {
     }()
     
     let modeSwitch: UISwitch = {
-        let uiswitch = UISwitch(frame: CGRect(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2, width: 49, height: 31))
+        let uiswitch = UISwitch(frame: CGRect(x: UIScreen.main.bounds.width / 2 - 25, y: UIScreen.main.bounds.height / 2, width: 50, height: 31))
         return uiswitch
     }()
     
     let tableSwitch: UISwitch = {
-        let tableswitch = UISwitch(frame: CGRect(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2, width: 49, height: 31))
+        let tableswitch = UISwitch(frame: CGRect(x: UIScreen.main.bounds.width / 2 - 25, y: UIScreen.main.bounds.height / 2, width: 50, height: 31))
         return tableswitch
     }()
     
@@ -59,7 +59,7 @@ class SettingDetailView: UIView {
     }()
     
     var subscriptSwitch: UISwitch = {
-        let uiswitch = UISwitch(frame: CGRect(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2, width: 49, height: 31))
+        let uiswitch = UISwitch(frame: CGRect(x: UIScreen.main.bounds.width / 2 - 25, y: UIScreen.main.bounds.height / 2, width: 50, height: 31))
         return uiswitch
     }()
     
@@ -74,7 +74,7 @@ class SettingDetailView: UIView {
         let pickerView = UIPickerView()
         pickerView.layer.borderWidth = 1.0
         pickerView.layer.borderColor = UIColor.modeTextColor.cgColor
-        pickerView.frame = CGRect(x: 0, y: 0, width: 200, height: 200)
+        pickerView.frame = CGRect(x: UIScreen.main.bounds.width / 2 - 100, y: UIScreen.main.bounds.height / 2 - 100, width: 200, height: 200)
         return pickerView
     }()
     
@@ -148,7 +148,6 @@ class SettingDetailView: UIView {
         self.addSubview(valueLabel)
         
         letterSlider.value = Float(appDelegate.letterSize)
-        
         valueLabel.text = String(appDelegate.letterSize)
     }
     

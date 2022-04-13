@@ -71,6 +71,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     private func alreadyUserLogin() {
         
         LoginModel.shared.alreadyConfirmLogin { success in
+            print(success)
             if success {
                 self.performSegue(withIdentifier: "goCollection", sender: nil)
             } else {

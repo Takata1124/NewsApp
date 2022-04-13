@@ -19,7 +19,6 @@ class LoginModel {
     private var user: User?
     private var userId: String = ""
     private var userPassword: String = ""
-    private var userLogin: Bool = false
     
     private var errorMessage: String = "" {
         didSet {
@@ -35,12 +34,17 @@ class LoginModel {
         self.user = try! JSONDecoder().decode(User.self, from: data)
         self.userId = self.user!.id
         self.userPassword = self.user!.password
-        self.userLogin = self.user!.login
     }
     
     func alreadyConfirmLogin(completion: @escaping(Bool) -> Void) {
-
-        if self.userLogin == true {
+        
+        guard let data: Data = userDefaults.value(forKey: "User") as? Data else {
+            completion(false)
+            return
+        }
+        let user: User = try! JSONDecoder().decode(User.self, from: data)
+        
+        if user.login == true {
             completion(true)
         }
         else {
@@ -102,3 +106,4 @@ class LoginModel {
         }
     }
 }
+            
