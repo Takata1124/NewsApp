@@ -11,7 +11,6 @@ class SignUpModel {
     
     static let shared = SignUpModel()
     static let notificationName = "SignUpErrorMessage"
-    
     let notificationCenter = NotificationCenter()
     
     var id: String = ""

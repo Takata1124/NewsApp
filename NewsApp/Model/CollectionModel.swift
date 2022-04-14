@@ -22,7 +22,9 @@ class CollectionModel: NSObject, XMLParserDelegate {
     
     private(set) var feedItems: [FeedItem] = [] {
         didSet {
-            filterFunc(feedItems: feedItems)
+            filterFunc(feedItems: feedItems) {
+                self.saveFeedData(feedItems: self.feedItems)
+            }
         }
     }
     
@@ -35,10 +37,10 @@ class CollectionModel: NSObject, XMLParserDelegate {
     let userDefaults = UserDefaults.standard
     private let realm = try! Realm()
     
-    let item_name = "item"
-    let title_name = "title"
-    let link_name  = "link"
-    let pubDate_name = "pubDate"
+    private let item_name = "item"
+    private let title_name = "title"
+    private let link_name  = "link"
+    private let pubDate_name = "pubDate"
     
     var parser: XMLParser?
     
@@ -59,20 +61,26 @@ class CollectionModel: NSObject, XMLParserDelegate {
         self.selectFeed = user.feed
     }
     
-    private func filterFunc(feedItems: [FeedItem]) {
+    private func filterFunc(feedItems: [FeedItem], completion: @escaping() -> Void) {
+        
+        var i = 0
 
         feedItems.forEach { feed in
+            i += 1
 
             if feed.title != "" && !feed.title.contains("Yahoo!ニュース・トピックス") {
+                
                 if !feedTitles.contains(feed.title) {
                     filterFeedItems.append(feed)
-
-                    saveFeedData(feedItems: filterFeedItems)
-
                     feedTitles.append(feed.title)
+                    
                     let tempArry = Array(Set(feedTitles))
                     feedTitles = tempArry
                 }
+            }
+            
+            if i == feedItems.count {
+                completion()
             }
         }
     }
@@ -134,9 +142,8 @@ class CollectionModel: NSObject, XMLParserDelegate {
         try! realm.write {
             realm.delete(selectRealmItem)
         }
-        
+
         feedItems.forEach { item in
-            
             let realmFeedItem = RealmFeedItem()
             realmFeedItem.title = item.title
             realmFeedItem.url = item.url
@@ -150,12 +157,21 @@ class CollectionModel: NSObject, XMLParserDelegate {
     
     func comparedFeedItem() {
         
-        let tempFeedItem = realm.objects(StoreFeedItem.self)
+        let storeFeedItem = realm.objects(StoreFeedItem.self)
+        var tempFeedItems: [FeedItem] = []
         
-        tempFeedItem.forEach { storeItem in
+        var i = 0
+        
+        storeFeedItem.forEach { storeItem in
+            
+            i += 1
             if !feedTitles.contains(storeItem.title) && !storeItem.title.contains("Yahoo!ニュース・トピックス") {
                 let tempItem = FeedItem(title: storeItem.title, url: storeItem.url, pubDate: storeItem.pubDate)
-                filterFeedItems.append(tempItem)
+                tempFeedItems.append(tempItem)
+            }
+            
+            if i == storeFeedItem.count {
+                feedItems += tempFeedItems
             }
         }
     }

@@ -35,7 +35,6 @@ extension RssViewController: UITableViewDelegate, UITableViewDataSource {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "tableViewCell", for: indexPath)
         cell.textLabel?.text = RssModel.shared.rssArray[indexPath.row]
-        
         return cell
     }
     

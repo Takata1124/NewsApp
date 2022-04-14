@@ -72,7 +72,6 @@ class CollectionViewController: UIViewController {
     private func registerModel() {
 
         guard let model = collectionModel else { return }
-        
         self.filterdFeedItems = model.filterFeedItems
         
         model.notificationCenter.addObserver(forName: .init(rawValue: CollectionModel.notificationName), object: nil, queue: nil) { [weak self] nortification in
@@ -144,7 +143,6 @@ class CollectionViewController: UIViewController {
     }
 
     @IBAction func goSetting(_ sender: Any) {
-        
         self.performSegue(withIdentifier: "goSetting", sender: nil)
     }
     

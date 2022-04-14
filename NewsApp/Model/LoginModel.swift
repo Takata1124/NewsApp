@@ -11,7 +11,6 @@ class LoginModel {
     
     static let shared = LoginModel()
     static let notificationName = "LoginErrerMessage"
-    
     let notificationCenter = NotificationCenter()
     
     private let userDefaults = UserDefaults.standard

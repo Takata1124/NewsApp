@@ -15,7 +15,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var letterSize: Int = 13
     var cellType: CellType = .List
-    var InterbalTime: Double = 1
+    var InterbalTime: Double = 60
     let userdefaults = UserDefaults.standard
     var newDataAlert: Bool = false
     

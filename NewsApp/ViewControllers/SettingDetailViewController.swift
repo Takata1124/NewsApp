@@ -33,7 +33,6 @@ class SettingDetailViewController: UIViewController {
         setupTimeLayout()
         
         settingDetailView.confirmSelectCell(selectCell: selectCell)
-        
         settingDetailView.letterSlider.addTarget(self, action: #selector(onStartPointlabel(_:)), for: .valueChanged)
         settingDetailView.modeSwitch.addTarget(self, action: #selector(modeChange), for: UIControl.Event.valueChanged)
         settingDetailView.tableSwitch.addTarget(self, action: #selector(tableChange(sender:)), for: UIControl.Event.valueChanged)
