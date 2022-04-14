@@ -114,7 +114,7 @@ class getXMLDataOperation: Operation, XMLParserDelegate {
         self.currrentElementName = nil
 
         if elementName == item_name {
-            self.feedItems.append(FeedItem(title: "", url: "", pubDate: ""))
+            self.feedItems.append(FeedItem(title: "", url: "", pubDate: "", star: false, read: false))
         } else {
             currrentElementName = elementName
         }

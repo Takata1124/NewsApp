@@ -17,7 +17,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     private let userDefaults = UserDefaults.standard
     
     private var errorMessage: String = "" {
-        
         didSet {
             errorLabel.isHidden = errorMessage.isEmpty
             errorLabel.text = errorMessage

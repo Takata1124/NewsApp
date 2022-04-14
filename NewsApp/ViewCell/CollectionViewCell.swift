@@ -15,21 +15,22 @@ class CollectionViewCell: UICollectionViewCell {
     
     private var feedItem: FeedItem?
     
-    private var imageName: String = "star" {
+    private var read: Bool = false {
         didSet {
-            
+            if read {
+                self.backgroundColor = .systemGray4
+            } else {
+                self.backgroundColor = .clear
+            }
         }
     }
     
-    private (set) var star : Bool {
-        get {
-            return self.star
-        }
-        set {
-            if newValue == true {
-                self.imageName = "star.fill"
+    private var star: Bool = false {
+        didSet {
+            if star {
+                self.starImage.image = UIImage(systemName: "star.fill")
             } else {
-                self.imageName = "star"
+                self.starImage.image = UIImage(systemName: "star")
             }
         }
     }
@@ -48,7 +49,6 @@ class CollectionViewCell: UICollectionViewCell {
     
     let starImage: UIImageView = {
         let image = UIImageView()
-        image.image = UIImage(systemName: "star.fill")
         image.tintColor = .modeTextColor
         return image
     }()
@@ -73,6 +73,8 @@ class CollectionViewCell: UICollectionViewCell {
     func configureWithItem(item: FeedItem, cellType: CellType) {
         
         self.feedItem = item
+        self.star = item.star
+        self.read = item.read
         updateConstraintsWithCellType(cellType: cellType)
     }
     

@@ -32,7 +32,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         BGTaskScheduler.shared.getPendingTaskRequests { requests in
             
             print(requests)
-            
             if requests == [] {
                 
                 if var value: Int = self.userdefaults.value(forKey: "count") as? Int
@@ -48,6 +47,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         print(userdefaults.object(forKey: "count") as Any)
         print(userdefaults.array(forKey: "date") as Any)
         
+        migration()
         let realm = try! Realm()
         let object = realm.objects(StoreFeedItem.self)
         print(object)
@@ -56,6 +56,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         print(dt)
         
         return true
+    }
+    
+    private func migration() {
+
+        let nextSchemaVersion = 1
+
+        let config = Realm.Configuration(
+            schemaVersion: UInt64(nextSchemaVersion),
+            migrationBlock: { migration, oldSchemaVersion in
+                if (oldSchemaVersion < nextSchemaVersion) {
+                }
+            })
+        Realm.Configuration.defaultConfiguration = config
     }
     
     // MARK: UISceneSession Lifecycle
@@ -102,7 +115,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         operation.completionBlock = {
             task.setTaskCompleted(success: !operation.isCancelled)
         }
-
+        
         operationQueue.addOperation(operation)
     }
     

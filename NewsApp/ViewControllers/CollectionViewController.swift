@@ -9,27 +9,36 @@ import UIKit
 import RealmSwift
 
 class CollectionViewController: UIViewController {
- 
+    
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var nortificationButton: UIBarButtonItem!
     @IBOutlet weak var orderButton: UIButton!
-
+    
     private let userDefaults = UserDefaults.standard
     private let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
     private let refreshControl = UIRefreshControl()
     
     let bounds = UIScreen.main.bounds
     let nib = UINib(nibName: "CollectionViewCell", bundle: nil)
-
-    private var filterdFeedItems: [FeedItem] = [] {
+    
+    private var filterFeedItems: [FeedItem] = [] {
         didSet {
             self.collectionView.reloadData()
         }
     }
-
+    
     var articleUrl: String = ""
     var titleName: String = ""
     var buttonTitle: String = "New"
+    
+    var deleteAction: Bool = false {
+        didSet {
+            if deleteAction {
+                self.filterFeedItems = []
+                collectionModel?.deleteItems()
+            }
+        }
+    }
     
     var collectionModel: CollectionModel? {
         didSet {
@@ -38,21 +47,23 @@ class CollectionViewController: UIViewController {
     }
     
     private let realm = try! Realm()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+ 
         self.collectionModel = CollectionModel()
-        
-        if filterdFeedItems == [] {
-            collectionModel?.getXMLData()
-        }
         
         setupLayout()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        if filterFeedItems == [] {
+            collectionModel?.getXMLData()
+        }
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
-
+        
         self.collectionView.reloadData()
         
         DispatchQueue.main.async {
@@ -70,15 +81,15 @@ class CollectionViewController: UIViewController {
     }
     
     private func registerModel() {
-
+        
         guard let model = collectionModel else { return }
-        self.filterdFeedItems = model.filterFeedItems
+        
+        self.filterFeedItems = model.filterFeedItems
         
         model.notificationCenter.addObserver(forName: .init(rawValue: CollectionModel.notificationName), object: nil, queue: nil) { [weak self] nortification in
             
             if let filterfeeditems = nortification.userInfo?["item"] as? [FeedItem] {
-                
-                self?.filterdFeedItems = filterfeeditems
+                self?.filterFeedItems = filterfeeditems
                 self?.collectionView.reloadData()
             }
         }
@@ -107,22 +118,23 @@ class CollectionViewController: UIViewController {
         
         refreshControl.addTarget(self, action: #selector(CollectionViewController.refresh(sender:)), for: .valueChanged)
     }
-
+    
     @objc func refresh(sender: UIRefreshControl) {
         
-        if filterdFeedItems == [] {
+        if filterFeedItems == [] {
             collectionModel?.getXMLData()
         } else {
             collectionModel?.comparedFeedItem()
         }
+        
         refreshControl.endRefreshing()
     }
-
+    
     @IBAction func newOrder(_ sender: Any) {
         
         if buttonTitle == "New" {
-            filterdFeedItems.sort { item_1, item_2 in
-                item_1.pubDate > item_2.pubDate
+            filterFeedItems.sort { item_1, item_2 in
+                item_1.pubDate < item_2.pubDate
             }
             DispatchQueue.main.async {
                 self.buttonTitle = "Old"
@@ -131,8 +143,8 @@ class CollectionViewController: UIViewController {
             }
             
         } else {
-            filterdFeedItems.sort { item_1, item_2 in
-                item_1.pubDate < item_2.pubDate
+            filterFeedItems.sort { item_1, item_2 in
+                item_1.pubDate > item_2.pubDate
             }
             DispatchQueue.main.async {
                 self.buttonTitle = "New"
@@ -141,7 +153,7 @@ class CollectionViewController: UIViewController {
             }
         }
     }
-
+    
     @IBAction func goSetting(_ sender: Any) {
         self.performSegue(withIdentifier: "goSetting", sender: nil)
     }
@@ -167,14 +179,13 @@ extension CollectionViewController: UICollectionViewDataSource, UICollectionView
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
-        return filterdFeedItems.count
+        return filterFeedItems.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! CollectionViewCell
-        
-        let feeditem = filterdFeedItems[indexPath.row]
+        let feeditem = filterFeedItems[indexPath.row]
         
         cell.textLabel.font = UIFont.systemFont(ofSize: CGFloat(appDelegate.letterSize))
         cell.dateLabel.font = UIFont.systemFont(ofSize: CGFloat(10))
@@ -185,9 +196,20 @@ extension CollectionViewController: UICollectionViewDataSource, UICollectionView
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        self.articleUrl = filterdFeedItems[indexPath.row].url
-        self.titleName = filterdFeedItems[indexPath.row].title
+        self.articleUrl = filterFeedItems[indexPath.row].url
+        self.titleName = filterFeedItems[indexPath.row].title
+
+        saveSelected(indexPath: indexPath)
         
         performSegue(withIdentifier: "goArticle", sender: nil)
+    }
+    
+    private func saveSelected(indexPath: IndexPath) {
+        
+        let selectItem = filterFeedItems[indexPath.row]
+        let newFeedItem = FeedItem(title: selectItem.title, url: selectItem.url, pubDate: selectItem.pubDate, star: selectItem.star, read: true)
+        self.filterFeedItems[indexPath.row] = newFeedItem
+        let selectedTitle: String = self.filterFeedItems[indexPath.row].title
+        self.collectionModel?.saveSelected(title: selectedTitle)
     }
 }

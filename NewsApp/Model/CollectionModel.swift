@@ -8,17 +8,16 @@
 import Foundation
 import RealmSwift
 
-class CollectionModel: NSObject, XMLParserDelegate {
+class CollectionModel: NSObject {
     
     static let shared = CollectionModel()
     static let notificationName = "CollectionData"
-    
     let notificationCenter = NotificationCenter()
     
     private var selectFeed: String = ""
     private var feedUrl: String = ""
     
-    private var feedTitles: [String] = []
+    var feedTitles: [String] = []
     
     private(set) var feedItems: [FeedItem] = [] {
         didSet {
@@ -34,7 +33,14 @@ class CollectionModel: NSObject, XMLParserDelegate {
         }
     }
     
+    func deleteItems() {
+        self.feedTitles = []
+        self.feedItems = []
+        self.filterFeedItems = []
+    }
+    
     let userDefaults = UserDefaults.standard
+    
     private let realm = try! Realm()
     
     private let item_name = "item"
@@ -68,7 +74,7 @@ class CollectionModel: NSObject, XMLParserDelegate {
         feedItems.forEach { feed in
             i += 1
 
-            if feed.title != "" && !feed.title.contains("Yahoo!ニュース・トピックス") {
+            if feed.url != "" && !feed.title.contains("Yahoo!ニュース・トピックス") {
                 
                 if !feedTitles.contains(feed.title) {
                     filterFeedItems.append(feed)
@@ -127,10 +133,12 @@ class CollectionModel: NSObject, XMLParserDelegate {
 
         result.forEach { item in
             feedTitles.append(item.title)
-            
             if !item.title.contains("Yahoo!ニュース・トピックス") {
-                let feeditem = FeedItem(title: item.title, url: item.url, pubDate: item.pubDate)
-                filterFeedItems.append(feeditem)
+                let feeditem = FeedItem(title: item.title, url: item.url, pubDate: item.pubDate, star: item.star, read: item.read)
+                guard let title = feeditem.title else { return }
+                if title != "" {
+                    filterFeedItems.append(feeditem)
+                }
             }
         }
     }
@@ -159,14 +167,13 @@ class CollectionModel: NSObject, XMLParserDelegate {
         
         let storeFeedItem = realm.objects(StoreFeedItem.self)
         var tempFeedItems: [FeedItem] = []
-        
         var i = 0
         
         storeFeedItem.forEach { storeItem in
             
             i += 1
             if !feedTitles.contains(storeItem.title) && !storeItem.title.contains("Yahoo!ニュース・トピックス") {
-                let tempItem = FeedItem(title: storeItem.title, url: storeItem.url, pubDate: storeItem.pubDate)
+                let tempItem = FeedItem(title: storeItem.title, url: storeItem.url, pubDate: storeItem.pubDate, star: false, read: false)
                 tempFeedItems.append(tempItem)
             }
             
@@ -175,6 +182,23 @@ class CollectionModel: NSObject, XMLParserDelegate {
             }
         }
     }
+    
+    func saveSelected(title: String) {
+        
+        let predicate = NSPredicate(format: "title == %@", "\(title)")
+        let result = realm.objects(RealmFeedItem.self).filter(predicate)
+        
+        do{
+          try realm.write{
+              result[0].read = true
+          }
+        }catch {
+          print("Error \(error)")
+        }
+    }
+}
+
+extension CollectionModel: XMLParserDelegate {
     
     func getXMLData() {
         
@@ -187,7 +211,6 @@ class CollectionModel: NSObject, XMLParserDelegate {
         let parser = XMLParser(contentsOf: url)
         
         if parser != nil {
-            
             self.parser = parser
             self.parser?.delegate = self
             self.parser?.parse()
@@ -205,7 +228,7 @@ class CollectionModel: NSObject, XMLParserDelegate {
         self.currrentElementName = nil
         
         if elementName == item_name {
-            self.feedItems.append(FeedItem(title: "", url: "", pubDate: ""))
+            self.feedItems.append(FeedItem(title: "", url: "", pubDate: "", star: false, read: false))
         } else {
             currrentElementName = elementName
         }

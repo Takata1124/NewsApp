@@ -13,4 +13,6 @@ class RealmFeedItem: Object {
     @objc dynamic var title = ""
     @objc dynamic var url = ""
     @objc dynamic var pubDate = ""
+    @objc dynamic var star = false
+    @objc dynamic var read = false
 }
