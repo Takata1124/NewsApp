@@ -261,6 +261,9 @@
                                         <buttonConfiguration key="configuration" style="plain" image="checkmark" catalog="system">
                                             <color key="baseForegroundColor" name="modeTextColor"/>
                                         </buttonConfiguration>
+                                        <connections>
+                                            <action selector="filterRead:" destination="QBX-42-9ku" eventType="touchUpInside" id="9cv-OP-rsT"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rom-8p-KUe">
                                         <rect key="frame" x="310.5" y="22" width="103.5" height="31"/>
@@ -351,6 +354,9 @@
                                         <buttonConfiguration key="configuration" style="plain" image="star" catalog="system" title="">
                                             <color key="baseForegroundColor" name="modeTextColor"/>
                                         </buttonConfiguration>
+                                        <connections>
+                                            <action selector="tapStar:" destination="auD-8P-aW4" eventType="touchUpInside" id="nMd-ax-KBn"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bto-xQ-JTv">
                                         <rect key="frame" x="276" y="22" width="138" height="31"/>
@@ -386,6 +392,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="ves-Bw-HRS"/>
                     <connections>
+                        <outlet property="starButton" destination="ze9-CT-9dD" id="0wx-W4-Rn7"/>
                         <outlet property="tempView" destination="thx-am-fPS" id="C0S-Y6-UAe"/>
                     </connections>
                 </viewController>
@@ -441,6 +448,7 @@
         <scene sceneID="cVr-gB-QVV">
             <objects>
                 <navigationController id="rpr-r4-PcB" customClass="NavigationViewController" customModule="NewsApp" customModuleProvider="target" sceneMemberID="viewController">
+                    <extendedEdge key="edgesForExtendedLayout"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="rsZ-F2-tTU">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>

@@ -23,7 +23,6 @@ class RssModel {
     func saveUseData(id: String, password: String, indexPath :IndexPath, completion: @escaping(Bool) -> Void) {
         
         let selectFeed = rssArray[indexPath.row]
-        
         let user = User(id: id, password: password, feed: selectFeed, login: true)
         
         if let data: Data = try? JSONEncoder().encode(user){

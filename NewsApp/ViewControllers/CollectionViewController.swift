@@ -7,6 +7,7 @@
 
 import UIKit
 import RealmSwift
+import SwipeCellKit
 
 class CollectionViewController: UIViewController {
     
@@ -29,7 +30,16 @@ class CollectionViewController: UIViewController {
     
     var articleUrl: String = ""
     var titleName: String = ""
-    var buttonTitle: String = "New"
+    var star: Bool?
+    
+    var buttonTitle: String = "Fetch" {
+        didSet {
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+                self.orderButton.setTitle(self.buttonTitle, for: .normal)
+            }
+        }
+    }
     
     var deleteAction: Bool = false {
         didSet {
@@ -48,11 +58,12 @@ class CollectionViewController: UIViewController {
     
     private let realm = try! Realm()
     
+    private var isFilter: Bool = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
- 
-        self.collectionModel = CollectionModel()
         
+        self.collectionModel = CollectionModel()
         setupLayout()
     }
     
@@ -83,7 +94,6 @@ class CollectionViewController: UIViewController {
     private func registerModel() {
         
         guard let model = collectionModel else { return }
-        
         self.filterFeedItems = model.filterFeedItems
         
         model.notificationCenter.addObserver(forName: .init(rawValue: CollectionModel.notificationName), object: nil, queue: nil) { [weak self] nortification in
@@ -96,9 +106,10 @@ class CollectionViewController: UIViewController {
     }
     
     private func setupLayout() {
-        
         let feed = collectionModel?.rssFeed()
         navigationItem.title = feed
+        //戻るボタン非表示
+        self.navigationItem.hidesBackButton = true
         
         orderButton.setTitle(buttonTitle, for: .normal)
         orderButton.tintColor = .modeTextColor
@@ -133,23 +144,14 @@ class CollectionViewController: UIViewController {
     @IBAction func newOrder(_ sender: Any) {
         
         if buttonTitle == "New" {
+            self.buttonTitle = "Old"
             filterFeedItems.sort { item_1, item_2 in
                 item_1.pubDate < item_2.pubDate
             }
-            DispatchQueue.main.async {
-                self.buttonTitle = "Old"
-                self.collectionView.reloadData()
-                self.orderButton.setTitle(self.buttonTitle, for: .normal)
-            }
-            
         } else {
+            self.buttonTitle = "New"
             filterFeedItems.sort { item_1, item_2 in
                 item_1.pubDate > item_2.pubDate
-            }
-            DispatchQueue.main.async {
-                self.buttonTitle = "New"
-                self.collectionView.reloadData()
-                self.orderButton.setTitle(self.buttonTitle, for: .normal)
             }
         }
     }
@@ -163,19 +165,45 @@ class CollectionViewController: UIViewController {
         UIView.animate(withDuration: 0.5, animations: { [weak self] in
             
             guard let `self` = self else { return }
-            
             self.collectionView?.collectionViewLayout = self.appDelegate.cellType.layoutFromSuperviewRect(rect: self.collectionView!.frame)
             self.collectionView?.visibleCells.forEach { cell in
                 
                 guard let _cell = cell as? CollectionViewCell else { return }
-                
                 _cell.updateConstraintsWithCellType(cellType: self.appDelegate.cellType)
             }
         })
     }
+    
+    @IBAction func filterRead(_ sender: Any) {
+        
+        if isFilter {
+            collectionModel?.deleteItems()
+            collectionModel?.fetchFeedDate()
+            self.isFilter = false
+        } else {
+            let filterArray = self.filterFeedItems.filter { item in
+                item.read == true
+            }
+            self.filterFeedItems = filterArray
+            self.isFilter = true
+        }
+        //セルの順番を保持する
+        if buttonTitle == "New" {
+            filterFeedItems.sort { item_1, item_2 in
+                item_1.pubDate > item_2.pubDate
+            }
+            return
+        }
+        if buttonTitle == "Old" {
+            filterFeedItems.sort { item_1, item_2 in
+                item_1.pubDate < item_2.pubDate
+            }
+            return
+        }
+    }
 }
 
-extension CollectionViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+extension CollectionViewController: UICollectionViewDataSource, UICollectionViewDelegate, SwipeCollectionViewCellDelegate {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
@@ -190,19 +218,19 @@ extension CollectionViewController: UICollectionViewDataSource, UICollectionView
         cell.textLabel.font = UIFont.systemFont(ofSize: CGFloat(appDelegate.letterSize))
         cell.dateLabel.font = UIFont.systemFont(ofSize: CGFloat(10))
         cell.configureWithItem(item: feeditem, cellType: appDelegate.cellType)
+        cell.delegate = self
         
         return cell
     }
-    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         self.articleUrl = filterFeedItems[indexPath.row].url
         self.titleName = filterFeedItems[indexPath.row].title
-
         saveSelected(indexPath: indexPath)
         
         performSegue(withIdentifier: "goArticle", sender: nil)
     }
+    
     
     private func saveSelected(indexPath: IndexPath) {
         
@@ -211,5 +239,40 @@ extension CollectionViewController: UICollectionViewDataSource, UICollectionView
         self.filterFeedItems[indexPath.row] = newFeedItem
         let selectedTitle: String = self.filterFeedItems[indexPath.row].title
         self.collectionModel?.saveSelected(title: selectedTitle)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, editActionsForItemAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
+        guard orientation == .right else { return nil }
+        
+        let starAction = SwipeAction(style: .destructive, title: "") { action, indexPath in
+            // handle action by updating model with deletion
+            print("star")
+            print(indexPath.row)
+        }
+        
+        starAction.image = UIImage(systemName: "star")
+        starAction.backgroundColor = .systemOrange
+        starAction.font = UIFont.systemFont(ofSize: CGFloat(10))
+        starAction.textColor = .modeTextColor
+        
+        let readAction = SwipeAction(style: .destructive, title: "") { action, indexPath in
+            // handle action by updating model with deletion
+            print("book")
+            print(indexPath.row)
+        }
+        
+        readAction.image = UIImage(systemName: "book")
+        readAction.backgroundColor = .systemBlue
+        readAction.font = UIFont.systemFont(ofSize: CGFloat(10))
+        readAction.textColor = .modeTextColor
+ 
+        return [starAction, readAction]
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, editActionsOptionsForItemAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> SwipeOptions {
+        var options = SwipeOptions()
+        options.expansionStyle = .destructive
+        options.transitionStyle = .border
+        return options
     }
 }

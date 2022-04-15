@@ -41,14 +41,14 @@ class LoginModel {
             completion(false)
             return
         }
+        
         let user: User = try! JSONDecoder().decode(User.self, from: data)
         
         if user.login == true {
-            completion(true)
+            return completion(true)
         }
-        else {
-            completion(false)
-        }
+        
+        completion(false)
     }
     
     func LoginAction(idText: String, passwordText: String, completion: @escaping(Bool) -> Void) {

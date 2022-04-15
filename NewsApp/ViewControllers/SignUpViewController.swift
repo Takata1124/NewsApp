@@ -47,6 +47,8 @@ class SignUpViewController: UIViewController {
     private func setupLayout() {
         
         navigationItem.title = "SignUp"
+        //戻るボタンを非表示
+        self.navigationItem.hidesBackButton = true
         
         idTextField.layer.borderWidth = 1.0
         idTextField.keyboardType = .numberPad
@@ -93,4 +95,6 @@ class SignUpViewController: UIViewController {
             rssView.password = SignUpModel.shared.password
         }
     }
+    
+    
 }

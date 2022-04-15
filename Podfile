@@ -7,6 +7,8 @@ target 'NewsApp' do
 
   # Pods for NewsApp
   pod 'RealmSwift'
+  pod 'SwipeCellKit'
+  
   target 'NewsAppTests' do
     inherit! :search_paths
     # Pods for testing

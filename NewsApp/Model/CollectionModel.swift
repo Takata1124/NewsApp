@@ -48,9 +48,9 @@ class CollectionModel: NSObject {
     private let link_name  = "link"
     private let pubDate_name = "pubDate"
     
-    var parser: XMLParser?
+    private var parser: XMLParser?
     
-    var currrentElementName: String?
+    private var currrentElementName: String?
     
     override init() {
         super.init()
@@ -70,10 +70,7 @@ class CollectionModel: NSObject {
     private func filterFunc(feedItems: [FeedItem], completion: @escaping() -> Void) {
         
         var i = 0
-
         feedItems.forEach { feed in
-            i += 1
-
             if feed.url != "" && !feed.title.contains("Yahoo!ニュース・トピックス") {
                 
                 if !feedTitles.contains(feed.title) {
@@ -84,6 +81,7 @@ class CollectionModel: NSObject {
                     feedTitles = tempArry
                 }
             }
+            i += 1
             
             if i == feedItems.count {
                 completion()
@@ -127,7 +125,7 @@ class CollectionModel: NSObject {
         }
     }
     
-    private func fetchFeedDate() {
+    func fetchFeedDate() {
 
         let result = realm.objects(RealmFeedItem.self)
 

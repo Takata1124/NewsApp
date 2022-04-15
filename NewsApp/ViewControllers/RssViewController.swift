@@ -18,6 +18,9 @@ class RssViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        //戻るボタン非表示
+        self.navigationItem.hidesBackButton = true
+        
         tableView.delegate = self
         tableView.dataSource = self
         tableView.separatorColor = .black
@@ -51,7 +54,6 @@ extension RssViewController: UITableViewDelegate, UITableViewDataSource {
             } else {
                 print("Rssの登録に失敗しました")
             }
-            
         }
     }
     

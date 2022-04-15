@@ -15,8 +15,7 @@ class SettingModel {
     let notificationCenter = NotificationCenter()
     let userDefaults = UserDefaults.standard
     let realm = try! Realm()
-    
- 
+
     static let settingList = ["一覧画面表示切り替え","RSS取得間隔","購読RSS管理","文字サイズの変更","ダークモード","記事データの削除","購読データの削除","ユーザー情報の削除","ログアウト"]
 
     func UserLogout() {

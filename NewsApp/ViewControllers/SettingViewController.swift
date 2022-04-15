@@ -6,7 +6,6 @@
 //
 
 import UIKit
-//import RealmSwift
 
 class SettingViewController: UIViewController, UINavigationControllerDelegate {
     
@@ -14,7 +13,6 @@ class SettingViewController: UIViewController, UINavigationControllerDelegate {
     
     var selectCell: String = ""
     let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
-//    let realm = try! Realm()
     var deleteAction: Bool = false
     
     override func viewDidLoad() {
@@ -59,20 +57,17 @@ class SettingViewController: UIViewController, UINavigationControllerDelegate {
         switch selectCell {
             
         case "記事データの削除":
- 
             SettingModel.shared.deleteArticleData {
                 self.deleteAction = true
                 self.navigationController?.popViewController(animated: true)
             }
     
         case "購読データの削除":
-
             SettingModel.shared.deleteSubscriptionData {
                 self.navigationController?.popViewController(animated: true)
             }
 
         case "ユーザー情報の削除":
-            
             removeUserDefaults {
                 DispatchQueue.main.async {
                     self.navigationController?.popToRootViewController(animated: true)
