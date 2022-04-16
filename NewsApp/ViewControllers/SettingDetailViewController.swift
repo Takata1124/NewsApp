@@ -59,7 +59,6 @@ class SettingDetailViewController: UIViewController {
         if #available(iOS 13.0, *) {
             
             let onCheck: Bool = sender.isOn
-            
             if onCheck {
                 appDelegateWindow?.overrideUserInterfaceStyle = .dark
             } else {

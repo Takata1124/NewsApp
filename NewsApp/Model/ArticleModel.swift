@@ -15,6 +15,14 @@ class ArticleModel {
     
     init() {}
     
+    func fetchStar(title: String) -> Bool {
+        
+        let predicate = NSPredicate(format: "title == %@", "\(title)")
+        let result = realm.objects(RealmFeedItem.self).filter(predicate)
+
+        return result[0].star
+    }
+    
     func saveStar(title: String) {
         
         let predicate = NSPredicate(format: "title == %@", "\(title)")

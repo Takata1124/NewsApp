@@ -10,9 +10,12 @@ import RealmSwift
 
 class CollectionModel: NSObject {
     
-    static let shared = CollectionModel()
-    static let notificationName = "CollectionData"
+//    static let shared = CollectionModel()
     let notificationCenter = NotificationCenter()
+    static let notificationName = "CollectionData"
+    static let notificationAlertName = "AlertStoreData"
+    
+    private let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
     
     private var selectFeed: String = ""
     private var feedUrl: String = ""
@@ -49,7 +52,6 @@ class CollectionModel: NSObject {
     private let pubDate_name = "pubDate"
     
     private var parser: XMLParser?
-    
     private var currrentElementName: String?
     
     override init() {
@@ -58,8 +60,10 @@ class CollectionModel: NSObject {
         fetchUserFeed()
         getFeedUrl(self.selectFeed)
         fetchFeedDate()
+        
+        notificationAlert()
     }
-
+    
     private func fetchUserFeed() {
         
         guard let data: Data = userDefaults.value(forKey: "User") as? Data else { return }
@@ -90,7 +94,7 @@ class CollectionModel: NSObject {
     }
     
     func rssFeed() -> String {
-
+        
         guard let data: Data = userDefaults.value(forKey: "User") as? Data else { return "一覧" }
         let user: User = try! JSONDecoder().decode(User.self, from: data)
         let feed = user.feed
@@ -124,15 +128,15 @@ class CollectionModel: NSObject {
             print("urlを取得できませんでした")
         }
     }
-    
+    //保存データの設置
     func fetchFeedDate() {
-
+        
         let result = realm.objects(RealmFeedItem.self)
-
+        
         result.forEach { item in
             feedTitles.append(item.title)
             if !item.title.contains("Yahoo!ニュース・トピックス") {
-                let feeditem = FeedItem(title: item.title, url: item.url, pubDate: item.pubDate, star: item.star, read: item.read)
+                let feeditem = FeedItem(title: item.title, url: item.url, pubDate: item.pubDate, star: item.star, read: item.read, afterRead: item.afterRead)
                 guard let title = feeditem.title else { return }
                 if title != "" {
                     filterFeedItems.append(feeditem)
@@ -140,15 +144,24 @@ class CollectionModel: NSObject {
             }
         }
     }
+    //更新データの有無を通知
+    func notificationAlert() {
+        
+        if appDelegate.storeFeedItems != [] {
+            DispatchQueue.main.async {
+                self.notificationCenter.post(name: Notification.Name(CollectionModel.notificationAlertName), object: nil, userInfo: ["alert": true])
+            }
+        }
+    }
     
     private func saveFeedData(feedItems: [FeedItem]) {
-
+        
         let selectRealmItem = realm.objects(RealmFeedItem.self)
         
         try! realm.write {
             realm.delete(selectRealmItem)
         }
-
+        
         feedItems.forEach { item in
             let realmFeedItem = RealmFeedItem()
             realmFeedItem.title = item.title
@@ -171,7 +184,7 @@ class CollectionModel: NSObject {
             
             i += 1
             if !feedTitles.contains(storeItem.title) && !storeItem.title.contains("Yahoo!ニュース・トピックス") {
-                let tempItem = FeedItem(title: storeItem.title, url: storeItem.url, pubDate: storeItem.pubDate, star: false, read: false)
+                let tempItem = FeedItem(title: storeItem.title, url: storeItem.url, pubDate: storeItem.pubDate, star: false, read: false, afterRead: false)
                 tempFeedItems.append(tempItem)
             }
             
@@ -187,11 +200,144 @@ class CollectionModel: NSObject {
         let result = realm.objects(RealmFeedItem.self).filter(predicate)
         
         do{
-          try realm.write{
-              result[0].read = true
-          }
+            try realm.write{
+                result[0].read = true
+            }
         }catch {
-          print("Error \(error)")
+            print("Error \(error)")
+        }
+    }
+    
+    func saveStar(title: String) {
+        
+        let predicate = NSPredicate(format: "title == %@", "\(title)")
+        let result = realm.objects(RealmFeedItem.self).filter(predicate)
+        
+        if result[0].star == false {
+            do{
+                try realm.write{
+                    result[0].star = true
+                }
+            }catch {
+                print("Error \(error)")
+            }
+        } else {
+            do{
+                try realm.write{
+                    result[0].star = false
+                }
+            }catch {
+                print("Error \(error)")
+            }
+        }
+    }
+    
+    func saveAfterRead(title: String) {
+        
+        let predicate = NSPredicate(format: "title == %@", "\(title)")
+        let result = realm.objects(RealmFeedItem.self).filter(predicate)
+        
+        if result[0].afterRead == false {
+            do{
+                try realm.write{
+                    result[0].afterRead = true
+                }
+            }catch {
+                print("Error \(error)")
+            }
+        } else {
+            do{
+                try realm.write{
+                    result[0].afterRead = false
+                }
+            }catch {
+                print("Error \(error)")
+            }
+        }
+    }
+    
+    func makingNewOrder(buttonTitle: String) -> String {
+        
+        if buttonTitle == "New" {
+            filterFeedItems.sort { item_1, item_2 in
+                item_1.pubDate < item_2.pubDate
+            }
+            return "Old"
+        }
+        
+        filterFeedItems.sort { item_1, item_2 in
+            item_1.pubDate > item_2.pubDate
+        }
+        return "New"
+    }
+    
+    func filterStar(isReadFilter: Bool, isStarFilter: Bool, buttonTitle: String) {
+        
+        if isReadFilter { return }
+        
+        if isStarFilter {
+            self.deleteItems()
+            self.fetchFeedDate()
+        } else {
+            let filterArray = self.filterFeedItems.filter { item in
+                item.star == true
+            }
+            self.filterFeedItems = filterArray
+        }
+
+        if buttonTitle == "New" {
+            filterFeedItems.sort { item_1, item_2 in
+                item_1.pubDate > item_2.pubDate
+            }
+            return
+        }
+        if buttonTitle == "Old" {
+            filterFeedItems.sort { item_1, item_2 in
+                item_1.pubDate < item_2.pubDate
+            }
+            return
+        }
+    }
+    
+    func filterRead(isReadFilter: Bool, isStarFilter: Bool, buttonTitle: String) {
+        
+        if isStarFilter { return }
+        
+        if isReadFilter {
+            self.deleteItems()
+            self.fetchFeedDate()
+        } else {
+            let filterArray = self.filterFeedItems.filter { item in
+                item.read == true
+            }
+            self.filterFeedItems = filterArray
+        }
+        
+        if buttonTitle == "New" {
+            filterFeedItems.sort { item_1, item_2 in
+                item_1.pubDate > item_2.pubDate
+            }
+            return
+        }
+        
+        if buttonTitle == "Old" {
+            filterFeedItems.sort { item_1, item_2 in
+                item_1.pubDate < item_2.pubDate
+            }
+            return
+        }
+    }
+    
+    func filterAfterReadAction(isAfterReadFilter: Bool) {
+        
+        if isAfterReadFilter {
+            self.deleteItems()
+            self.fetchFeedDate()
+        } else {
+            let filterArray = self.filterFeedItems.filter { item in
+                item.afterRead == true
+            }
+            self.filterFeedItems = filterArray
         }
     }
 }
@@ -226,7 +372,7 @@ extension CollectionModel: XMLParserDelegate {
         self.currrentElementName = nil
         
         if elementName == item_name {
-            self.feedItems.append(FeedItem(title: "", url: "", pubDate: "", star: false, read: false))
+            self.feedItems.append(FeedItem(title: "", url: "", pubDate: "", star: false, read: false, afterRead: false))
         } else {
             currrentElementName = elementName
         }
@@ -273,6 +419,6 @@ extension CollectionModel: XMLParserDelegate {
     }
     
     func parserDidEndDocument(_ parser: XMLParser) {
-
+        
     }
 }

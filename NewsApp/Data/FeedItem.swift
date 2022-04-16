@@ -18,13 +18,15 @@ class FeedItem: Equatable {
     var pubDate: String!
     var star: Bool!
     var read: Bool!
+    var afterRead: Bool!
     
-    init(title: String, url: String, pubDate: String, star: Bool, read: Bool) {
+    init(title: String, url: String, pubDate: String, star: Bool, read: Bool, afterRead: Bool) {
         
         self.title = title
         self.url = url
         self.pubDate = pubDate
         self.star = star
         self.read = read
+        self.afterRead = afterRead
     }
 }

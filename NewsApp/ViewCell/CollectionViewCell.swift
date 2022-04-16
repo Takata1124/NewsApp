@@ -93,14 +93,14 @@ class CollectionViewCell: SwipeCollectionViewCell {
             textLabel.textAlignment = .left
             dateLabel.frame = CGRect(x: self.bounds.width / 2 - 150, y: self.bounds.height / 2, width: 300, height: 50)
             dateLabel.textAlignment = .right
-            starImage.frame = CGRect(x: 20, y: self.bounds.height / 2 - 10, width: 20, height: 20)
+            starImage.frame = CGRect(x: 10, y: self.bounds.height / 2 - 10, width: 20, height: 20)
             
         case .Grid:
             textLabel.frame = CGRect(x: self.bounds.width / 2 - 75, y: self.bounds.height / 2 -  25, width: 150, height: 50)
             textLabel.textAlignment = .left
             dateLabel.frame = CGRect(x: self.bounds.width / 2 - 75, y: self.bounds.height * 1.5 / 2, width: 150, height: 50)
             dateLabel.textAlignment = .right
-            starImage.frame = CGRect(x: 20, y: 20, width: 20, height: 20)
+            starImage.frame = CGRect(x: 10, y: 20, width: 20, height: 20)
         }
     }
 }

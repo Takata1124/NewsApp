@@ -17,8 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var cellType: CellType = .List
     var InterbalTime: Double = 60
     let userdefaults = UserDefaults.standard
-    var newDataAlert: Bool = false
-    
+    var storeFeedItems: [FeedItem] = []
     var navigationController: UINavigationController?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -50,9 +49,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         print(userdefaults.array(forKey: "date") as Any)
         
         migration()
+        
         let realm = try! Realm()
         let object = realm.objects(StoreFeedItem.self)
+        object.forEach { item in
+            self.storeFeedItems.append(FeedItem(title: item.title, url: item.url, pubDate: item.pubDate, star: false, read: false, afterRead: false))
+        }
         print(object)
+        print(type(of: object))
         
         let dt = Date()
         print(dt)
@@ -62,7 +66,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     private func migration() {
 
-        let nextSchemaVersion = 1
+        let nextSchemaVersion = 2
 
         let config = Realm.Configuration(
             schemaVersion: UInt64(nextSchemaVersion),

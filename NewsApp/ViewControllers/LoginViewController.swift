@@ -70,12 +70,13 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     private func alreadyUserLogin() {
         
         LoginModel.shared.alreadyConfirmLogin { success in
-            print(success)
+            
             if success {
                 self.performSegue(withIdentifier: "goCollection", sender: nil)
-            } else {
                 return
             }
+            
+            return
         }
     }
 
@@ -84,9 +85,11 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         LoginModel.shared.LoginAction(idText: idTextField.text ?? "", passwordText: passwordTextField.text ?? "") { success in
             if success {
                 self.performSegue(withIdentifier: "goCollection", sender: nil)
-            } else {
-                print("Rss選択に移れませんでした")
+                return
             }
+            
+            print("Rss選択に移れませんでした")
+            return
         }
     }
     

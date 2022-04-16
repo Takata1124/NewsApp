@@ -15,4 +15,5 @@ class RealmFeedItem: Object {
     @objc dynamic var pubDate = ""
     @objc dynamic var star = false
     @objc dynamic var read = false
+    @objc dynamic var afterRead = false
 }
