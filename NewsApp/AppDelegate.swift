@@ -6,27 +6,32 @@
 //
 
 import UIKit
-import AuthenticationServices
 import BackgroundTasks
 import RealmSwift
+import UserNotifications
 
 @main
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
     
     var letterSize: Int = 13
     var cellType: CellType = .List
-    var InterbalTime: Double = 60
+    var InterbalTime: Double = 15
     let userdefaults = UserDefaults.standard
     var storeFeedItems: [FeedItem] = []
     var navigationController: UINavigationController?
     
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    let usernotificationCenter = UNUserNotificationCenter.current()
+    
+    var realm: Realm?
+    
+    var window: UIWindow?
+    
+    func application(_ : UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
         UINavigationBar.appearance().tintColor = UIColor.modeTextColor
         UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: UIColor.modeTextColor]
         
         BGTaskScheduler.shared.register(forTaskWithIdentifier: "com.MeasurementSample.refresh", using: nil) { task in
-            
             self.handleAppRefresh(task: task as! BGAppRefreshTask)
         }
         
@@ -50,24 +55,44 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         migration()
         
-        let realm = try! Realm()
-        let object = realm.objects(StoreFeedItem.self)
-        object.forEach { item in
+        self.realm = try! Realm()
+   
+        let object = realm?.objects(StoreFeedItem.self)
+        object?.forEach { item in
             self.storeFeedItems.append(FeedItem(title: item.title, url: item.url, pubDate: item.pubDate, star: false, read: false, afterRead: false))
         }
         print(object)
-        print(type(of: object))
         
         let dt = Date()
         print(dt)
-        
+
         return true
     }
     
+    private func formatter(date: Date) -> String {
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        dateFormatter.dateFormat = "EEE, dd MMM yyyy hh:mm:ss Z"
+        dateFormatter.locale = NSLocale(localeIdentifier: "ja_JP") as Locale
+        dateFormatter.dateFormat = "yyyy/MM/dd HH:mm Z"
+        let dateString = dateFormatter.string(from: date)
+        return dateString
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
+        
+        UIApplication.shared.applicationIconBadgeNumber = 0
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler([[.banner, .sound]])
+    }
+    
     private func migration() {
-
+        
         let nextSchemaVersion = 2
-
+        
         let config = Realm.Configuration(
             schemaVersion: UInt64(nextSchemaVersion),
             migrationBlock: { migration, oldSchemaVersion in
@@ -123,11 +148,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         
         operationQueue.addOperation(operation)
+        
+        showingAlert()
     }
     
     private func scheduleAppRefresh() {
-        
-        print("taskの登録")
         
         let request = BGAppRefreshTaskRequest(identifier: "com.MeasurementSample.refresh")
         request.earliestBeginDate = Date(timeIntervalSinceNow: InterbalTime * 60)
@@ -136,6 +161,86 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             try BGTaskScheduler.shared.submit(request)
         } catch {
             print("Could not schedule app refresh: \(error)")
+        }
+    }
+    
+    private func showingAlert() {
+
+        var isContain: Bool = false
+        var tempStoreFeedTitle: [String] = []
+        var tempRealmFeedTitle: [String] = []
+        
+        let storeObject = realm?.objects(StoreFeedItem.self)
+        storeObject?.forEach { item in
+            tempStoreFeedTitle.append(item.title)
+        }
+        
+        let realmObject = realm?.objects(RealmFeedItem.self)
+        realmObject?.forEach { item in
+            tempRealmFeedTitle.append(item.title)
+        }
+        
+        tempStoreFeedTitle.forEach { storeTitle in
+            if tempRealmFeedTitle.contains(storeTitle) {
+                isContain = true
+            }
+        }
+        
+        if isContain { return }
+
+        if #available (iOS 10.0, *) {
+           
+            usernotificationCenter.requestAuthorization(options: [.sound, .alert, .badge], completionHandler: {
+                (granted, error) in
+                
+                DispatchQueue.main.async {
+                    if granted == true {
+                        UIApplication.shared.registerForRemoteNotifications()
+                    } else {
+                        print("permisson Denied")
+                    }
+                }
+            })
+        }
+        
+        usernotificationCenter.getNotificationSettings { settings in
+            
+            DispatchQueue.main.async {
+                
+                let title = "NewsApp"
+                let message = "更新データがあります"
+                let date = Date(timeIntervalSinceNow: 1 * 30)
+                
+                if settings.authorizationStatus == .authorized {
+                    
+                    let content = UNMutableNotificationContent()
+                    content.title = title
+                    content.body = message
+                    content.badge = 1
+                    
+                    let dateComp = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: date)
+                    let trigger = UNCalendarNotificationTrigger(dateMatching: dateComp, repeats: false)
+                    let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+                    self.usernotificationCenter.delegate = self
+                    
+                    UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+    
+                } else {
+                    
+                    let ac = UIAlertController(title: "プッシュ通知が使用できません", message: "設定画面よりアプリのプッシュ通知をONにしてください", preferredStyle: .alert)
+                    let goToSettings = UIAlertAction(title: title, style: .default) { _ in
+                        guard let settingsURL = URL(string: UIApplication.openSettingsURLString) else { return }
+                        
+                        if UIApplication.shared.canOpenURL(settingsURL) {
+                            UIApplication.shared.open(settingsURL) { _ in }
+                        }
+                       
+                    }
+                    ac.addAction(goToSettings)
+                    ac.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { _ in }))
+                    self.window?.rootViewController?.present(ac, animated: true, completion: nil)
+                }
+            }
         }
     }
 }

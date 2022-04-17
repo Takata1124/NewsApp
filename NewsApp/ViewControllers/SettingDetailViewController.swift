@@ -61,8 +61,10 @@ class SettingDetailViewController: UIViewController {
             let onCheck: Bool = sender.isOn
             if onCheck {
                 appDelegateWindow?.overrideUserInterfaceStyle = .dark
+                settingDetailView.modeLabel.text = "dark"
             } else {
                 appDelegateWindow?.overrideUserInterfaceStyle = .light
+                settingDetailView.modeLabel.text = "light"
             }
         }
     }

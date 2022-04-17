@@ -35,7 +35,7 @@ class SettingDetailView: UIView {
         return label
     }()
     
-    let modeLabel: UILabel = {
+    var modeLabel: UILabel = {
         let label = UILabel(frame: CGRect(x: UIScreen.main.bounds.width / 2 - 50, y: 300, width: 100, height: 50))
         label.textAlignment = .center
         return label

@@ -159,10 +159,16 @@ class CollectionViewController: UIViewController {
     
     @objc func refresh(sender: UIRefreshControl) {
         
-        if filterFeedItems == [] || appDelegate.storeFeedItems == [] {
+        if filterFeedItems == [] {
             collectionModel?.getXMLData()
-        } else {
+        }
+        
+        if filterFeedItems != [] && appDelegate.storeFeedItems != [] {
             collectionModel?.comparedFeedItem()
+        }
+        
+        if filterFeedItems != [] && appDelegate.storeFeedItems == [] {
+            collectionModel?.getXMLData()
         }
         
         refreshControl.endRefreshing()
@@ -237,20 +243,11 @@ extension CollectionViewController: UICollectionViewDataSource, UICollectionView
         self.titleName = filterFeedItems[indexPath.row].title
         self.indexPathRow = indexPath.row
         
-        saveSelected(indexPath: indexPath)
+        self.collectionModel?.saveSelected(indexPath: indexPath)
         
         performSegue(withIdentifier: "goArticle", sender: nil)
     }
-    
-    private func saveSelected(indexPath: IndexPath) {
-        
-        let selectItem = filterFeedItems[indexPath.row]
-        let newFeedItem = FeedItem(title: selectItem.title, url: selectItem.url, pubDate: selectItem.pubDate, star: selectItem.star, read: true, afterRead: selectItem.afterRead)
-        self.filterFeedItems[indexPath.row] = newFeedItem
-        let selectedTitle: String = self.filterFeedItems[indexPath.row].title
-        self.collectionModel?.saveSelected(title: selectedTitle)
-    }
-    
+
     func collectionView(_ collectionView: UICollectionView, editActionsForItemAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
         guard orientation == .right else { return nil }
         

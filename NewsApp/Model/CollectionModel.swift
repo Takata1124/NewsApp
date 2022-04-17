@@ -20,8 +20,6 @@ class CollectionModel: NSObject {
     private var selectFeed: String = ""
     private var feedUrl: String = ""
     
-    var feedTitles: [String] = []
-    
     private(set) var feedItems: [FeedItem] = [] {
         didSet {
             filterFunc(feedItems: feedItems) {
@@ -37,7 +35,6 @@ class CollectionModel: NSObject {
     }
     
     func deleteItems() {
-        self.feedTitles = []
         self.feedItems = []
         self.filterFeedItems = []
     }
@@ -77,12 +74,10 @@ class CollectionModel: NSObject {
         feedItems.forEach { feed in
             if feed.url != "" && !feed.title.contains("Yahoo!ニュース・トピックス") {
                 
-                if !feedTitles.contains(feed.title) {
+                if !filterFeedItems.contains(where: { feeditem in
+                    feeditem.title == feed.title
+                }) {
                     filterFeedItems.append(feed)
-                    feedTitles.append(feed.title)
-                    
-                    let tempArry = Array(Set(feedTitles))
-                    feedTitles = tempArry
                 }
             }
             i += 1
@@ -134,7 +129,6 @@ class CollectionModel: NSObject {
         let result = realm.objects(RealmFeedItem.self)
         
         result.forEach { item in
-            feedTitles.append(item.title)
             if !item.title.contains("Yahoo!ニュース・トピックス") {
                 let feeditem = FeedItem(title: item.title, url: item.url, pubDate: item.pubDate, star: item.star, read: item.read, afterRead: item.afterRead)
                 guard let title = feeditem.title else { return }
@@ -158,19 +152,20 @@ class CollectionModel: NSObject {
         
         let selectRealmItem = realm.objects(RealmFeedItem.self)
         
-        try! realm.write {
-            realm.delete(selectRealmItem)
-        }
-        
         feedItems.forEach { item in
-            let realmFeedItem = RealmFeedItem()
-            realmFeedItem.title = item.title
-            realmFeedItem.url = item.url
-            realmFeedItem.pubDate = item.pubDate
             
-            try! realm.write({
-                realm.add(realmFeedItem)
-            })
+            if !selectRealmItem.contains(where: { realmitem in
+                realmitem.title == item.title
+            }) {
+                let realmFeedItem = RealmFeedItem()
+                realmFeedItem.title = item.title
+                realmFeedItem.url = item.url
+                realmFeedItem.pubDate = item.pubDate
+                
+                try! realm.write({
+                    realm.add(realmFeedItem)
+                })
+            }
         }
     }
     
@@ -183,20 +178,32 @@ class CollectionModel: NSObject {
         storeFeedItem.forEach { storeItem in
             
             i += 1
-            if !feedTitles.contains(storeItem.title) && !storeItem.title.contains("Yahoo!ニュース・トピックス") {
+            if !filterFeedItems.contains(where: { item in
+                item.title == storeItem.title
+            }) && !storeItem.title.contains("Yahoo!ニュース・トピックス") {
                 let tempItem = FeedItem(title: storeItem.title, url: storeItem.url, pubDate: storeItem.pubDate, star: false, read: false, afterRead: false)
                 tempFeedItems.append(tempItem)
             }
             
             if i == storeFeedItem.count {
                 feedItems += tempFeedItems
+                
+                let results = realm.objects(StoreFeedItem.self)
+                try! realm.write {
+                    realm.delete(results)
+                }
             }
         }
     }
     
-    func saveSelected(title: String) {
+    func saveSelected(indexPath: IndexPath) {
         
-        let predicate = NSPredicate(format: "title == %@", "\(title)")
+        let selectItem = filterFeedItems[indexPath.row]
+        let newFeedItem = FeedItem(title: selectItem.title, url: selectItem.url, pubDate: selectItem.pubDate, star: selectItem.star, read: true, afterRead: selectItem.afterRead)
+        self.filterFeedItems[indexPath.row] = newFeedItem
+        let selectedTitle: String = self.filterFeedItems[indexPath.row].title
+        
+        let predicate = NSPredicate(format: "title == %@", "\(selectedTitle)")
         let result = realm.objects(RealmFeedItem.self).filter(predicate)
         
         do{
@@ -308,7 +315,7 @@ class CollectionModel: NSObject {
             self.fetchFeedDate()
         } else {
             let filterArray = self.filterFeedItems.filter { item in
-                item.read == true
+                item.read == false
             }
             self.filterFeedItems = filterArray
         }
