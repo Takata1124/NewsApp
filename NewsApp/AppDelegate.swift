@@ -61,7 +61,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         object?.forEach { item in
             self.storeFeedItems.append(FeedItem(title: item.title, url: item.url, pubDate: item.pubDate, star: false, read: false, afterRead: false))
         }
-        print(object)
         
         let dt = Date()
         print(dt)
@@ -148,13 +147,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         }
         
         operationQueue.addOperation(operation)
-        
-        showingAlert()
     }
     
     private func scheduleAppRefresh() {
         
         let request = BGAppRefreshTaskRequest(identifier: "com.MeasurementSample.refresh")
+        
         request.earliestBeginDate = Date(timeIntervalSinceNow: InterbalTime * 60)
         
         do {

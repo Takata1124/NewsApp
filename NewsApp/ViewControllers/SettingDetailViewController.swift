@@ -16,7 +16,6 @@ class SettingDetailViewController: UIViewController {
     var selectCell: String = ""
     
     private var currentValue: String = "" {
-        
         didSet {
             settingDetailView.valueLabel.text = currentValue
         }

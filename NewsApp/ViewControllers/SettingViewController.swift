@@ -82,7 +82,6 @@ class SettingViewController: UIViewController, UINavigationControllerDelegate {
             }
             
         default:
-    
             self.performSegue(withIdentifier: "goSettingDetail", sender: nil)
         }
     }

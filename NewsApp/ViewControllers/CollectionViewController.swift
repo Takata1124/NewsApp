@@ -16,7 +16,8 @@ class CollectionViewController: UIViewController {
     @IBOutlet weak var orderButton: UIButton!
     @IBOutlet weak var starButton: UIButton!
     @IBOutlet weak var readButton: UIButton!
-    
+    @IBOutlet weak var afterReadButton: UIButton!
+ 
     private let userDefaults = UserDefaults.standard
     private let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
     private let refreshControl = UIRefreshControl()
@@ -35,7 +36,9 @@ class CollectionViewController: UIViewController {
     
     var filterFeedItems: [FeedItem] = [] {
         didSet {
-            self.collectionView.reloadData()
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+            }
         }
     }
     
@@ -70,22 +73,29 @@ class CollectionViewController: UIViewController {
     
     private var isReadFilter: Bool = false {
         didSet {
-            starButton.tintColor = self.isReadFilter ? UIColor.systemGray : UIColor.modeTextColor
+            readButton.tintColor = self.isReadFilter ? UIColor.red : UIColor.modeTextColor
         }
     }
     
     private var isStarFilter: Bool = false {
         didSet {
-            readButton.tintColor = self.isStarFilter ? UIColor.systemGray : UIColor.modeTextColor
+            starButton.tintColor = self.isStarFilter ? UIColor.red : UIColor.modeTextColor
         }
     }
     
-    private var isAfterReadFilter: Bool = false
+    private var isAfterReadFilter: Bool = false {
+        didSet {
+            afterReadButton.tintColor = self.isAfterReadFilter ? UIColor.red : UIColor.modeTextColor
+        }
+    }
+    
+    var notificationToken: NotificationToken?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.collectionModel = CollectionModel()
+        
         setupLayout()
     }
     
@@ -145,6 +155,7 @@ class CollectionViewController: UIViewController {
         orderButton.tintColor = .modeTextColor
         starButton.tintColor = .modeTextColor
         readButton.tintColor = .modeTextColor
+        afterReadButton.tintColor = .modeTextColor
         
         nortificationButton.image = UIImage(systemName: "bell")
         
@@ -158,13 +169,20 @@ class CollectionViewController: UIViewController {
     }
     
     @objc func refresh(sender: UIRefreshControl) {
+        //
+        if isReadFilter == true || isStarFilter == true || isAfterReadFilter == true {
+            refreshControl.endRefreshing()
+            return
+        }
         
         if filterFeedItems == [] {
             collectionModel?.getXMLData()
         }
         
         if filterFeedItems != [] && appDelegate.storeFeedItems != [] {
-            collectionModel?.comparedFeedItem()
+            collectionModel?.comparedFeedItem(completion: {
+                self.collectionModel?.deleteStoreFeedItems()
+            })
         }
         
         if filterFeedItems != [] && appDelegate.storeFeedItems == [] {
@@ -180,6 +198,8 @@ class CollectionViewController: UIViewController {
     
     @IBAction func filterStar(_ sender: Any) {
         
+        if isReadFilter == true || isAfterReadFilter == true { return }
+   
         collectionModel?.filterStar(isReadFilter: isReadFilter, isStarFilter: isStarFilter, buttonTitle: buttonTitle)
         self.isStarFilter.toggle()
     }
@@ -206,13 +226,17 @@ class CollectionViewController: UIViewController {
     
     @IBAction func filterRead(_ sender: Any) {
         
+        if isStarFilter == true || isAfterReadFilter == true { return }
+  
         collectionModel?.filterRead(isReadFilter: isReadFilter, isStarFilter: isStarFilter, buttonTitle: buttonTitle)
         self.isReadFilter.toggle()
     }
     
     @IBAction func filterAfterRead(_ sender: Any) {
         
-        collectionModel?.filterAfterReadAction(isAfterReadFilter: isAfterReadFilter)
+        if isStarFilter == true || isReadFilter == true { return }
+    
+        collectionModel?.filterAfterReadAction(isAfterReadFilter: isAfterReadFilter, buttonTitle: buttonTitle)
         self.isAfterReadFilter.toggle()
     }
 }
@@ -247,7 +271,7 @@ extension CollectionViewController: UICollectionViewDataSource, UICollectionView
         
         performSegue(withIdentifier: "goArticle", sender: nil)
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, editActionsForItemAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
         guard orientation == .right else { return nil }
         
@@ -275,7 +299,7 @@ extension CollectionViewController: UICollectionViewDataSource, UICollectionView
             DispatchQueue.main.async {
                 self.collectionView.reloadData()
             }
-
+            
             guard let selectTitle = self.filterFeedItems[indexPath.row].title else { return }
             self.collectionModel?.saveAfterRead(title: selectTitle)
         }
