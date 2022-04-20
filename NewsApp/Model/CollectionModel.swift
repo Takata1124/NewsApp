@@ -81,10 +81,10 @@ class CollectionModel: NSObject {
                 }
 
             case .update(let items, let deletions, let insertions, let modifications):
-                print("Update count: \(items.count)")
-                print("Delete count: \(deletions.count)")
-                print("Insert count: \(insertions.count)")
-                print("Modification count: \(modifications.count)")
+//                print("Update count: \(items.count)")
+//                print("Delete count: \(deletions.count)")
+//                print("Insert count: \(insertions.count)")
+//                print("Modification count: \(modifications.count)")
                 //セル選択時のアップデートと処理を防ぐ
                 if modifications == [] {
                     if items.count > 0 {
@@ -240,14 +240,16 @@ class CollectionModel: NSObject {
             
             if i == storeFeedItem.count {
                 feedItems += tempFeedItems
+                completion()
             }
         }
     }
     
     func deleteStoreFeedItems() {
         
+        appDelegate.storeFeedItems = []
         let results = realm.objects(StoreFeedItem.self)
-        
+
         try! realm.write {
             realm.delete(results)
         }
@@ -332,18 +334,18 @@ class CollectionModel: NSObject {
         return "New"
     }
     
-    func filterStar(isReadFilter: Bool, isStarFilter: Bool, buttonTitle: String) {
+    func filterStar(isStarFilter: Bool, buttonTitle: String)  {
   
         if isStarFilter {
-            self.deleteItems()
-            self.fetchFeedDate()
-        } else {
             let result = realm.objects(RealmFeedItem.self).filter("star = true")
             var tempArray: [FeedItem] = []
             result.forEach { item in
                 tempArray.append(FeedItem(title: item.title, url: item.url, pubDate: item.pubDate, star: item.star, read: item.read, afterRead: item.afterRead))
             }
             self.filterFeedItems = tempArray
+        } else {
+            self.deleteItems()
+            self.fetchFeedDate()
         }
         
         if buttonTitle == "New" {
@@ -358,20 +360,21 @@ class CollectionModel: NSObject {
             }
             return
         }
+        
     }
     
-    func filterRead(isReadFilter: Bool, isStarFilter: Bool, buttonTitle: String) {
+    func filterRead(isReadFilter: Bool, buttonTitle: String) {
         
         if isReadFilter {
-            self.deleteItems()
-            self.fetchFeedDate()
-        } else {
             let result = realm.objects(RealmFeedItem.self).filter("read = true")
             var tempArray: [FeedItem] = []
             result.forEach { item in
                 tempArray.append(FeedItem(title: item.title, url: item.url, pubDate: item.pubDate, star: item.star, read: item.read, afterRead: item.afterRead))
             }
             self.filterFeedItems = tempArray
+        } else {
+            self.deleteItems()
+            self.fetchFeedDate()
         }
         
         if buttonTitle == "New" {
@@ -392,13 +395,13 @@ class CollectionModel: NSObject {
     func filterAfterReadAction(isAfterReadFilter: Bool, buttonTitle: String) {
         
         if isAfterReadFilter {
-            self.deleteItems()
-            self.fetchFeedDate()
-        } else {
             let filterArray = self.filterFeedItems.filter { item in
                 item.afterRead == true
             }
             self.filterFeedItems = filterArray
+        } else {
+            self.deleteItems()
+            self.fetchFeedDate()
         }
         
         if buttonTitle == "New" {

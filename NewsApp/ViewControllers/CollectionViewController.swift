@@ -8,6 +8,7 @@
 import UIKit
 import RealmSwift
 import SwipeCellKit
+import SwiftUI
 
 class CollectionViewController: UIViewController {
     
@@ -132,8 +133,38 @@ class CollectionViewController: UIViewController {
         model.notificationCenter.addObserver(forName: .init(rawValue: CollectionModel.notificationName), object: nil, queue: nil) { [weak self] nortification in
             
             if let filterfeeditems = nortification.userInfo?["item"] as? [FeedItem] {
+                
+                if self!.isStarFilter == true {
+                    self?.filterFeedItems = []
+                    filterfeeditems.forEach { item in
+                        if item.star == true {
+                            self?.filterFeedItems.append(item)
+                        }
+                    }
+                    return
+                }
+                
+                if self!.isReadFilter == true {
+                    self?.filterFeedItems = []
+                    filterfeeditems.forEach { item in
+                        if item.read == true {
+                            self?.filterFeedItems.append(item)
+                        }
+                    }
+                    return
+                }
+                
+                if self!.isAfterReadFilter == true {
+                    self?.filterFeedItems = []
+                    filterfeeditems.forEach { item in
+                        if item.afterRead == true {
+                            self?.filterFeedItems.append(item)
+                        }
+                    }
+                    return
+                }
+                
                 self?.filterFeedItems = filterfeeditems
-                self?.collectionView.reloadData()
             }
         }
         
@@ -199,9 +230,10 @@ class CollectionViewController: UIViewController {
     @IBAction func filterStar(_ sender: Any) {
         
         if isReadFilter == true || isAfterReadFilter == true { return }
-   
-        collectionModel?.filterStar(isReadFilter: isReadFilter, isStarFilter: isStarFilter, buttonTitle: buttonTitle)
+        
         self.isStarFilter.toggle()
+        collectionModel?.filterStar(isStarFilter: isStarFilter, buttonTitle: buttonTitle)
+        
     }
     
     @IBAction func goSetting(_ sender: Any) {
@@ -228,16 +260,16 @@ class CollectionViewController: UIViewController {
         
         if isStarFilter == true || isAfterReadFilter == true { return }
   
-        collectionModel?.filterRead(isReadFilter: isReadFilter, isStarFilter: isStarFilter, buttonTitle: buttonTitle)
         self.isReadFilter.toggle()
+        collectionModel?.filterRead(isReadFilter: isReadFilter, buttonTitle: buttonTitle)
     }
     
     @IBAction func filterAfterRead(_ sender: Any) {
         
         if isStarFilter == true || isReadFilter == true { return }
     
-        collectionModel?.filterAfterReadAction(isAfterReadFilter: isAfterReadFilter, buttonTitle: buttonTitle)
         self.isAfterReadFilter.toggle()
+        collectionModel?.filterAfterReadAction(isAfterReadFilter: isAfterReadFilter, buttonTitle: buttonTitle)
     }
 }
 

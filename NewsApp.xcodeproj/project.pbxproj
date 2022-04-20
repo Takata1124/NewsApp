@@ -47,6 +47,7 @@
 		68BF679B27FAA51500A451C3 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BF679A27FAA51500A451C3 /* User.swift */; };
 		68BF67A027FAA72200A451C3 /* PasswordValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BF679F27FAA72200A451C3 /* PasswordValidator.swift */; };
 		68BF67A427FAA9E400A451C3 /* IdValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BF67A327FAA9E400A451C3 /* IdValidator.swift */; };
+		68F5351A280FF27B00B5AC97 /* AlertOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68F53519280FF27B00B5AC97 /* AlertOperation.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -113,6 +114,7 @@
 		68BF679A27FAA51500A451C3 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		68BF679F27FAA72200A451C3 /* PasswordValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordValidator.swift; sourceTree = "<group>"; };
 		68BF67A327FAA9E400A451C3 /* IdValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdValidator.swift; sourceTree = "<group>"; };
+		68F53519280FF27B00B5AC97 /* AlertOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertOperation.swift; sourceTree = "<group>"; };
 		76235084F41210D9F6AAF859 /* Pods-NewsApp-NewsAppUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NewsApp-NewsAppUITests.debug.xcconfig"; path = "Target Support Files/Pods-NewsApp-NewsAppUITests/Pods-NewsApp-NewsAppUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		7CD6F167B975734BFA8583D3 /* Pods_NewsApp_NewsAppUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NewsApp_NewsAppUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		87E15B0BFFCC36D8FE884880 /* Pods-NewsApp-NewsAppUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NewsApp-NewsAppUITests.release.xcconfig"; path = "Target Support Files/Pods-NewsApp-NewsAppUITests/Pods-NewsApp-NewsAppUITests.release.xcconfig"; sourceTree = "<group>"; };
@@ -180,6 +182,7 @@
 			isa = PBXGroup;
 			children = (
 				688EB32C28028EFB008FB693 /* RefreshAppContentsOperation.swift */,
+				68F53519280FF27B00B5AC97 /* AlertOperation.swift */,
 			);
 			path = Operation;
 			sourceTree = "<group>";
@@ -586,6 +589,7 @@
 				688EB3432809B70C008FB693 /* ArticleModel.swift in Sources */,
 				688EB33328045487008FB693 /* SettingDetailView.swift in Sources */,
 				688EB33D2806FCEC008FB693 /* CollectionModel.swift in Sources */,
+				68F5351A280FF27B00B5AC97 /* AlertOperation.swift in Sources */,
 				68BF678727F8AA1300A451C3 /* FeedItem.swift in Sources */,
 				688EB34128092F9A008FB693 /* SettingDetailModel.swift in Sources */,
 				68BF67A027FAA72200A451C3 /* PasswordValidator.swift in Sources */,
