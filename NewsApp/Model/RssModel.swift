@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import RealmSwift
 
 class RssModel {
     
@@ -15,19 +16,29 @@ class RssModel {
     static let notificationName = "RssErrerMessage"
     
     private let userDefaults = UserDefaults.standard
+    let realm = try! Realm()
     
     init() {
         
     }
     
-    func saveUseData(id: String, password: String, indexPath :IndexPath, completion: @escaping(Bool) -> Void) {
+    func saveUseData(id: String, password: String, accessTokeValue: String, indexPath :IndexPath, completion: @escaping(Bool) -> Void) {
         
         let selectFeed = rssArray[indexPath.row]
-        let user = User(id: id, password: password, feed: selectFeed, login: true)
+        
+        let user = User(id: id, password: password, feed: selectFeed, login: true, accessTokeValue: accessTokeValue)
         
         if let data: Data = try? JSONEncoder().encode(user){
             self.userDefaults.setValue(data, forKey: "User")
-            completion(true)
+            
+            let results = realm.objects(RealmFeedItem.self)
+            let storeResults = realm.objects(StoreFeedItem.self)
+
+            try! realm.write {
+                realm.delete(results)
+                realm.delete(storeResults)
+                completion(true)
+            }
         } else {
             completion(false)
             return

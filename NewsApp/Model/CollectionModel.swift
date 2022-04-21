@@ -81,10 +81,6 @@ class CollectionModel: NSObject {
                 }
 
             case .update(let items, let deletions, let insertions, let modifications):
-//                print("Update count: \(items.count)")
-//                print("Delete count: \(deletions.count)")
-//                print("Insert count: \(insertions.count)")
-//                print("Modification count: \(modifications.count)")
                 //セル選択時のアップデートと処理を防ぐ
                 if modifications == [] {
                     if items.count > 0 {
@@ -213,9 +209,13 @@ class CollectionModel: NSObject {
     //更新データの有無を通知
     func notificationAlert() {
         if appDelegate.storeFeedItems != [] {
-            DispatchQueue.main.async {
+//            DispatchQueue.main.async {
                 self.notificationCenter.post(name: Notification.Name(CollectionModel.notificationAlertName), object: nil, userInfo: ["alert": true])
-            }
+//            }
+        } else {
+//            DispatchQueue.main.async {
+                self.notificationCenter.post(name: Notification.Name(CollectionModel.notificationAlertName), object: nil, userInfo: ["alert": false])
+//            }
         }
     }
     
@@ -224,7 +224,6 @@ class CollectionModel: NSObject {
         let storeFeedItem = realm.objects(StoreFeedItem.self)
         //データない場合は処理をやめる
         if storeFeedItem.count == 0 { return }
-        
         var tempFeedItems: [FeedItem] = []
         var i = 0
         
@@ -240,6 +239,7 @@ class CollectionModel: NSObject {
             
             if i == storeFeedItem.count {
                 feedItems += tempFeedItems
+                self.notificationAlert()
                 completion()
             }
         }

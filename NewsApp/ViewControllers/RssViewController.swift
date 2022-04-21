@@ -13,6 +13,10 @@ class RssViewController: UIViewController {
     var password: String = ""
     var selectFeed: String = ""
     
+    private let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
+    
+    var accessTokenValue: String = ""
+    
     @IBOutlet weak var tableView: UITableView!
     
     override func viewDidLoad() {
@@ -45,7 +49,7 @@ extension RssViewController: UITableViewDelegate, UITableViewDataSource {
         
         tableView.deselectRow(at: indexPath, animated: true)
         
-        RssModel.shared.saveUseData(id: self.id, password: self.password, indexPath: indexPath) { success in
+        RssModel.shared.saveUseData(id: self.id, password: self.password, accessTokeValue: self.accessTokenValue, indexPath: indexPath) { success in
             
             if success {
                 DispatchQueue.main.async {

@@ -14,10 +14,10 @@ class SignUpViewController: UIViewController {
     @IBOutlet weak var idTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     
+    @IBOutlet weak var lineView: UIView!
+
     var id: String = ""
     var password: String = ""
-    
-    let userDefaults = UserDefaults.standard
     
     private var errorMessage: String = "" {
         
@@ -95,6 +95,4 @@ class SignUpViewController: UIViewController {
             rssView.password = SignUpModel.shared.password
         }
     }
-    
-    
 }

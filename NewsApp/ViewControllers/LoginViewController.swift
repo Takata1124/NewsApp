@@ -6,15 +6,18 @@
 //
 
 import UIKit
+import LineSDK
 
-class LoginViewController: UIViewController, UITextFieldDelegate {
+class LoginViewController: UIViewController, UITextFieldDelegate, LoginButtonDelegate {
     
     @IBOutlet weak var idTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var errorLabel: UILabel!
+    @IBOutlet weak var lineView: UIView!
+    
+    private let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
     
     private var user: User?
-    private let userDefaults = UserDefaults.standard
     
     private var errorMessage: String = "" {
         didSet {
@@ -22,6 +25,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             errorLabel.text = errorMessage
         }
     }
+    
+    private var accessTokenValue: String = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -58,6 +63,13 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         
         passwordTextField.layer.borderWidth = 1.0
         passwordTextField.keyboardType = .numberPad
+        
+        let loginButton = LoginButton()
+        loginButton.delegate = self
+        loginButton.permissions = [.profile]
+        loginButton.presentingViewController = self
+
+        lineView.addSubview(loginButton)
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -75,11 +87,38 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                 self.performSegue(withIdentifier: "goCollection", sender: nil)
                 return
             }
-            
             return
         }
     }
-
+    
+    func loginButton(_ button: LoginButton, didSucceedLogin loginResult: LoginResult) {
+        print("LINE認証成功")
+        print("アクセストークン:\(loginResult.accessToken.value)")
+        print("ここでログイン処理を呼び出す")
+        
+        print(loginResult.userProfile?.userID ?? "")
+        
+        self.accessTokenValue = loginResult.userProfile!.userID
+        
+        LoginModel.shared.lineLoginAction(accessToken: accessTokenValue) { success in
+            
+            if success {
+                self.performSegue(withIdentifier: "goCollection", sender: nil)
+                return
+            }
+            
+            self.performSegue(withIdentifier: "LineToRss", sender: nil)
+        }
+    }
+    
+    func loginButton(_ button: LoginButton, didFailLogin error: LineSDKError) {
+        print("Error: \(error)")
+    }
+    
+    func loginButtonDidStartLogin(_ button: LoginButton) {
+        print("Login Started.")
+    }
+    
     @IBAction func goListView(_ sender: Any) {
         
         LoginModel.shared.LoginAction(idText: idTextField.text ?? "", passwordText: passwordTextField.text ?? "") { success in
@@ -87,9 +126,18 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                 self.performSegue(withIdentifier: "goCollection", sender: nil)
                 return
             }
-            
+
             print("Rss選択に移れませんでした")
             return
+        }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        if segue.identifier == "LineToRss" {
+            let rssViewController = segue.destination as! RssViewController
+            
+            rssViewController.accessTokenValue = self.accessTokenValue
         }
     }
     

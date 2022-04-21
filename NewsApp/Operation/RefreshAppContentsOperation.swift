@@ -27,6 +27,8 @@ class getXMLDataOperation: Operation, XMLParserDelegate {
     
     private var parser: XMLParser?
     
+    private let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
+    
     override init() {
         
         var value: Int = userdefaults.object(forKey: "count") as! Int
@@ -35,7 +37,7 @@ class getXMLDataOperation: Operation, XMLParserDelegate {
     }
     
     override func main() {
-
+        
         fetchStoreFeedTitle()
         usergetFeed()
         getFeedUrl(self.selectFeed)
@@ -44,7 +46,7 @@ class getXMLDataOperation: Operation, XMLParserDelegate {
     }
     
     private func fetchStoreFeedTitle() {
-
+        
         let result = realm.objects(StoreFeedItem.self)
         result.forEach { item in
             feedTitles.append(item.title)
@@ -52,7 +54,7 @@ class getXMLDataOperation: Operation, XMLParserDelegate {
     }
     
     private func usergetFeed() {
-        
+
         guard let data: Data = userdefaults.value(forKey: "User") as? Data else { return }
         let user: User = try! JSONDecoder().decode(User.self, from: data)
         self.selectFeed = user.feed
@@ -76,7 +78,7 @@ class getXMLDataOperation: Operation, XMLParserDelegate {
             print("failed to parse XML")
         }
     }
-
+    
     private func getFeedUrl(_ selectFeed: String) {
         
         switch selectFeed {
@@ -108,11 +110,11 @@ class getXMLDataOperation: Operation, XMLParserDelegate {
     func parserDidStartDocument(_ parser: XMLParser) {
         print("XML解析開始しました")
     }
-
+    
     func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String] = [:]) {
         
         self.currrentElementName = nil
-
+        
         if elementName == item_name {
             self.feedItems.append(FeedItem(title: "", url: "", pubDate: "", star: false, read: false, afterRead: false))
         } else {
@@ -164,9 +166,9 @@ class getXMLDataOperation: Operation, XMLParserDelegate {
     }
     
     private func saveXMLData(feeditems: [FeedItem]) {
-
+        
         feedItems.forEach { item in
-  
+            
             if feedTitles.contains(item.title) {
                 return
             } else {
@@ -174,7 +176,7 @@ class getXMLDataOperation: Operation, XMLParserDelegate {
                 storeFeedItem.title = item.title
                 storeFeedItem.url = item.url
                 storeFeedItem.pubDate = item.pubDate
-     
+                
                 try! realm.write({
                     realm.add(storeFeedItem)
                 })

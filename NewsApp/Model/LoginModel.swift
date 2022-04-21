@@ -26,10 +26,12 @@ class LoginModel {
     }
     
     private init() {
+        
         guard let data: Data = userDefaults.value(forKey: "User") as? Data else {
             errorMessage = "ユーザー情報がありません"
             return
         }
+        
         self.user = try! JSONDecoder().decode(User.self, from: data)
         self.userId = self.user!.id
         self.userPassword = self.user!.password
@@ -47,6 +49,28 @@ class LoginModel {
         if user.login == true {
             return completion(true)
         }
+        
+        completion(false)
+    }
+    
+    func lineLoginAction(accessToken: String, completion: @escaping(Bool) -> Void) {
+      
+        if let data: Data = userDefaults.value(forKey: "User") as? Data {
+            
+            let user: User = try! JSONDecoder().decode(User.self, from: data)
+            
+            if accessToken == user.accessTokeValue {
+                
+                let recodeUser: User = User(id: self.user!.id, password: self.user!.password, feed: self.user!.feed, login: true, accessTokeValue: self.user!.accessTokeValue)
+                
+                guard let data: Data = try? JSONEncoder().encode(recodeUser) else { return }
+                
+                userDefaults.setValue(data, forKey: "User")
+  
+                return completion(true)
+            }
+        }
+        print("新規登録")
         
         completion(false)
     }
@@ -79,7 +103,6 @@ class LoginModel {
             errorMessage = "パスワードを入力してください"
         case .toolong(_):
             errorMessage = "パスワードは8文字で入力してください"
-            
         }
         
         if idValidator.isValid() && passwordValidator.isValid() {
@@ -94,11 +117,13 @@ class LoginModel {
             
             if userId == idText && userPassword == passwordText {
                 
-                let recodeUser: User = User(id: self.user!.id, password: self.user!.password, feed: self.user!.feed, login: true)
+                let recodeUser: User = User(id: self.user!.id, password: self.user!.password, feed: self.user!.feed, login: true, accessTokeValue: self.user!.accessTokeValue)
+                
                 guard let data: Data = try? JSONEncoder().encode(recodeUser) else { return }
                 userDefaults.setValue(data, forKey: "User")
                 
                 completion(true)
+                return
             }
         } else {
             completion(false)

@@ -22,8 +22,10 @@ class SettingModel {
         
         guard let data: Data = userDefaults.value(forKey: "User") as? Data else { return }
         let user: User = try! JSONDecoder().decode(User.self, from: data)
-        let recodeUser: User = User(id: user.id, password: user.password, feed: user.feed, login: false)
+        let recodeUser: User = User(id: user.id, password: user.password, feed: user.feed, login: false, accessTokeValue: user.accessTokeValue)
+        
         guard let data: Data = try? JSONEncoder().encode(recodeUser) else { return }
+        
         userDefaults.set(data, forKey: "User")
     }
     

@@ -9,17 +9,18 @@ import UIKit
 import BackgroundTasks
 import RealmSwift
 import UserNotifications
+import LineSDK
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
     
     var letterSize: Int = 13
     var cellType: CellType = .List
-    var InterbalTime: Double = 15
+    var InterbalTime: Double = 1
     let userdefaults = UserDefaults.standard
     var storeFeedItems: [FeedItem] = []
     var navigationController: UINavigationController?
-    
+
     let usernotificationCenter = UNUserNotificationCenter.current()
     
     var realm: Realm?
@@ -50,20 +51,29 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         }
         
         print(userdefaults.object(forKey: "count") as Any)
+        print(userdefaults.object(forKey: "alertCount") as Any)
         print(userdefaults.array(forKey: "date") as Any)
         
-        migration()
-        
+        realmMigration()
         self.realm = try! Realm()
    
         let object = realm?.objects(StoreFeedItem.self)
         object?.forEach { item in
             self.storeFeedItems.append(FeedItem(title: item.title, url: item.url, pubDate: item.pubDate, star: false, read: false, afterRead: false))
         }
-        print(self.storeFeedItems)
         
-//        let dt = Date()
-//        print(dt)
+        print(self.storeFeedItems)
+        if self.storeFeedItems != [] {
+            self.storeFeedItems.forEach { item in
+                print(item.title!)
+            }
+        }
+         
+        let data: Data = (userdefaults.value(forKey: "User") as? Data)!
+        let user: User = try! JSONDecoder().decode(User.self, from: data)
+        print(user.login)
+
+        LoginManager.shared.setup(channelID: "1657027285", universalLinkURL: nil)
 
         return true
     }
@@ -88,7 +98,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         completionHandler([[.banner, .sound]])
     }
     
-    private func migration() {
+    private func realmMigration() {
         
         let nextSchemaVersion = 2
         
@@ -119,7 +129,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         
         print("Call to task")
         
-        scheduleAppRefresh()
+//        scheduleAppRefresh()
         
         if var dateArray = self.userdefaults.value(forKey: "date") as? [Date] {
             let nowDay = Date()
@@ -135,15 +145,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         
         let operationQueue = OperationQueue()
         let operation = getXMLDataOperation()
-        let alertOperation = AlertOperation()
+//        let alertOperation = AlertOperation()
         
-        var operations: [Operation] = []
+//        operations.append(operation)
+//        operations.append(alertOperation)
+//        operations[1].addDependency(operations[0])
         
-        operations.append(operation)
-        operations.append(alertOperation)
-        operations[1].addDependency(operations[0])
-        
-        let lastOperation = operations.last!
+//        let lastOperation = operations.last!
         
         operationQueue.maxConcurrentOperationCount = 1
         
@@ -152,10 +160,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         }
         
         operation.completionBlock = {
-            task.setTaskCompleted(success: !lastOperation.isCancelled)
+            task.setTaskCompleted(success: !operation.isCancelled)
         }
         
-        operationQueue.addOperations(operations, waitUntilFinished: false)
+        operationQueue.addOperation(operation)
     }
     
     private func scheduleAppRefresh() {
