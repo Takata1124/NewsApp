@@ -15,19 +15,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         
-//        guard let data: Data = userDefaults.value(forKey: "User") as? Data else { return }
-//        let user: User = try! JSONDecoder().decode(User.self, from: data)
-//
-//        if user.feed == "" { return }
-//
-//        guard let windowScene = (scene as? UIWindowScene) else { return }
-//        let window = UIWindow(windowScene: windowScene)
-//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//        let vc = storyboard.instantiateViewController(withIdentifier: "ListStoryboard")
-//        let navigation = UINavigationController(rootViewController: vc)
-//        window.rootViewController = navigation
-//        self.window = window
-//        window.makeKeyAndVisible()
     }
     
     func sceneDidDisconnect(_ scene: UIScene) {

@@ -16,7 +16,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate, LoginButtonDel
     @IBOutlet weak var lineView: UIView!
     
     private let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
-    
     private var user: User?
     
     private var errorMessage: String = "" {

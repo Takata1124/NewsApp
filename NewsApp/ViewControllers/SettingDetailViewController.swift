@@ -73,9 +73,9 @@ class SettingDetailViewController: UIViewController {
         let onCheck: Bool = sender.isOn
         
         if onCheck {
-            settingDetailView.subscriptLabel.text = "On"
+            settingDetailView.subscriptionSelect = true
         } else {
-            settingDetailView.subscriptLabel.text = "Off"
+            settingDetailView.subscriptionSelect = false
         }
     }
     
@@ -117,5 +117,3 @@ extension SettingDetailViewController: UIPickerViewDelegate, UIPickerViewDataSou
         print(timeArray[row])
     }
 }
-
-

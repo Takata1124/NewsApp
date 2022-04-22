@@ -48,7 +48,7 @@ class CollectionViewController: UIViewController {
     var star: Bool = false
     var indexPathRow: Int = 0
     
-    var buttonTitle: String = "Order" {
+    var buttonTitle: String = "Random" {
         didSet {
             DispatchQueue.main.async {
                 self.collectionView.reloadData()
@@ -188,8 +188,12 @@ class CollectionViewController: UIViewController {
         readButton.tintColor = .modeTextColor
         afterReadButton.tintColor = .modeTextColor
         
-        nortificationButton.image = UIImage(systemName: "bell")
-        
+        if appDelegate.storeFeedItems != [] {
+            nortificationButton.image = UIImage(systemName: "bell.fill")
+        } else {
+            nortificationButton.image = UIImage(systemName: "bell")
+        }
+
         collectionView.collectionViewLayout = appDelegate.cellType.layoutFromSuperviewRect(rect: bounds)
         collectionView.delegate = self
         collectionView.dataSource = self
@@ -200,25 +204,21 @@ class CollectionViewController: UIViewController {
     }
     
     @objc func refresh(sender: UIRefreshControl) {
-        //
+        
         if isReadFilter == true || isStarFilter == true || isAfterReadFilter == true {
             refreshControl.endRefreshing()
             return
-        }
-        
-        if filterFeedItems == [] {
-            collectionModel?.getXMLData()
         }
         
         if filterFeedItems != [] && appDelegate.storeFeedItems != [] {
             collectionModel?.comparedFeedItem(completion: {
                 self.collectionModel?.deleteStoreFeedItems()
             })
-        }
-        
-        if filterFeedItems != [] && appDelegate.storeFeedItems == [] {
+        } else {
             collectionModel?.getXMLData()
         }
+        //budge削除
+        UIApplication.shared.applicationIconBadgeNumber = 0
         
         refreshControl.endRefreshing()
     }

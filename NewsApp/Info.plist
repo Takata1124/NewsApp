@@ -9,9 +9,17 @@
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
-			<key>CFBundleURLName</key>
-			<string></string>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>line3rdp.$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+			</array>
 		</dict>
+	</array>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>lineauth2</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
@@ -37,22 +45,5 @@
 		<string>fetch</string>
 		<string>processing</string>
 	</array>
-    <key>CFBundleURLTypes</key>
-    <array>
-        <dict>
-            <key>CFBundleTypeRole</key>
-            <string>Editor</string>
-            <key>CFBundleURLSchemes</key>
-            <array>
-                <!-- LINEからアプリに戻る際に利用するURLスキーマを追加 -->
-                <string>line3rdp.$(PRODUCT_BUNDLE_IDENTIFIER)</string>
-            </array>
-        </dict>
-    </array>
-    <key>LSApplicationQueriesSchemes</key>
-    <array>
-        <!-- アプリからLINEを起動する際に利用するURLスキーマを追加 -->
-        <string>lineauth2</string>
-    </array>
 </dict>
 </plist>

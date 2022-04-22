@@ -16,12 +16,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     
     var letterSize: Int = 13
     var cellType: CellType = .List
+    
+    var subscription: Bool = false
     var InterbalTime: Double = 1
+    
     let userdefaults = UserDefaults.standard
     var storeFeedItems: [FeedItem] = []
     var navigationController: UINavigationController?
-
+    
     let usernotificationCenter = UNUserNotificationCenter.current()
+    
+    var backgroundSituation: Bool = false
+    var tempStoreFeedTitle: [String] = []
+    var tempRealmFeedTitle: [String] = []
     
     var realm: Realm?
     var window: UIWindow?
@@ -53,28 +60,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         print(userdefaults.object(forKey: "count") as Any)
         print(userdefaults.object(forKey: "alertCount") as Any)
         print(userdefaults.array(forKey: "date") as Any)
-        
-        realmMigration()
-        self.realm = try! Realm()
-   
-        let object = realm?.objects(StoreFeedItem.self)
-        object?.forEach { item in
-            self.storeFeedItems.append(FeedItem(title: item.title, url: item.url, pubDate: item.pubDate, star: false, read: false, afterRead: false))
-        }
-        
-        print(self.storeFeedItems)
-        if self.storeFeedItems != [] {
-            self.storeFeedItems.forEach { item in
-                print(item.title!)
+        print(Date())
+
+        if !backgroundSituation {
+            DispatchQueue.main.async {
+                
+                self.realmMigration()
+                self.realm = try! Realm()
+                
+                let object = self.realm?.objects(StoreFeedItem.self)
+                object?.forEach { item in
+                    self.storeFeedItems.append(FeedItem(title: item.title, url: item.url, pubDate: item.pubDate, star: false, read: false, afterRead: false))
+                }
+                
+                print(self.storeFeedItems) 
             }
         }
-         
-        let data: Data = (userdefaults.value(forKey: "User") as? Data)!
-        let user: User = try! JSONDecoder().decode(User.self, from: data)
-        print(user.login)
-
+        
         LoginManager.shared.setup(channelID: "1657027285", universalLinkURL: nil)
-
+        
         return true
     }
     
@@ -95,6 +99,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        
         completionHandler([[.banner, .sound]])
     }
     
@@ -108,6 +113,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                 if (oldSchemaVersion < nextSchemaVersion) {
                 }
             })
+        
         Realm.Configuration.defaultConfiguration = config
     }
     
@@ -125,12 +131,74 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
     }
     
+    private func notificationAlert() {
+
+        if #available (iOS 10.0, *) {
+            
+            self.usernotificationCenter.requestAuthorization(options: [.sound, .alert, .badge], completionHandler: {
+                (granted, error) in
+                
+                DispatchQueue.main.async {
+                    
+                    if granted == true {
+                        UIApplication.shared.registerForRemoteNotifications()
+                    } else {
+                        print("permisson Denied")
+                    }
+                }
+            })
+        }
+        
+        self.usernotificationCenter.getNotificationSettings { settings in
+            
+            DispatchQueue.main.async {
+                
+                let title = "NewsApp"
+                let message = "更新データがあります"
+                
+                if settings.authorizationStatus == .authorized {
+                    
+                    let content = UNMutableNotificationContent()
+                    content.title = title
+                    content.body = message
+                    content.badge = 1
+                    content.sound = UNNotificationSound.default
+                    
+                    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 60, repeats: false)
+                    let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+                    self.usernotificationCenter.delegate = self
+                    
+                    UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+                    
+                } else {
+                    let ac = UIAlertController(title: "プッシュ通知が使用できません", message: "設定画面よりアプリのプッシュ通知をONにしてください", preferredStyle: .alert)
+                    let goToSettings = UIAlertAction(title: title, style: .default) { _ in
+                        guard let settingsURL = URL(string: UIApplication.openSettingsURLString) else { return }
+                        
+                        if UIApplication.shared.canOpenURL(settingsURL) {
+                            UIApplication.shared.open(settingsURL) { _ in }
+                        }
+                    }
+                    
+                    ac.addAction(goToSettings)
+                    ac.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { _ in }))
+                    self.window?.rootViewController?.present(ac, animated: true, completion: nil)
+                }
+            }
+        }
+    }
+    
     private func handleAppRefresh(task: BGAppRefreshTask) {
         
+        print(Thread.current)
+        
+        self.backgroundSituation = true
+        print(self.backgroundSituation)
+        
         print("Call to task")
-        
-//        scheduleAppRefresh()
-        
+      
+        scheduleAppRefresh()
+    
         if var dateArray = self.userdefaults.value(forKey: "date") as? [Date] {
             let nowDay = Date()
             var tempArray = userdefaults.array(forKey: "date")
@@ -144,16 +212,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         }
         
         let operationQueue = OperationQueue()
-        let operation = getXMLDataOperation()
-//        let alertOperation = AlertOperation()
-        
-//        operations.append(operation)
-//        operations.append(alertOperation)
-//        operations[1].addDependency(operations[0])
-        
-//        let lastOperation = operations.last!
-        
         operationQueue.maxConcurrentOperationCount = 1
+        
+        let operation = getXMLDataOperation()
         
         task.expirationHandler = {
             operationQueue.cancelAllOperations()
@@ -164,9 +225,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         }
         
         operationQueue.addOperation(operation)
+        
+        self.backgroundSituation = false
+        
+        print("終了")
     }
     
     private func scheduleAppRefresh() {
+        
+        notificationAlert()
         
         let request = BGAppRefreshTaskRequest(identifier: "com.MeasurementSample.refresh")
         

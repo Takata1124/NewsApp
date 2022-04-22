@@ -8,14 +8,18 @@
 import Foundation
 import RealmSwift
 
-class getXMLDataOperation: Operation, XMLParserDelegate {
+class getXMLDataOperation: Operation, XMLParserDelegate, UNUserNotificationCenterDelegate {
     
     private var currrentElementName: String?
     private let userdefaults = UserDefaults.standard
     
+    let usernotificationCenter = UNUserNotificationCenter.current()
+    var window: UIWindow?
+    
     private var feedUrl: String = ""
     private var feedItems = [FeedItem]()
     private var feedTitles = [String]()
+    private var tempRealmFeedTitle: [String] = []
     private var selectFeed: String = ""
     
     private let item_name = "item"
@@ -23,38 +27,65 @@ class getXMLDataOperation: Operation, XMLParserDelegate {
     private let link_name  = "link"
     private let pubDate_name = "pubDate"
     
-    private let realm = try! Realm()
+    var realm: Realm?
     
     private var parser: XMLParser?
     
-    private let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
-    
     override init() {
+        super.init()
         
-        var value: Int = userdefaults.object(forKey: "count") as! Int
-        value = value + 1
-        userdefaults.set(value, forKey: "count")
+        DispatchQueue(label: "background").async {
+            autoreleasepool {
+                
+                self.realmMigration()
+                self.realm = try! Realm()
+            }
+        }
+    }
+    
+    private func realmMigration() {
+        
+        let nextSchemaVersion = 2
+        
+        let config = Realm.Configuration(
+            schemaVersion: UInt64(nextSchemaVersion),
+            migrationBlock: { migration, oldSchemaVersion in
+                if (oldSchemaVersion < nextSchemaVersion) {
+                }
+            })
+        
+        Realm.Configuration.defaultConfiguration = config
     }
     
     override func main() {
         
-        fetchStoreFeedTitle()
-        usergetFeed()
-        getFeedUrl(self.selectFeed)
-        getXMLData(urlString: feedUrl)
-        saveXMLData(feeditems: feedItems)
+        DispatchQueue(label: "background").async {
+            autoreleasepool {
+                
+                self.fetchStoreFeedTitle()
+                self.usergetFeed()
+                self.getFeedUrl(self.selectFeed)
+                self.getXMLData(urlString: self.feedUrl)
+                self.saveXMLData(feeditems: self.feedItems)
+            }
+        }
     }
     
     private func fetchStoreFeedTitle() {
         
-        let result = realm.objects(StoreFeedItem.self)
-        result.forEach { item in
-            feedTitles.append(item.title)
+        let result = self.realm?.objects(StoreFeedItem.self)
+        result?.forEach { item in
+            self.feedTitles.append(item.title)
+        }
+        
+        let realmObject = self.realm?.objects(RealmFeedItem.self)
+        realmObject?.forEach { item in
+            self.tempRealmFeedTitle.append(item.title)
         }
     }
     
     private func usergetFeed() {
-
+        
         guard let data: Data = userdefaults.value(forKey: "User") as? Data else { return }
         let user: User = try! JSONDecoder().decode(User.self, from: data)
         self.selectFeed = user.feed
@@ -167,20 +198,28 @@ class getXMLDataOperation: Operation, XMLParserDelegate {
     
     private func saveXMLData(feeditems: [FeedItem]) {
         
-        feedItems.forEach { item in
+        var i = 0
+        feeditems.forEach { item in
             
+            i += 1
             if feedTitles.contains(item.title) {
+                
                 return
             } else {
+
                 let storeFeedItem = StoreFeedItem()
                 storeFeedItem.title = item.title
                 storeFeedItem.url = item.url
                 storeFeedItem.pubDate = item.pubDate
                 
-                try! realm.write({
-                    realm.add(storeFeedItem)
+                try! self.realm?.write({
+                    self.realm?.add(storeFeedItem)
                 })
             }
         }
+        
+        var value: Int = userdefaults.object(forKey: "count") as! Int
+        value = value + 1
+        userdefaults.set(value, forKey: "count")
     }
 }

@@ -15,6 +15,16 @@ class SettingDetailView: UIView {
         }
     }
     
+    var subscriptionSelect: Bool = false {
+        didSet {
+            if subscriptionSelect {
+                subscriptLabel.text = "ON"
+            } else {
+                subscriptLabel.text = "Off"
+            }
+        }
+    }
+    
     private let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
     private let appDelegateWindow = UIApplication.shared.windows.first
     

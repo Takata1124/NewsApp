@@ -50,7 +50,7 @@ class CollectionModel: NSObject {
         
         fetchUserFeed()
         getFeedUrl(self.selectFeed)
-          
+        
         notificationAlert()
         setupRealmFeedItem()
     }
@@ -58,14 +58,14 @@ class CollectionModel: NSObject {
     func deleteItems() {
         self.filterFeedItems = []
     }
-
+    
     private func setupRealmFeedItem() {
-
+        
         realmFeedItem = realm.objects(RealmFeedItem.self)
-
+        
         notificationToken = realmFeedItem?.observe{ [unowned self] changes in
             switch changes {
-
+                
             case .initial(let items):
                 print("Initial count: \(items.count)")
                 
@@ -79,7 +79,7 @@ class CollectionModel: NSObject {
                         }
                     }
                 }
-
+                
             case .update(let items, let deletions, let insertions, let modifications):
                 //セル選択時のアップデートと処理を防ぐ
                 if modifications == [] {
@@ -112,7 +112,7 @@ class CollectionModel: NSObject {
                     
                     self.filterFeedItems[index] = newFeedItem
                 }
-               
+                
             case .error(let error):
                 fatalError("\(error)")
             }
@@ -209,13 +209,10 @@ class CollectionModel: NSObject {
     //更新データの有無を通知
     func notificationAlert() {
         if appDelegate.storeFeedItems != [] {
-//            DispatchQueue.main.async {
-                self.notificationCenter.post(name: Notification.Name(CollectionModel.notificationAlertName), object: nil, userInfo: ["alert": true])
-//            }
+            self.notificationCenter.post(name: Notification.Name(CollectionModel.notificationAlertName), object: nil, userInfo: ["alert": true])
         } else {
-//            DispatchQueue.main.async {
-                self.notificationCenter.post(name: Notification.Name(CollectionModel.notificationAlertName), object: nil, userInfo: ["alert": false])
-//            }
+            
+            self.notificationCenter.post(name: Notification.Name(CollectionModel.notificationAlertName), object: nil, userInfo: ["alert": false])
         }
     }
     
@@ -239,7 +236,6 @@ class CollectionModel: NSObject {
             
             if i == storeFeedItem.count {
                 feedItems += tempFeedItems
-                self.notificationAlert()
                 completion()
             }
         }
@@ -249,9 +245,10 @@ class CollectionModel: NSObject {
         
         appDelegate.storeFeedItems = []
         let results = realm.objects(StoreFeedItem.self)
-
+        
         try! realm.write {
             realm.delete(results)
+            self.notificationAlert()
         }
     }
     
@@ -335,7 +332,7 @@ class CollectionModel: NSObject {
     }
     
     func filterStar(isStarFilter: Bool, buttonTitle: String)  {
-  
+        
         if isStarFilter {
             let result = realm.objects(RealmFeedItem.self).filter("star = true")
             var tempArray: [FeedItem] = []
@@ -501,8 +498,5 @@ extension CollectionModel: XMLParserDelegate {
         print("end")
         
         saveFeedItems(feedItems: self.feedItems)
-//        {
-////            self.saveFeedData(feedItems: self.feedItems)
-//        }
     }
 }
