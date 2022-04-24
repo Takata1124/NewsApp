@@ -18,8 +18,7 @@ class getXMLDataOperation: Operation, XMLParserDelegate, UNUserNotificationCente
     
     private var feedUrl: String = ""
     private var feedItems = [FeedItem]()
-    private var feedTitles = [String]()
-    private var tempRealmFeedTitle: [String] = []
+//    private var feedTitles = [String]()
     private var selectFeed: String = ""
     
     private let item_name = "item"
@@ -27,61 +26,44 @@ class getXMLDataOperation: Operation, XMLParserDelegate, UNUserNotificationCente
     private let link_name  = "link"
     private let pubDate_name = "pubDate"
     
-    var realm: Realm?
+    //    var realm: Realm?
     
     private var parser: XMLParser?
     
     override init() {
         super.init()
         
-        DispatchQueue(label: "background").async {
-            autoreleasepool {
-                
-                self.realmMigration()
-                self.realm = try! Realm()
-            }
-        }
+        
+        
+        //        DispatchQueue(label: "background").async {
+        //            autoreleasepool {
+        //
+        //                self.realmMigration()
+        //                self.realm = try! Realm()
+        //            }
+        //        }
     }
     
-    private func realmMigration() {
-        
-        let nextSchemaVersion = 2
-        
-        let config = Realm.Configuration(
-            schemaVersion: UInt64(nextSchemaVersion),
-            migrationBlock: { migration, oldSchemaVersion in
-                if (oldSchemaVersion < nextSchemaVersion) {
-                }
-            })
-        
-        Realm.Configuration.defaultConfiguration = config
-    }
+    //    private func realmMigration() {
+    //
+    //        let nextSchemaVersion = 2
+    //
+    //        let config = Realm.Configuration(
+    //            schemaVersion: UInt64(nextSchemaVersion),
+    //            migrationBlock: { migration, oldSchemaVersion in
+    //                if (oldSchemaVersion < nextSchemaVersion) {
+    //                }
+    //            })
+    //
+    //        Realm.Configuration.defaultConfiguration = config
+    //    }
     
     override func main() {
         
-        DispatchQueue(label: "background").async {
-            autoreleasepool {
-                
-                self.fetchStoreFeedTitle()
-                self.usergetFeed()
-                self.getFeedUrl(self.selectFeed)
-                self.getXMLData(urlString: self.feedUrl)
-                self.saveXMLData(feeditems: self.feedItems)
-            }
-        }
-    }
-    
-    private func fetchStoreFeedTitle() {
-        
-        let result = self.realm?.objects(StoreFeedItem.self)
-        result?.forEach { item in
-            self.feedTitles.append(item.title)
-        }
-        
-        let realmObject = self.realm?.objects(RealmFeedItem.self)
-        realmObject?.forEach { item in
-            self.tempRealmFeedTitle.append(item.title)
-        }
+        self.usergetFeed()
+        self.getFeedUrl(self.selectFeed)
+        self.getXMLData(urlString: self.feedUrl)
+        self.saveXMLData(feeditems: self.feedItems)
     }
     
     private func usergetFeed() {
@@ -198,28 +180,23 @@ class getXMLDataOperation: Operation, XMLParserDelegate, UNUserNotificationCente
     
     private func saveXMLData(feeditems: [FeedItem]) {
         
-        var i = 0
-        feeditems.forEach { item in
-            
-            i += 1
-            if feedTitles.contains(item.title) {
-                
-                return
-            } else {
-
-                let storeFeedItem = StoreFeedItem()
-                storeFeedItem.title = item.title
-                storeFeedItem.url = item.url
-                storeFeedItem.pubDate = item.pubDate
-                
-                try! self.realm?.write({
-                    self.realm?.add(storeFeedItem)
-                })
+        var tempFeedItems: [FeedItem] = []
+        tempFeedItems += feeditems
+        
+        let jsonDecoder = JSONDecoder()
+        if let data = userdefaults.data(forKey: "StoreFeedItems") {
+            if let storeData = try? jsonDecoder.decode([FeedItem].self, from: data) {
+                tempFeedItems += storeData
             }
         }
+
+        let jsonEncoder = JSONEncoder()
+        guard let data = try? jsonEncoder.encode(tempFeedItems) else {
+            return
+        }
         
-        var value: Int = userdefaults.object(forKey: "count") as! Int
-        value = value + 1
-        userdefaults.set(value, forKey: "count")
+        userdefaults.set(data, forKey: "StoreFeedItems")
+        
+        print("saveData")
     }
 }

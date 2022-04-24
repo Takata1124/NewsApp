@@ -18,25 +18,21 @@ class RssModel {
     private let userDefaults = UserDefaults.standard
     let realm = try! Realm()
     
-    init() {
-        
-    }
+    init() {}
     
     func saveUseData(id: String, password: String, accessTokeValue: String, indexPath :IndexPath, completion: @escaping(Bool) -> Void) {
         
         let selectFeed = rssArray[indexPath.row]
         
-        let user = User(id: id, password: password, feed: selectFeed, login: true, accessTokeValue: accessTokeValue)
-        
+        let user = User(id: id, password: password, feed: selectFeed, login: true, accessTokeValue: accessTokeValue, subscription: false, subsciptInterval: 1.0)
+
         if let data: Data = try? JSONEncoder().encode(user){
             self.userDefaults.setValue(data, forKey: "User")
             
             let results = realm.objects(RealmFeedItem.self)
-            let storeResults = realm.objects(StoreFeedItem.self)
 
             try! realm.write {
                 realm.delete(results)
-                realm.delete(storeResults)
                 completion(true)
             }
         } else {

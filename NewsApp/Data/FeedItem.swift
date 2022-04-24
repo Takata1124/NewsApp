@@ -7,7 +7,7 @@
 
 import Foundation
 
-class FeedItem: Equatable {
+class FeedItem: Equatable, Codable {
     
     static func == (lhs: FeedItem, rhs: FeedItem) -> Bool {
         return lhs.title == rhs.title

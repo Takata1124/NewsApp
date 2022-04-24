@@ -15,8 +15,7 @@ class SignUpModel {
     
     var id: String = ""
     var password: String = ""
-    
-    
+
     private let userDefaults = UserDefaults.standard
     
     private var errorMessage: String = "" {

@@ -17,18 +17,40 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     var letterSize: Int = 13
     var cellType: CellType = .List
     
-    var subscription: Bool = false
-    var InterbalTime: Double = 1
+    var subscription: Bool = false {
+        didSet {
+            
+            print(subscription)
+            guard let data: Data = userdefaults.value(forKey: "User") as? Data else { return }
+            let user: User = try! JSONDecoder().decode(User.self, from: data)
+            let recodeUser: User = User(id: user.id, password: user.password, feed: user.feed, login: user.login, accessTokeValue: user.accessTokeValue, subscription: self.subscription, subsciptInterval: user.subsciptInterval)
+            guard let data: Data = try? JSONEncoder().encode(recodeUser) else { return }
+            userdefaults.set(data, forKey: "User")
+            
+            if subscription == false {
+                BGTaskScheduler.shared.cancelAllTaskRequests()
+            }
+        }
+    }
+    
+    var InterbalTime: Double = 1 {
+        didSet {
+            
+            print(InterbalTime)
+            guard let data: Data = userdefaults.value(forKey: "User") as? Data else { return }
+            let user: User = try! JSONDecoder().decode(User.self, from: data)
+            let recodeUser: User = User(id: user.id, password: user.password, feed: user.feed, login: user.login, accessTokeValue: user.accessTokeValue, subscription: user.subscription, subsciptInterval: self.InterbalTime)
+            guard let data: Data = try? JSONEncoder().encode(recodeUser) else { return }
+            userdefaults.set(data, forKey: "User")
+        }
+    }
     
     let userdefaults = UserDefaults.standard
     var storeFeedItems: [FeedItem] = []
     var navigationController: UINavigationController?
     
     let usernotificationCenter = UNUserNotificationCenter.current()
-    
-    var backgroundSituation: Bool = false
-    var tempStoreFeedTitle: [String] = []
-    var tempRealmFeedTitle: [String] = []
+//    var backgroundSituation: Bool = false
     
     var realm: Realm?
     var window: UIWindow?
@@ -37,61 +59,65 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         
         UINavigationBar.appearance().tintColor = UIColor.modeTextColor
         UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: UIColor.modeTextColor]
+        //LineSetup
+        LoginManager.shared.setup(channelID: "1657027285", universalLinkURL: nil)
         
         BGTaskScheduler.shared.register(forTaskWithIdentifier: "com.MeasurementSample.refresh", using: nil) { task in
             self.handleAppRefresh(task: task as! BGAppRefreshTask)
         }
+        
+//        if !backgroundSituation {
+//
+//        }
+//
+        DispatchQueue.main.async {
+
+            self.realmMigration()
+            self.realm = try! Realm()
+        }
+//
+        if let data: Data = userdefaults.value(forKey: "User") as? Data {
+            let user: User = try! JSONDecoder().decode(User.self, from: data)
+            self.subscription = user.subscription
+            self.InterbalTime = user.subsciptInterval
+        }
+        //購読設定なしでリターン
+        print(subscription)
+        
+        if !subscription { return true }
         
         BGTaskScheduler.shared.getPendingTaskRequests { requests in
             
             print(requests)
             if requests == [] {
                 
-                if var value: Int = self.userdefaults.value(forKey: "count") as? Int
-                {
-                    self.scheduleAppRefresh()
-                } else {
-                    self.userdefaults.set(0, forKey: "count")
-                    self.scheduleAppRefresh()
-                }
+                self.scheduleAppRefresh()
             }
         }
         
-        print(userdefaults.object(forKey: "count") as Any)
-        print(userdefaults.object(forKey: "alertCount") as Any)
-        print(userdefaults.array(forKey: "date") as Any)
-        print(Date())
-
-        if !backgroundSituation {
-            DispatchQueue.main.async {
-                
-                self.realmMigration()
-                self.realm = try! Realm()
-                
-                let object = self.realm?.objects(StoreFeedItem.self)
-                object?.forEach { item in
-                    self.storeFeedItems.append(FeedItem(title: item.title, url: item.url, pubDate: item.pubDate, star: false, read: false, afterRead: false))
-                }
-                
-                print(self.storeFeedItems) 
-            }
-        }
+        let jsonDecoder = JSONDecoder()
+        guard let data = userdefaults.data(forKey: "StoreFeedItems") else { return true }
+        let store = try? jsonDecoder.decode([FeedItem].self, from: data)
         
-        LoginManager.shared.setup(channelID: "1657027285", universalLinkURL: nil)
-        
+        store?.forEach({ item in
+            storeFeedItems.append(item)
+        })
+  
+        print(storeFeedItems)
+ 
         return true
     }
     
-    private func formatter(date: Date) -> String {
-        
-        let dateFormatter = DateFormatter()
-        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
-        dateFormatter.dateFormat = "EEE, dd MMM yyyy hh:mm:ss Z"
-        dateFormatter.locale = NSLocale(localeIdentifier: "ja_JP") as Locale
-        dateFormatter.dateFormat = "yyyy/MM/dd HH:mm Z"
-        let dateString = dateFormatter.string(from: date)
-        return dateString
-    }
+//    private func formatter(date: Date) -> String {
+//
+//        let dateFormatter = DateFormatter()
+//        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+//        dateFormatter.dateFormat = "EEE, dd MMM yyyy hh:mm:ss Z"
+//        dateFormatter.locale = NSLocale(localeIdentifier: "ja_JP") as Locale
+//        dateFormatter.dateFormat = "yyyy/MM/dd HH:mm Z"
+//        let dateString = dateFormatter.string(from: date)
+//        return dateString
+//    }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
         
@@ -100,7 +126,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         
-        completionHandler([[.banner, .sound]])
+//        completionHandler([[.banner, .sound]])
     }
     
     private func realmMigration() {
@@ -132,14 +158,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     }
     
     private func notificationAlert() {
-
+        
         if #available (iOS 10.0, *) {
             
             self.usernotificationCenter.requestAuthorization(options: [.sound, .alert, .badge], completionHandler: {
                 (granted, error) in
                 
                 DispatchQueue.main.async {
-                    
                     if granted == true {
                         UIApplication.shared.registerForRemoteNotifications()
                     } else {
@@ -162,9 +187,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                     content.title = title
                     content.body = message
                     content.badge = 1
-                    content.sound = UNNotificationSound.default
+//                    content.sound = UNNotificationSound.default
                     
-                    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 60, repeats: false)
+                    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
                     let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
                     self.usernotificationCenter.delegate = self
                     
@@ -190,26 +215,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     
     private func handleAppRefresh(task: BGAppRefreshTask) {
         
-        print(Thread.current)
-        
-        self.backgroundSituation = true
-        print(self.backgroundSituation)
+//        backgroundSituation = true
         
         print("Call to task")
-      
+        
+        guard let data: Data = userdefaults.value(forKey: "User") as? Data else { return }
+        let user: User = try! JSONDecoder().decode(User.self, from: data)
+        self.subscription = user.subscription
+        self.InterbalTime = user.subsciptInterval
+        
         scheduleAppRefresh()
-    
-        if var dateArray = self.userdefaults.value(forKey: "date") as? [Date] {
-            let nowDay = Date()
-            var tempArray = userdefaults.array(forKey: "date")
-            tempArray?.append(nowDay)
-            self.userdefaults.set(tempArray, forKey: "date")
-        } else {
-            let nowDay = Date()
-            var dtArray: [Date] = []
-            dtArray.append(nowDay)
-            self.userdefaults.set(dtArray, forKey: "date")
-        }
         
         let operationQueue = OperationQueue()
         operationQueue.maxConcurrentOperationCount = 1
@@ -225,24 +240,69 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         }
         
         operationQueue.addOperation(operation)
-        
-        self.backgroundSituation = false
-        
-        print("終了")
+ 
+//        self.backgroundSituation = false
     }
     
-    private func scheduleAppRefresh() {
-        
-        notificationAlert()
+    func scheduleAppRefresh() {
+ 
+//        notificationAlert()
         
         let request = BGAppRefreshTaskRequest(identifier: "com.MeasurementSample.refresh")
-        
         request.earliestBeginDate = Date(timeIntervalSinceNow: InterbalTime * 60)
         
         do {
+            print("request")
             try BGTaskScheduler.shared.submit(request)
+            compareStoreAlert()
         } catch {
             print("Could not schedule app refresh: \(error)")
+        }
+    }
+    
+    private func compareStoreAlert() {
+        
+        var notContain: Bool = false
+        let jsonDecoder = JSONDecoder()
+        guard let data = userdefaults.data(forKey: "StoreFeedItems") else { return }
+        let store = try? jsonDecoder.decode([FeedItem].self, from: data)
+        
+        self.realmMigration()
+        self.realm = try! Realm()
+        
+        var tempRealmFeedItem: [FeedItem] = []
+        let result = realm?.objects(RealmFeedItem.self)
+        
+        result?.forEach { item in
+            if !item.title.contains("Yahoo!ニュース・トピックス") {
+                
+                let feeditem = FeedItem(title: item.title, url: item.url, pubDate: item.pubDate, star: item.star, read: item.read, afterRead: item.afterRead)
+                
+                guard let title = feeditem.title else { return }
+                
+                if title != "" {
+                    tempRealmFeedItem.append(feeditem)
+                }
+            }
+        }
+        
+        store?.forEach({ storeItem in
+            if tempRealmFeedItem.contains(where: { realmItem in
+                realmItem.title == storeItem.title
+            }) {
+                print(storeItem.title ?? "")
+                return
+            } else {
+                notContain = true
+            }
+        })
+        
+        if notContain {
+            print("contain")
+            notificationAlert()
+            print("alertSetup")
+        } else {
+            print("notContain")
         }
     }
 }

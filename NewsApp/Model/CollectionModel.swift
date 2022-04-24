@@ -10,7 +10,6 @@ import RealmSwift
 
 class CollectionModel: NSObject {
     
-    //    static let shared = CollectionModel()
     let notificationCenter = NotificationCenter()
     static let notificationName = "CollectionData"
     static let notificationAlertName = "AlertStoreData"
@@ -27,8 +26,7 @@ class CollectionModel: NSObject {
             notificationCenter.post(name: .init(rawValue: CollectionModel.notificationName), object: nil, userInfo: ["item" : filterFeedItems])
         }
     }
-    
-    
+ 
     let userDefaults = UserDefaults.standard
     let realm = try! Realm()
     
@@ -50,7 +48,6 @@ class CollectionModel: NSObject {
         
         fetchUserFeed()
         getFeedUrl(self.selectFeed)
-        
         notificationAlert()
         setupRealmFeedItem()
     }
@@ -67,7 +64,6 @@ class CollectionModel: NSObject {
             switch changes {
                 
             case .initial(let items):
-                print("Initial count: \(items.count)")
                 
                 if items.count > 0 {
                     items.forEach { item in
@@ -218,13 +214,19 @@ class CollectionModel: NSObject {
     
     func comparedFeedItem(completion: @escaping() -> Void) {
         
-        let storeFeedItem = realm.objects(StoreFeedItem.self)
-        //データない場合は処理をやめる
-        if storeFeedItem.count == 0 { return }
+        var tempStoreFeedItems: [FeedItem] = []
+        tempStoreFeedItems = appDelegate.storeFeedItems
+        
+        if tempStoreFeedItems.count == 0 {
+            return
+        }
+        
         var tempFeedItems: [FeedItem] = []
         var i = 0
-        
-        storeFeedItem.forEach { storeItem in
+   
+        tempStoreFeedItems.forEach { storeItem in
+            
+            print(storeItem.title as Any)
             
             i += 1
             if !filterFeedItems.contains(where: { item in
@@ -234,8 +236,8 @@ class CollectionModel: NSObject {
                 tempFeedItems.append(tempItem)
             }
             
-            if i == storeFeedItem.count {
-                feedItems += tempFeedItems
+            if i == tempStoreFeedItems.count {
+                saveFeedItems(feedItems: tempFeedItems)
                 completion()
             }
         }
@@ -244,12 +246,10 @@ class CollectionModel: NSObject {
     func deleteStoreFeedItems() {
         
         appDelegate.storeFeedItems = []
-        let results = realm.objects(StoreFeedItem.self)
         
-        try! realm.write {
-            realm.delete(results)
-            self.notificationAlert()
-        }
+        userDefaults.removeObject(forKey: "StoreFeedItems")
+        
+        self.notificationAlert()
     }
     
     func saveSelected(indexPath: IndexPath) {

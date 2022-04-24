@@ -14,6 +14,6 @@ struct User: Codable {
     let feed: String
     let login: Bool
     let accessTokeValue: String
-//    let subscription: Bool
-//    let subsciptInterval: Double
+    let subscription: Bool
+    let subsciptInterval: Double
 }

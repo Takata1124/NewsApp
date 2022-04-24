@@ -22,7 +22,7 @@ class SettingDetailViewController: UIViewController {
     }
     
     let settingDetailView = SettingDetailView()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -31,23 +31,30 @@ class SettingDetailViewController: UIViewController {
         
         setupTimeLayout()
         
-        settingDetailView.confirmSelectCell(selectCell: selectCell)
-        settingDetailView.letterSlider.addTarget(self, action: #selector(onStartPointlabel(_:)), for: .valueChanged)
-        settingDetailView.modeSwitch.addTarget(self, action: #selector(modeChange), for: UIControl.Event.valueChanged)
-        settingDetailView.tableSwitch.addTarget(self, action: #selector(tableChange(sender:)), for: UIControl.Event.valueChanged)
-        settingDetailView.subscriptSwitch.addTarget(self, action: #selector(subscriptionChange(sender:)), for: UIControl.Event.valueChanged)
-        
-        view.addSubview(settingDetailView)
+        setup()
     }
     
     override func viewDidLayoutSubviews() {
 
         settingDetailView.frame = view.frame
     }
+    
+    private func setup() {
+
+        settingDetailView.confirmSelectCell(selectCell: self.selectCell)
+        settingDetailView.letterSlider.addTarget(self, action: #selector(onStartPointlabel(_:)), for: .valueChanged)
+        settingDetailView.modeSwitch.addTarget(self, action: #selector(modeChange), for: UIControl.Event.valueChanged)
+        settingDetailView.tableSwitch.addTarget(self, action: #selector(tableChange(sender:)), for: UIControl.Event.valueChanged)
+        settingDetailView.subscriptSwitch.addTarget(self, action: #selector(subscriptionChange(sender:)), for: UIControl.Event.valueChanged)
+        settingDetailView.timePickerView.delegate = self
+        settingDetailView.timePickerView.dataSource = self
+        
+        view.addSubview(settingDetailView)
+    }
 
     private func setupTimeLayout() {
         
-        for i in 0..<25 {
+        for i in 1..<25 {
             let i: String = "\(i)"
             timeArray.append(i)
         }
@@ -60,10 +67,8 @@ class SettingDetailViewController: UIViewController {
             let onCheck: Bool = sender.isOn
             if onCheck {
                 appDelegateWindow?.overrideUserInterfaceStyle = .dark
-                settingDetailView.modeLabel.text = "dark"
             } else {
                 appDelegateWindow?.overrideUserInterfaceStyle = .light
-                settingDetailView.modeLabel.text = "light"
             }
         }
     }
@@ -73,8 +78,10 @@ class SettingDetailViewController: UIViewController {
         let onCheck: Bool = sender.isOn
         
         if onCheck {
+            appDelegate.subscription = true
             settingDetailView.subscriptionSelect = true
         } else {
+            appDelegate.subscription = false
             settingDetailView.subscriptionSelect = false
         }
     }
@@ -85,10 +92,8 @@ class SettingDetailViewController: UIViewController {
         
         if onCheck {
             appDelegate.cellType = .Grid
-            settingDetailView.tableCategory.text = "CollectionView"
         } else {
             appDelegate.cellType = .List
-            settingDetailView.tableCategory.text = "TableView"
         }
     }
     
@@ -114,6 +119,7 @@ extension SettingDetailViewController: UIPickerViewDelegate, UIPickerViewDataSou
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        print(timeArray[row])
+        appDelegate.InterbalTime = Double(timeArray[row])!
+        settingDetailView.timeLabelText = appDelegate.InterbalTime
     }
 }

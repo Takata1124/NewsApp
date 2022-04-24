@@ -19,9 +19,42 @@ class SettingDetailView: UIView {
         didSet {
             if subscriptionSelect {
                 subscriptLabel.text = "ON"
+                subscriptSwitch.isOn = true
             } else {
-                subscriptLabel.text = "Off"
+                subscriptLabel.text = "OFF"
+                subscriptSwitch.isOn = false
             }
+        }
+    }
+    
+    var modeSelect: Bool = false {
+        didSet {
+            if modeSelect {
+                modeLabel.text = "dark"
+                modeSwitch.isOn = true
+            } else {
+                modeLabel.text = "light"
+                modeSwitch.isOn = false
+            }
+        }
+    }
+    
+    var tableSelect: Bool = false {
+        didSet {
+            if tableSelect {
+                tableSwitch.isOn = true
+                tableCategory.text = "CollectionView"
+            } else {
+                tableSwitch.isOn = false
+                tableCategory.text = "TableView"
+            }
+        }
+    }
+    
+    var timeLabelText: Double = 1 {
+        
+        didSet {
+            timeLabel.text = "現在の取得時間は\(timeLabelText)時間です"
         }
     }
     
@@ -63,7 +96,6 @@ class SettingDetailView: UIView {
     
     var tableCategory: UILabel = {
         let label = UILabel(frame: CGRect(x: UIScreen.main.bounds.width / 2 - 150, y: 300, width: 300, height: 50))
-        label.text = "TableView"
         label.textAlignment = .center
         return label
     }()
@@ -75,7 +107,12 @@ class SettingDetailView: UIView {
     
     var subscriptLabel: UILabel = {
         let label = UILabel(frame: CGRect(x: UIScreen.main.bounds.width / 2 - 150, y: 300, width: 300, height: 50))
-        label.text = "Off"
+        label.textAlignment = .center
+        return label
+    }()
+    
+    var timeLabel: UILabel = {
+        let label = UILabel(frame: CGRect(x: UIScreen.main.bounds.width / 2 - 150, y: 150, width: 300, height: 50))
         label.textAlignment = .center
         return label
     }()
@@ -133,23 +170,30 @@ class SettingDetailView: UIView {
         self.addSubview(tableCategory)
         
         if appDelegate.cellType == .Grid {
-            tableSwitch.isOn = true
-            tableCategory.text = "CollectionView"
+            tableSelect = true
         } else {
-            tableSwitch.isOn = false
-            tableCategory.text = "TableView"
+            tableSelect = false
         }
     }
     
     private func timeArraySetupLayout() {
         
         self.addSubview(timePickerView)
+        self.addSubview(timeLabel)
+        
+        timeLabel.text = "現在の取得時間は\(appDelegate.InterbalTime)時間です"
     }
     
     private func subscriptSetupLayout() {
         
         self.addSubview(subscriptLabel)
         self.addSubview(subscriptSwitch)
+        
+        if appDelegate.subscription {
+            subscriptionSelect = true
+        } else {
+            subscriptionSelect = false
+        }
     }
 
     private func sliderLayout() {
@@ -167,11 +211,9 @@ class SettingDetailView: UIView {
         self.addSubview(modeSwitch)
         
         if appDelegateWindow?.overrideUserInterfaceStyle == .dark {
-            modeSwitch.isOn = true
-            modeLabel.text = "dark"
+            modeSelect = true
         } else {
-            modeSwitch.isOn = false
-            modeLabel.text = "light"
+            modeSelect = false
         }
     }
 }
