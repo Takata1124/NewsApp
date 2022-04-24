@@ -14,6 +14,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate, LoginButtonDel
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var errorLabel: UILabel!
     @IBOutlet weak var lineView: UIView!
+    @IBOutlet weak var defaultLoginButton: UIButton!
+    @IBOutlet weak var transSignUpButton: UIButton!
     
     private let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
     private var user: User?
@@ -59,16 +61,23 @@ class LoginViewController: UIViewController, UITextFieldDelegate, LoginButtonDel
         idTextField.layer.borderWidth = 1.0
         idTextField.keyboardType = .numberPad
         idTextField.delegate = self
+        idTextField.accessibilityIdentifier = "idTextField"
         
         passwordTextField.layer.borderWidth = 1.0
         passwordTextField.keyboardType = .numberPad
+        passwordTextField.accessibilityIdentifier = "passwordTextField"
         
-        let loginButton = LoginButton()
-        loginButton.delegate = self
-        loginButton.permissions = [.profile]
-        loginButton.presentingViewController = self
+        defaultLoginButton.accessibilityIdentifier = "defaultLoginButton"
+        
+        transSignUpButton.accessibilityIdentifier = "transSignUpButton"
+        
+        let lineLoginButton = LoginButton()
+        lineLoginButton.delegate = self
+        lineLoginButton.permissions = [.profile]
+        lineLoginButton.presentingViewController = self
+        lineLoginButton.accessibilityIdentifier = "lineButton"
 
-        lineView.addSubview(loginButton)
+        lineView.addSubview(lineLoginButton)
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

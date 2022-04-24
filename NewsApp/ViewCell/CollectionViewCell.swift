@@ -76,6 +76,7 @@ class CollectionViewCell: SwipeCollectionViewCell {
         self.feedItem = item
         self.star = item.star
         self.read = item.read
+        
         updateConstraintsWithCellType(cellType: cellType)
     }
     

@@ -19,8 +19,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     
     var subscription: Bool = false {
         didSet {
-            
-            print(subscription)
             guard let data: Data = userdefaults.value(forKey: "User") as? Data else { return }
             let user: User = try! JSONDecoder().decode(User.self, from: data)
             let recodeUser: User = User(id: user.id, password: user.password, feed: user.feed, login: user.login, accessTokeValue: user.accessTokeValue, subscription: self.subscription, subsciptInterval: user.subsciptInterval)
@@ -35,8 +33,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     
     var InterbalTime: Double = 1 {
         didSet {
-            
-            print(InterbalTime)
             guard let data: Data = userdefaults.value(forKey: "User") as? Data else { return }
             let user: User = try! JSONDecoder().decode(User.self, from: data)
             let recodeUser: User = User(id: user.id, password: user.password, feed: user.feed, login: user.login, accessTokeValue: user.accessTokeValue, subscription: user.subscription, subsciptInterval: self.InterbalTime)
@@ -50,7 +46,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     var navigationController: UINavigationController?
     
     let usernotificationCenter = UNUserNotificationCenter.current()
-//    var backgroundSituation: Bool = false
     
     var realm: Realm?
     var window: UIWindow?
@@ -66,24 +61,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
             self.handleAppRefresh(task: task as! BGAppRefreshTask)
         }
         
-//        if !backgroundSituation {
-//
-//        }
-//
         DispatchQueue.main.async {
-
+            
             self.realmMigration()
             self.realm = try! Realm()
         }
-//
+        
         if let data: Data = userdefaults.value(forKey: "User") as? Data {
             let user: User = try! JSONDecoder().decode(User.self, from: data)
             self.subscription = user.subscription
             self.InterbalTime = user.subsciptInterval
         }
         //購読設定なしでリターン
-        print(subscription)
-        
         if !subscription { return true }
         
         BGTaskScheduler.shared.getPendingTaskRequests { requests in
@@ -101,23 +90,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         
         store?.forEach({ item in
             storeFeedItems.append(item)
+            print(item.title)
         })
-  
+        
         print(storeFeedItems)
- 
+        
+        print(userdefaults.object(forKey: "date") as Any)
+        
         return true
     }
-    
-//    private func formatter(date: Date) -> String {
-//
-//        let dateFormatter = DateFormatter()
-//        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
-//        dateFormatter.dateFormat = "EEE, dd MMM yyyy hh:mm:ss Z"
-//        dateFormatter.locale = NSLocale(localeIdentifier: "ja_JP") as Locale
-//        dateFormatter.dateFormat = "yyyy/MM/dd HH:mm Z"
-//        let dateString = dateFormatter.string(from: date)
-//        return dateString
-//    }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
         
@@ -126,7 +107,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         
-//        completionHandler([[.banner, .sound]])
+        //        completionHandler([[.banner, .sound]])
     }
     
     private func realmMigration() {
@@ -187,7 +168,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                     content.title = title
                     content.body = message
                     content.badge = 1
-//                    content.sound = UNNotificationSound.default
+                    content.sound = UNNotificationSound.default
                     
                     let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
                     let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
@@ -215,8 +196,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     
     private func handleAppRefresh(task: BGAppRefreshTask) {
         
-//        backgroundSituation = true
-        
         print("Call to task")
         
         guard let data: Data = userdefaults.value(forKey: "User") as? Data else { return }
@@ -225,6 +204,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         self.InterbalTime = user.subsciptInterval
         
         scheduleAppRefresh()
+        
+        if var dateArray = self.userdefaults.value(forKey: "date") as? [Date] {
+            let nowDay = Date()
+            var tempArray = userdefaults.array(forKey: "date")
+            tempArray?.append(nowDay)
+            self.userdefaults.set(tempArray, forKey: "date")
+        } else {
+            let nowDay = Date()
+            var dtArray: [Date] = []
+            dtArray.append(nowDay)
+            self.userdefaults.set(dtArray, forKey: "date")
+        }
         
         let operationQueue = OperationQueue()
         operationQueue.maxConcurrentOperationCount = 1
@@ -240,13 +231,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         }
         
         operationQueue.addOperation(operation)
- 
-//        self.backgroundSituation = false
     }
     
     func scheduleAppRefresh() {
- 
-//        notificationAlert()
         
         let request = BGAppRefreshTaskRequest(identifier: "com.MeasurementSample.refresh")
         request.earliestBeginDate = Date(timeIntervalSinceNow: InterbalTime * 60)
@@ -300,7 +287,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         if notContain {
             print("contain")
             notificationAlert()
-            print("alertSetup")
         } else {
             print("notContain")
         }

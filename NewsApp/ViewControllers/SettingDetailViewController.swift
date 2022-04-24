@@ -67,8 +67,10 @@ class SettingDetailViewController: UIViewController {
             let onCheck: Bool = sender.isOn
             if onCheck {
                 appDelegateWindow?.overrideUserInterfaceStyle = .dark
+                settingDetailView.modeSelect = true
             } else {
                 appDelegateWindow?.overrideUserInterfaceStyle = .light
+                settingDetailView.modeSelect = false
             }
         }
     }
@@ -92,8 +94,10 @@ class SettingDetailViewController: UIViewController {
         
         if onCheck {
             appDelegate.cellType = .Grid
+            settingDetailView.tableSelect = true
         } else {
             appDelegate.cellType = .List
+            settingDetailView.tableSelect = false
         }
     }
     

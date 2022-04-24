@@ -18,45 +18,19 @@ class getXMLDataOperation: Operation, XMLParserDelegate, UNUserNotificationCente
     
     private var feedUrl: String = ""
     private var feedItems = [FeedItem]()
-//    private var feedTitles = [String]()
     private var selectFeed: String = ""
     
     private let item_name = "item"
     private let title_name = "title"
     private let link_name  = "link"
     private let pubDate_name = "pubDate"
-    
-    //    var realm: Realm?
-    
+  
     private var parser: XMLParser?
     
     override init() {
         super.init()
         
-        
-        
-        //        DispatchQueue(label: "background").async {
-        //            autoreleasepool {
-        //
-        //                self.realmMigration()
-        //                self.realm = try! Realm()
-        //            }
-        //        }
     }
-    
-    //    private func realmMigration() {
-    //
-    //        let nextSchemaVersion = 2
-    //
-    //        let config = Realm.Configuration(
-    //            schemaVersion: UInt64(nextSchemaVersion),
-    //            migrationBlock: { migration, oldSchemaVersion in
-    //                if (oldSchemaVersion < nextSchemaVersion) {
-    //                }
-    //            })
-    //
-    //        Realm.Configuration.defaultConfiguration = config
-    //    }
     
     override func main() {
         

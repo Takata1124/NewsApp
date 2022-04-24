@@ -22,6 +22,7 @@ class RssViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        navigationItem.title = "RSS"
         //戻るボタン非表示
         self.navigationItem.hidesBackButton = true
         

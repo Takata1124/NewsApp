@@ -8,7 +8,7 @@
 import UIKit
 import RealmSwift
 import SwipeCellKit
-import SwiftUI
+//import SwiftUI
 
 class CollectionViewController: UIViewController {
     
@@ -92,6 +92,8 @@ class CollectionViewController: UIViewController {
     
     var notificationToken: NotificationToken?
     
+    var realm: Realm?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -101,7 +103,10 @@ class CollectionViewController: UIViewController {
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        if filterFeedItems == [] {
+        //初回ログイン時のみ処理
+        self.realm = appDelegate.realm
+        let realmFeedItem = realm?.objects(RealmFeedItem.self)
+        if realmFeedItem?.count == 0 {
             collectionModel?.getXMLData()
         }
     }

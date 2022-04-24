@@ -62,10 +62,7 @@ class LoginModel {
             if accessToken == user.accessTokeValue {
                 
                 let recodeUser: User = User(id: self.user!.id, password: self.user!.password, feed: self.user!.feed, login: true, accessTokeValue: self.user!.accessTokeValue, subscription: self.user!.subscription, subsciptInterval: self.user!.subsciptInterval)
-                
-                print(recodeUser.login)
-                
-                
+
                 guard let data: Data = try? JSONEncoder().encode(recodeUser) else { return }
                 
                 userDefaults.setValue(data, forKey: "User")
@@ -73,8 +70,7 @@ class LoginModel {
                 return completion(true)
             }
         }
-        print("新規登録")
-        
+
         completion(false)
     }
     

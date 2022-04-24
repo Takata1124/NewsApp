@@ -13,7 +13,8 @@ class SignUpViewController: UIViewController {
     @IBOutlet weak var errorLabel: UILabel!
     @IBOutlet weak var idTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
-    
+    @IBOutlet weak var SignUpButton: UIButton!
+  
     @IBOutlet weak var lineView: UIView!
 
     var id: String = ""
@@ -52,9 +53,13 @@ class SignUpViewController: UIViewController {
         
         idTextField.layer.borderWidth = 1.0
         idTextField.keyboardType = .numberPad
+        idTextField.accessibilityIdentifier = "idTextField"
         
         passwordTextField.layer.borderWidth = 1.0
         passwordTextField.keyboardType = .numberPad
+        passwordTextField.accessibilityIdentifier = "passwordTextField"
+        
+        SignUpButton.accessibilityIdentifier = "SignUpButton"
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

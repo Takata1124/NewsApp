@@ -48,6 +48,7 @@ class CollectionModel: NSObject {
         
         fetchUserFeed()
         getFeedUrl(self.selectFeed)
+        
         notificationAlert()
         setupRealmFeedItem()
     }
@@ -207,7 +208,6 @@ class CollectionModel: NSObject {
         if appDelegate.storeFeedItems != [] {
             self.notificationCenter.post(name: Notification.Name(CollectionModel.notificationAlertName), object: nil, userInfo: ["alert": true])
         } else {
-            
             self.notificationCenter.post(name: Notification.Name(CollectionModel.notificationAlertName), object: nil, userInfo: ["alert": false])
         }
     }

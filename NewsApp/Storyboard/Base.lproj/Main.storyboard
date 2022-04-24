@@ -104,6 +104,7 @@
                                     <constraint firstAttribute="width" constant="150" id="FHC-vb-lXc"/>
                                     <constraint firstAttribute="height" constant="50" id="jeC-01-96T"/>
                                 </constraints>
+                                <color key="tintColor" name="modeTextColor"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" title="Login"/>
                                 <connections>
@@ -117,6 +118,7 @@
                                     <constraint firstAttribute="width" constant="150" id="z1b-qt-E7S"/>
                                     <constraint firstAttribute="height" constant="50" id="z9E-en-iei"/>
                                 </constraints>
+                                <color key="tintColor" name="modeTextColor"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" title="新規登録"/>
                                 <connections>
@@ -153,10 +155,12 @@
                     </view>
                     <navigationItem key="navigationItem" id="V8R-lb-Awn"/>
                     <connections>
+                        <outlet property="defaultLoginButton" destination="qMR-9u-v57" id="i5J-eb-vy7"/>
                         <outlet property="errorLabel" destination="FbE-ea-abK" id="ubR-xJ-bmo"/>
                         <outlet property="idTextField" destination="qep-gb-coA" id="wpn-V1-tmV"/>
                         <outlet property="lineView" destination="UUt-tM-wJl" id="RjF-Yd-2pn"/>
                         <outlet property="passwordTextField" destination="VaT-l8-H6d" id="lfD-D4-n4d"/>
+                        <outlet property="transSignUpButton" destination="Olk-A5-b0P" id="O6p-7G-xWu"/>
                         <segue destination="ypd-Mr-Nsn" kind="show" identifier="goSignUp" id="1i2-cN-cke"/>
                         <segue destination="QBX-42-9ku" kind="show" identifier="goCollection" id="zaf-qa-ab4"/>
                         <segue destination="mYC-1l-hpz" kind="show" identifier="LineToRss" id="9Sk-a3-jv2"/>
@@ -459,7 +463,7 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="f7X-sX-y5E">
-                                        <rect key="frame" x="276" y="12.5" width="138" height="50.5"/>
+                                        <rect key="frame" x="276" y="13.5" width="138" height="48"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bto-xQ-JTv">
                                                 <rect key="frame" x="0.0" y="0.0" width="138" height="31"/>
@@ -472,8 +476,8 @@
                                                 </connections>
                                             </button>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="共有" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wgy-V3-rsr">
-                                                <rect key="frame" x="0.0" y="31" width="138" height="19.5"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                <rect key="frame" x="0.0" y="31" width="138" height="17"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
@@ -653,6 +657,7 @@
                                     <constraint firstAttribute="width" constant="150" id="Val-Hy-dI9"/>
                                     <constraint firstAttribute="height" constant="50" id="lxS-sB-hBf"/>
                                 </constraints>
+                                <color key="tintColor" name="modeTextColor"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" title="SignUp"/>
                                 <connections>
@@ -667,6 +672,7 @@
                                     <constraint firstAttribute="height" constant="50" id="Alu-a7-SXZ"/>
                                     <constraint firstAttribute="width" constant="300" id="RWs-o2-PX0"/>
                                 </constraints>
+                                <color key="tintColor" name="modeTextColor"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" title="既にアカウントをお持ちの方"/>
                                 <connections>
@@ -693,6 +699,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="CyR-BA-TvI"/>
                     <connections>
+                        <outlet property="SignUpButton" destination="evE-je-UX9" id="ud1-ma-HI8"/>
                         <outlet property="errorLabel" destination="S2S-tL-vkR" id="s0e-uE-yBd"/>
                         <outlet property="idTextField" destination="gbt-JQ-M3X" id="MtM-d6-RAI"/>
                         <outlet property="passwordTextField" destination="sry-s8-OuS" id="Kov-uJ-yKF"/>
@@ -705,7 +712,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="9Sk-a3-jv2"/>
+        <segue reference="k6f-80-MwC"/>
         <segue reference="zaf-qa-ab4"/>
     </inferredMetricsTieBreakers>
     <resources>

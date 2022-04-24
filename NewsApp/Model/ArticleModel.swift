@@ -30,9 +30,9 @@ class ArticleModel {
         
         if result[0].star == false {
             do{
-              try realm.write{
-                  result[0].star = true
-              }
+                try realm.write{
+                    result[0].star = true
+                }
             }catch {
               print("Error \(error)")
             }
