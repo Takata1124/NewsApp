@@ -50,7 +50,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             BGTaskScheduler.shared.getPendingTaskRequests { requests in
 
                 if requests == [] {
-                    
                     self.appDelegate.scheduleAppRefresh()
                 }
             }

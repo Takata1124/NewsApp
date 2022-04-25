@@ -79,10 +79,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
             
             print(requests)
             if requests == [] {
-                
                 self.scheduleAppRefresh()
             }
         }
+        
+        print(userdefaults.object(forKey: "date") as Any)
         
         let jsonDecoder = JSONDecoder()
         guard let data = userdefaults.data(forKey: "StoreFeedItems") else { return true }
@@ -90,13 +91,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         
         store?.forEach({ item in
             storeFeedItems.append(item)
-            print(item.title)
         })
         
         print(storeFeedItems)
-        
-        print(userdefaults.object(forKey: "date") as Any)
-        
+      
         return true
     }
     
@@ -198,13 +196,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         
         print("Call to task")
         
-        guard let data: Data = userdefaults.value(forKey: "User") as? Data else { return }
-        let user: User = try! JSONDecoder().decode(User.self, from: data)
-        self.subscription = user.subscription
-        self.InterbalTime = user.subsciptInterval
-        
         scheduleAppRefresh()
-        
+  
         if var dateArray = self.userdefaults.value(forKey: "date") as? [Date] {
             let nowDay = Date()
             var tempArray = userdefaults.array(forKey: "date")
@@ -235,15 +228,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     
     func scheduleAppRefresh() {
         
-        let request = BGAppRefreshTaskRequest(identifier: "com.MeasurementSample.refresh")
-        request.earliestBeginDate = Date(timeIntervalSinceNow: InterbalTime * 60)
-        
-        do {
-            print("request")
-            try BGTaskScheduler.shared.submit(request)
-            compareStoreAlert()
-        } catch {
-            print("Could not schedule app refresh: \(error)")
+        if let data: Data = userdefaults.value(forKey: "User") as? Data {
+            
+            let user: User = try! JSONDecoder().decode(User.self, from: data)
+            self.subscription = user.subscription
+            self.InterbalTime = user.subsciptInterval
+            
+            let request = BGAppRefreshTaskRequest(identifier: "com.MeasurementSample.refresh")
+            
+            request.earliestBeginDate = Date(timeIntervalSinceNow: self.InterbalTime * 3600)
+            
+            do {
+                print("request")
+                try BGTaskScheduler.shared.submit(request)
+                compareStoreAlert()
+            } catch {
+                print("Could not schedule app refresh: \(error)")
+            }
         }
     }
     
@@ -285,10 +286,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         })
         
         if notContain {
-            print("contain")
             notificationAlert()
-        } else {
-            print("notContain")
         }
     }
 }

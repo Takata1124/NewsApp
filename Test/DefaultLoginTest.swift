@@ -26,7 +26,7 @@ class DefaultLoginTest: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
 
-    func defaultLogin() throws {
+    func testDefaultLogin() throws {
         
         let idText = "1111"
         let passwordText = "11111111"
