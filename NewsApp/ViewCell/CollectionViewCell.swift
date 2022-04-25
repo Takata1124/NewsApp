@@ -58,7 +58,7 @@ class CollectionViewCell: SwipeCollectionViewCell {
         super.awakeFromNib()
         
         self.layer.borderWidth = 0.5
-        self.layer.borderColor = UIColor.dynamicColor(light: .black, dark: .white).cgColor
+        self.layer.borderColor = UIColor.modeTextColor.cgColor
         
         self.addSubview(textLabel)
         self.addSubview(dateLabel)
@@ -68,7 +68,7 @@ class CollectionViewCell: SwipeCollectionViewCell {
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         
-        self.layer.borderColor = UIColor.dynamicColor(light: .black, dark: .white).cgColor
+        self.layer.borderColor = UIColor.modeTextColor.cgColor
     }
     
     func configureWithItem(item: FeedItem, cellType: CellType) {

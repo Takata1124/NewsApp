@@ -83,13 +83,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
             }
         }
         
-        print(userdefaults.object(forKey: "date") as Any)
-        
         let jsonDecoder = JSONDecoder()
         guard let data = userdefaults.data(forKey: "StoreFeedItems") else { return true }
         let store = try? jsonDecoder.decode([FeedItem].self, from: data)
         
         store?.forEach({ item in
+            print(item.title!)
             storeFeedItems.append(item)
         })
         
@@ -198,17 +197,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         
         scheduleAppRefresh()
   
-        if var dateArray = self.userdefaults.value(forKey: "date") as? [Date] {
-            let nowDay = Date()
-            var tempArray = userdefaults.array(forKey: "date")
-            tempArray?.append(nowDay)
-            self.userdefaults.set(tempArray, forKey: "date")
-        } else {
-            let nowDay = Date()
-            var dtArray: [Date] = []
-            dtArray.append(nowDay)
-            self.userdefaults.set(dtArray, forKey: "date")
-        }
+//        if var dateArray = self.userdefaults.value(forKey: "date") as? [Date] {
+//            let nowDay = Date()
+//            var tempArray = userdefaults.array(forKey: "date")
+//            tempArray?.append(nowDay)
+//            self.userdefaults.set(tempArray, forKey: "date")
+//        } else {
+//            let nowDay = Date()
+//            var dtArray: [Date] = []
+//            dtArray.append(nowDay)
+//            self.userdefaults.set(dtArray, forKey: "date")
+//        }
         
         let operationQueue = OperationQueue()
         operationQueue.maxConcurrentOperationCount = 1
@@ -236,10 +235,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
             
             let request = BGAppRefreshTaskRequest(identifier: "com.MeasurementSample.refresh")
             
-            request.earliestBeginDate = Date(timeIntervalSinceNow: self.InterbalTime * 3600)
+            request.earliestBeginDate = Date(timeIntervalSinceNow: self.InterbalTime * 60)
             
             do {
-                print("request")
                 try BGTaskScheduler.shared.submit(request)
                 compareStoreAlert()
             } catch {
@@ -278,7 +276,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
             if tempRealmFeedItem.contains(where: { realmItem in
                 realmItem.title == storeItem.title
             }) {
-                print(storeItem.title ?? "")
                 return
             } else {
                 notContain = true

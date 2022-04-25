@@ -18,7 +18,6 @@
 		688EB32227FF25BD008FB693 /* CellType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688EB32127FF25BD008FB693 /* CellType.swift */; };
 		688EB32B27FFEEE1008FB693 /* RealmFeedItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688EB32A27FFEEE1008FB693 /* RealmFeedItem.swift */; };
 		688EB32D28028EFB008FB693 /* RefreshAppContentsOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688EB32C28028EFB008FB693 /* RefreshAppContentsOperation.swift */; };
-		688EB32F28031B1A008FB693 /* StoreFeedItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688EB32E28031B1A008FB693 /* StoreFeedItem.swift */; };
 		688EB33328045487008FB693 /* SettingDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688EB33228045487008FB693 /* SettingDetailView.swift */; };
 		688EB3372805C071008FB693 /* LoginModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688EB3362805C071008FB693 /* LoginModel.swift */; };
 		688EB3392805DA8B008FB693 /* SignUpModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688EB3382805DA8B008FB693 /* SignUpModel.swift */; };
@@ -81,7 +80,6 @@
 		688EB32127FF25BD008FB693 /* CellType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellType.swift; sourceTree = "<group>"; };
 		688EB32A27FFEEE1008FB693 /* RealmFeedItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmFeedItem.swift; sourceTree = "<group>"; };
 		688EB32C28028EFB008FB693 /* RefreshAppContentsOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshAppContentsOperation.swift; sourceTree = "<group>"; };
-		688EB32E28031B1A008FB693 /* StoreFeedItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreFeedItem.swift; sourceTree = "<group>"; };
 		688EB33228045487008FB693 /* SettingDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingDetailView.swift; sourceTree = "<group>"; };
 		688EB3362805C071008FB693 /* LoginModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginModel.swift; sourceTree = "<group>"; };
 		688EB3382805DA8B008FB693 /* SignUpModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpModel.swift; sourceTree = "<group>"; };
@@ -215,7 +213,6 @@
 				688EB32127FF25BD008FB693 /* CellType.swift */,
 				68BF678627F8AA1300A451C3 /* FeedItem.swift */,
 				688EB32A27FFEEE1008FB693 /* RealmFeedItem.swift */,
-				688EB32E28031B1A008FB693 /* StoreFeedItem.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -593,7 +590,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				68BF677527F72EFB00A451C3 /* LoginViewController.swift in Sources */,
-				688EB32F28031B1A008FB693 /* StoreFeedItem.swift in Sources */,
 				68BF674927F723A300A451C3 /* SplashViewController.swift in Sources */,
 				68BF674527F723A300A451C3 /* AppDelegate.swift in Sources */,
 				68BF678C27F9BFF900A451C3 /* Validator.swift in Sources */,

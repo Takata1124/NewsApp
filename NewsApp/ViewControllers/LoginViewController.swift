@@ -83,8 +83,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate, LoginButtonDel
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         
-        idTextField.layer.borderColor = UIColor.dynamicColor(light: .black, dark: .white).cgColor
-        passwordTextField.layer.borderColor = UIColor.dynamicColor(light: .black, dark: .white).cgColor
+        idTextField.layer.borderColor = UIColor.modeTextColor.cgColor
+        passwordTextField.layer.borderColor = UIColor.modeTextColor.cgColor
     }
     
     private func alreadyUserLogin() {

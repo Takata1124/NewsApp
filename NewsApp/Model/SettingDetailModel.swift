@@ -6,3 +6,11 @@
 //
 
 import Foundation
+
+class SettingDetailModel {
+    
+    static let shared = SettingDetailModel()
+    
+    let notificationCenter = NotificationCenter()
+    
+}

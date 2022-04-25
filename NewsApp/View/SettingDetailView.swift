@@ -181,7 +181,7 @@ class SettingDetailView: UIView {
         self.addSubview(timePickerView)
         self.addSubview(timeLabel)
         
-        timeLabel.text = "現在の取得時間は\(appDelegate.InterbalTime)時間です"
+        timeLabel.text = "現在の取得時間は\(appDelegate.InterbalTime)分間隔です"
     }
     
     private func subscriptSetupLayout() {
