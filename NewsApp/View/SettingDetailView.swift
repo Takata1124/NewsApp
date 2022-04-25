@@ -54,7 +54,7 @@ class SettingDetailView: UIView {
     var timeLabelText: Double = 1 {
         
         didSet {
-            timeLabel.text = "現在の取得時間は\(timeLabelText)時間です"
+            timeLabel.text = "現在の取得時間は\(timeLabelText)分です"
         }
     }
     

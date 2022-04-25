@@ -10,6 +10,7 @@ import RealmSwift
 
 class CollectionModel: NSObject {
     
+    static let shared = CollectionModel()
     let notificationCenter = NotificationCenter()
     static let notificationName = "CollectionData"
     static let notificationAlertName = "AlertStoreData"
@@ -48,7 +49,6 @@ class CollectionModel: NSObject {
         
         fetchUserFeed()
         getFeedUrl(self.selectFeed)
-        
         notificationAlert()
         setupRealmFeedItem()
     }
@@ -274,20 +274,12 @@ class CollectionModel: NSObject {
         let result = realm.objects(RealmFeedItem.self).filter(predicate)
         
         if result[0].star == false {
-            do{
-                try realm.write{
-                    result[0].star = true
-                }
-            } catch {
-                print("Error \(error)")
+            try! realm.write {
+                result[0].star = true
             }
         } else {
-            do{
-                try realm.write{
-                    result[0].star = false
-                }
-            }catch {
-                print("Error \(error)")
+            try! realm.write {
+                result[0].star = false
             }
         }
     }
@@ -298,22 +290,63 @@ class CollectionModel: NSObject {
         let result = realm.objects(RealmFeedItem.self).filter(predicate)
         
         if result[0].afterRead == false {
-            do{
-                try realm.write{
-                    result[0].afterRead = true
-                }
-            }catch {
-                print("Error \(error)")
+            try! realm.write {
+                result[0].afterRead = true
             }
         } else {
-            do{
-                try realm.write{
-                    result[0].afterRead = false
-                }
-            }catch {
-                print("Error \(error)")
+            try! realm.write {
+                result[0].afterRead = false
             }
         }
+    }
+ 
+    func filterStar(isStarFilter: Bool, buttonTitle: String)  {
+        
+        if isStarFilter {
+            let result = realm.objects(RealmFeedItem.self).filter("star = true")
+            var tempArray: [FeedItem] = []
+            result.forEach { item in
+                tempArray.append(FeedItem(title: item.title, url: item.url, pubDate: item.pubDate, star: item.star, read: item.read, afterRead: item.afterRead))
+            }
+            self.filterFeedItems = tempArray
+        } else {
+            self.deleteItems()
+            self.fetchFeedDate()
+        }
+        
+        nowfilterFeedItemOrder(buttonTitle: buttonTitle)
+    }
+    
+    func filterRead(isReadFilter: Bool, buttonTitle: String) {
+        
+        if isReadFilter {
+            let result = realm.objects(RealmFeedItem.self).filter("read = true")
+            var tempArray: [FeedItem] = []
+            result.forEach { item in
+                tempArray.append(FeedItem(title: item.title, url: item.url, pubDate: item.pubDate, star: item.star, read: item.read, afterRead: item.afterRead))
+            }
+            self.filterFeedItems = tempArray
+        } else {
+            self.deleteItems()
+            self.fetchFeedDate()
+        }
+        
+        nowfilterFeedItemOrder(buttonTitle: buttonTitle)
+    }
+    
+    func filterAfterReadAction(isAfterReadFilter: Bool, buttonTitle: String) {
+        
+        if isAfterReadFilter {
+            let filterArray = self.filterFeedItems.filter { item in
+                item.afterRead == true
+            }
+            self.filterFeedItems = filterArray
+        } else {
+            self.deleteItems()
+            self.fetchFeedDate()
+        }
+        
+        nowfilterFeedItemOrder(buttonTitle: buttonTitle)
     }
     
     func makingNewOrder(buttonTitle: String) -> String {
@@ -331,75 +364,7 @@ class CollectionModel: NSObject {
         return "New"
     }
     
-    func filterStar(isStarFilter: Bool, buttonTitle: String)  {
-        
-        if isStarFilter {
-            let result = realm.objects(RealmFeedItem.self).filter("star = true")
-            var tempArray: [FeedItem] = []
-            result.forEach { item in
-                tempArray.append(FeedItem(title: item.title, url: item.url, pubDate: item.pubDate, star: item.star, read: item.read, afterRead: item.afterRead))
-            }
-            self.filterFeedItems = tempArray
-        } else {
-            self.deleteItems()
-            self.fetchFeedDate()
-        }
-        
-        if buttonTitle == "New" {
-            filterFeedItems.sort { item_1, item_2 in
-                item_1.pubDate > item_2.pubDate
-            }
-            return
-        }
-        if buttonTitle == "Old" {
-            filterFeedItems.sort { item_1, item_2 in
-                item_1.pubDate < item_2.pubDate
-            }
-            return
-        }
-        
-    }
-    
-    func filterRead(isReadFilter: Bool, buttonTitle: String) {
-        
-        if isReadFilter {
-            let result = realm.objects(RealmFeedItem.self).filter("read = true")
-            var tempArray: [FeedItem] = []
-            result.forEach { item in
-                tempArray.append(FeedItem(title: item.title, url: item.url, pubDate: item.pubDate, star: item.star, read: item.read, afterRead: item.afterRead))
-            }
-            self.filterFeedItems = tempArray
-        } else {
-            self.deleteItems()
-            self.fetchFeedDate()
-        }
-        
-        if buttonTitle == "New" {
-            filterFeedItems.sort { item_1, item_2 in
-                item_1.pubDate > item_2.pubDate
-            }
-            return
-        }
-        
-        if buttonTitle == "Old" {
-            filterFeedItems.sort { item_1, item_2 in
-                item_1.pubDate < item_2.pubDate
-            }
-            return
-        }
-    }
-    
-    func filterAfterReadAction(isAfterReadFilter: Bool, buttonTitle: String) {
-        
-        if isAfterReadFilter {
-            let filterArray = self.filterFeedItems.filter { item in
-                item.afterRead == true
-            }
-            self.filterFeedItems = filterArray
-        } else {
-            self.deleteItems()
-            self.fetchFeedDate()
-        }
+    func nowfilterFeedItemOrder(buttonTitle: String) {
         
         if buttonTitle == "New" {
             filterFeedItems.sort { item_1, item_2 in

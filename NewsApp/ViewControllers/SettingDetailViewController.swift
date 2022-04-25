@@ -31,7 +31,7 @@ class SettingDetailViewController: UIViewController {
         
         setupTimeLayout()
         
-        setup()
+        setupSettingDetailView()
     }
     
     override func viewDidLayoutSubviews() {
@@ -39,7 +39,7 @@ class SettingDetailViewController: UIViewController {
         settingDetailView.frame = view.frame
     }
     
-    private func setup() {
+    private func setupSettingDetailView() {
 
         settingDetailView.confirmSelectCell(selectCell: self.selectCell)
         settingDetailView.letterSlider.addTarget(self, action: #selector(onStartPointlabel(_:)), for: .valueChanged)
@@ -59,7 +59,7 @@ class SettingDetailViewController: UIViewController {
             timeArray.append(i)
         }
     }
-    
+
     @objc func modeChange(sender: UISwitch) {
         
         if #available(iOS 13.0, *) {

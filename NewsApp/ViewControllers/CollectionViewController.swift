@@ -8,7 +8,6 @@
 import UIKit
 import RealmSwift
 import SwipeCellKit
-//import SwiftUI
 
 class CollectionViewController: UIViewController {
     
@@ -91,14 +90,12 @@ class CollectionViewController: UIViewController {
     }
     
     var notificationToken: NotificationToken?
-    
     var realm: Realm?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.collectionModel = CollectionModel()
-        
         setupLayout()
     }
     
@@ -133,14 +130,16 @@ class CollectionViewController: UIViewController {
     private func registerModel() {
         
         guard let model = collectionModel else { return }
+        
         self.filterFeedItems = model.filterFeedItems
         
         model.notificationCenter.addObserver(forName: .init(rawValue: CollectionModel.notificationName), object: nil, queue: nil) { [weak self] nortification in
             
             if let filterfeeditems = nortification.userInfo?["item"] as? [FeedItem] {
                 
+                self?.filterFeedItems = []
+                
                 if self!.isStarFilter == true {
-                    self?.filterFeedItems = []
                     filterfeeditems.forEach { item in
                         if item.star == true {
                             self?.filterFeedItems.append(item)
@@ -150,7 +149,6 @@ class CollectionViewController: UIViewController {
                 }
                 
                 if self!.isReadFilter == true {
-                    self?.filterFeedItems = []
                     filterfeeditems.forEach { item in
                         if item.read == true {
                             self?.filterFeedItems.append(item)
@@ -160,7 +158,6 @@ class CollectionViewController: UIViewController {
                 }
                 
                 if self!.isAfterReadFilter == true {
-                    self?.filterFeedItems = []
                     filterfeeditems.forEach { item in
                         if item.afterRead == true {
                             self?.filterFeedItems.append(item)
@@ -217,6 +214,7 @@ class CollectionViewController: UIViewController {
         
         if filterFeedItems != [] && appDelegate.storeFeedItems != [] {
             collectionModel?.comparedFeedItem(completion: {
+                self.collectionModel?.nowfilterFeedItemOrder(buttonTitle: self.buttonTitle)
                 self.collectionModel?.deleteStoreFeedItems()
             })
         } else {

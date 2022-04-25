@@ -73,6 +73,16 @@ class SignUpViewController: UIViewController {
         
         self.view.endEditing(true)
     }
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        if segue.identifier == "goRss" {
+            let rssView = segue.destination as! RssViewController
+            
+            rssView.id = SignUpModel.shared.id
+            rssView.password = SignUpModel.shared.password
+        }
+    }
     
     @IBAction func goBackLoginView(_ sender: Any) {
 
@@ -88,16 +98,6 @@ class SignUpViewController: UIViewController {
             } else {
                 print("登録できませんでした")
             }
-        }
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
-        if segue.identifier == "goRss" {
-            let rssView = segue.destination as! RssViewController
-            
-            rssView.id = SignUpModel.shared.id
-            rssView.password = SignUpModel.shared.password
         }
     }
 }

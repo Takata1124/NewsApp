@@ -14,7 +14,6 @@ class LoginModel {
     let notificationCenter = NotificationCenter()
     
     private let userDefaults = UserDefaults.standard
-    
     private var user: User?
     private var userId: String = ""
     private var userPassword: String = ""
@@ -56,7 +55,6 @@ class LoginModel {
     func lineLoginAction(accessToken: String, completion: @escaping(Bool) -> Void) {
       
         if let data: Data = userDefaults.value(forKey: "User") as? Data {
-            
             let user: User = try! JSONDecoder().decode(User.self, from: data)
             
             if accessToken == user.accessTokeValue {

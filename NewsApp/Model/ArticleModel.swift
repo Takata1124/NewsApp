@@ -19,7 +19,7 @@ class ArticleModel {
         
         let predicate = NSPredicate(format: "title == %@", "\(title)")
         let result = realm.objects(RealmFeedItem.self).filter(predicate)
-
+        
         return result[0].star
     }
     
@@ -29,20 +29,13 @@ class ArticleModel {
         let result = realm.objects(RealmFeedItem.self).filter(predicate)
         
         if result[0].star == false {
-            do{
-                try realm.write{
-                    result[0].star = true
-                }
-            }catch {
-              print("Error \(error)")
+            try! realm.write{
+                result[0].star = true
             }
         } else {
-            do{
-              try realm.write{
-                  result[0].star = false
-              }
-            }catch {
-              print("Error \(error)")
+            try! realm.write{
+                result[0].star = false
+                
             }
         }
     }
