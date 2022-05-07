@@ -33,10 +33,10 @@ class SignUpModel {
         switch idValidator.validate() {
             
         case .none: break
-        case .required(_):
+        case .requiredPass(_):
             errorMessage = "idを入力してください"
             
-        case .toolong(_):
+        case .isIncorrectCount(_):
             errorMessage = "idは4文字で入力してください"
         }
         
@@ -45,10 +45,10 @@ class SignUpModel {
         switch passwordValidator.validate() {
             
         case .none: break
-        case .required(_):
+        case .requiredPass(_):
             errorMessage = "パスワードを入力してください"
             
-        case .toolong(_):
+        case .isIncorrectCount(_):
             errorMessage = "パスワードは8文字で入力してください"
         }
         
@@ -58,8 +58,9 @@ class SignUpModel {
             self.password = passwordText
             
             completion(true)
-        } else {
-            completion(false)
+            return
         }
+            
+        completion(false)
     }
 }

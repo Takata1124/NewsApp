@@ -35,7 +35,6 @@ class ArticleModel {
         } else {
             try! realm.write{
                 result[0].star = false
-                
             }
         }
     }

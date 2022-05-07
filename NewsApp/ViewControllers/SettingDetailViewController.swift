@@ -44,7 +44,7 @@ class SettingDetailViewController: UIViewController {
         settingDetailView.confirmSelectCell(selectCell: self.selectCell)
         settingDetailView.letterSlider.addTarget(self, action: #selector(onStartPointlabel(_:)), for: .valueChanged)
         settingDetailView.modeSwitch.addTarget(self, action: #selector(modeChange), for: UIControl.Event.valueChanged)
-        settingDetailView.tableSwitch.addTarget(self, action: #selector(tableChange(sender:)), for: UIControl.Event.valueChanged)
+        settingDetailView.tableCategorySwitch.addTarget(self, action: #selector(tableChange(sender:)), for: UIControl.Event.valueChanged)
         settingDetailView.subscriptSwitch.addTarget(self, action: #selector(subscriptionChange(sender:)), for: UIControl.Event.valueChanged)
         settingDetailView.timePickerView.delegate = self
         settingDetailView.timePickerView.dataSource = self

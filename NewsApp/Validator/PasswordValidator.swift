@@ -14,11 +14,11 @@ struct PasswordValidator: Validator {
     func validate() -> PasswordValidateResult {
         
         if password.isEmpty {
-            return .required("パスワードが入力されていません")
+            return .requiredPass("パスワードが入力されていません")
         }
         
         if password.count != 8 {
-            return .toolong(8)
+            return .isIncorrectCount(8)
         }
         
         return .none
@@ -28,8 +28,8 @@ struct PasswordValidator: Validator {
 enum PasswordValidateResult: ValidationResult {
     
     case none
-    case required(String)
-    case toolong(Int)
+    case requiredPass(String)
+    case isIncorrectCount(Int)
     
     var isOk: Bool {  if case .none = self { return true } else { return false } }
 }

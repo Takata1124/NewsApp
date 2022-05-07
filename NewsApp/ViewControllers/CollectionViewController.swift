@@ -96,6 +96,7 @@ class CollectionViewController: UIViewController {
         super.viewDidLoad()
         
         self.collectionModel = CollectionModel()
+        
         setupLayout()
     }
     

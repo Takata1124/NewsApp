@@ -23,7 +23,7 @@ class RssViewController: UIViewController {
         super.viewDidLoad()
         
         navigationItem.title = "RSS"
-        //戻るボタン非表示
+    
         self.navigationItem.hidesBackButton = true
         
         tableView.delegate = self

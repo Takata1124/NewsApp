@@ -22,17 +22,21 @@ class SettingModel {
 
     func UserLogout() {
         
-        guard let data: Data = userDefaults.value(forKey: "User") as? Data else { return }
-        let user: User = try! JSONDecoder().decode(User.self, from: data)
-        let recodeUser: User = User(id: user.id, password: user.password, feed: user.feed, login: false, accessTokeValue: user.accessTokeValue, subscription: user.subscription, subsciptInterval: user.subsciptInterval)
-        guard let data: Data = try? JSONEncoder().encode(recodeUser) else { return }
-        userDefaults.set(data, forKey: "User")
+        if let data: Data = userDefaults.value(forKey: "User") as? Data {
+            
+            let user: User = try! JSONDecoder().decode(User.self, from: data)
+            let recodeUser: User = User(id: user.id, password: user.password, feed: user.feed, login: false, accessTokeValue: user.accessTokeValue, subscription: user.subscription, subsciptInterval: user.subsciptInterval)
+            if let data: Data = try? JSONEncoder().encode(recodeUser) {
+                userDefaults.set(data, forKey: "User")
+            }
+        }
     }
     
     func removeUser() {
         
-        guard let data: Data = userDefaults.value(forKey: "User") as? Data else { return }
-        userDefaults.removeObject(forKey: "User")
+        if let data: Data = userDefaults.value(forKey: "User") as? Data {
+            userDefaults.removeObject(forKey: "User")
+        }
     }
     
     func deleteArticleData(completion: @escaping() -> Void) {

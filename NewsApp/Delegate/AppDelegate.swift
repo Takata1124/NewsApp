@@ -19,25 +19,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     
     var subscription: Bool = false {
         didSet {
-            guard let data: Data = userdefaults.value(forKey: "User") as? Data else { return }
-            let user: User = try! JSONDecoder().decode(User.self, from: data)
-            let recodeUser: User = User(id: user.id, password: user.password, feed: user.feed, login: user.login, accessTokeValue: user.accessTokeValue, subscription: self.subscription, subsciptInterval: user.subsciptInterval)
-            guard let data: Data = try? JSONEncoder().encode(recodeUser) else { return }
-            userdefaults.set(data, forKey: "User")
-            
-            if subscription == false {
-                BGTaskScheduler.shared.cancelAllTaskRequests()
+            if let data: Data = userdefaults.value(forKey: "User") as? Data {
+                let user: User = try! JSONDecoder().decode(User.self, from: data)
+                let recodeUser: User = User(id: user.id, password: user.password, feed: user.feed, login: user.login, accessTokeValue: user.accessTokeValue, subscription: self.subscription, subsciptInterval: user.subsciptInterval)
+                guard let data: Data = try? JSONEncoder().encode(recodeUser) else { return }
+                userdefaults.set(data, forKey: "User")
+                
+                if subscription == false {
+                    BGTaskScheduler.shared.cancelAllTaskRequests()
+                }
             }
         }
     }
     
     var InterbalTime: Double = 1 {
         didSet {
-            guard let data: Data = userdefaults.value(forKey: "User") as? Data else { return }
-            let user: User = try! JSONDecoder().decode(User.self, from: data)
-            let recodeUser: User = User(id: user.id, password: user.password, feed: user.feed, login: user.login, accessTokeValue: user.accessTokeValue, subscription: user.subscription, subsciptInterval: self.InterbalTime)
-            guard let data: Data = try? JSONEncoder().encode(recodeUser) else { return }
-            userdefaults.set(data, forKey: "User")
+            if let data: Data = userdefaults.value(forKey: "User") as? Data {
+                let user: User = try! JSONDecoder().decode(User.self, from: data)
+                let recodeUser: User = User(id: user.id, password: user.password, feed: user.feed, login: user.login, accessTokeValue: user.accessTokeValue, subscription: user.subscription, subsciptInterval: self.InterbalTime)
+                guard let data: Data = try? JSONEncoder().encode(recodeUser) else { return }
+                userdefaults.set(data, forKey: "User")
+            }
         }
     }
     
@@ -52,9 +54,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     
     func application(_ : UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
+        if let data: Data = userdefaults.value(forKey: "User") as? Data {
+            let user = try! JSONDecoder().decode(User.self, from: data)
+            print(user.id)
+            print(user.password)
+            print(user.login)
+        }
+        
         UINavigationBar.appearance().tintColor = UIColor.modeTextColor
         UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: UIColor.modeTextColor]
-        //LineSetup
+        
         LoginManager.shared.setup(channelID: "1657027285", universalLinkURL: nil)
         
         BGTaskScheduler.shared.register(forTaskWithIdentifier: "com.MeasurementSample.refresh", using: nil) { task in
@@ -88,7 +97,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         let store = try? jsonDecoder.decode([FeedItem].self, from: data)
         
         store?.forEach({ item in
-            print(item.title!)
             storeFeedItems.append(item)
         })
         

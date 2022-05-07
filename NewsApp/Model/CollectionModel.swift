@@ -78,7 +78,7 @@ class CollectionModel: NSObject {
                 }
                 
             case .update(let items, let deletions, let insertions, let modifications):
-                //セル選択時のアップデートと処理を防ぐ
+            
                 if modifications == [] {
                     if items.count > 0 {
                         items.forEach { item in
@@ -225,8 +225,6 @@ class CollectionModel: NSObject {
         var i = 0
    
         tempStoreFeedItems.forEach { storeItem in
-            
-            print(storeItem.title as Any)
             
             i += 1
             if !filterFeedItems.contains(where: { item in

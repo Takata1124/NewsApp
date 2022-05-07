@@ -17,7 +17,6 @@ class LoginModel {
     private var user: User?
     private var userId: String = ""
     private var userPassword: String = ""
-    
     private var errorMessage: String = "" {
         didSet {
             notificationCenter.post(name: .init(rawValue: LoginModel.notificationName), object: errorMessage)
@@ -26,27 +25,41 @@ class LoginModel {
     
     private init() {
         
-        guard let data: Data = userDefaults.value(forKey: "User") as? Data else {
+        if let data: Data = userDefaults.value(forKey: "User") as? Data {
+            self.user = try! JSONDecoder().decode(User.self, from: data)
+            self.userId = self.user!.id
+            self.userPassword = self.user!.password
+        } else {
             errorMessage = "ユーザー情報がありません"
             return
         }
-        
-        self.user = try! JSONDecoder().decode(User.self, from: data)
-        self.userId = self.user!.id
-        self.userPassword = self.user!.password
     }
     
-    func alreadyConfirmLogin(completion: @escaping(Bool) -> Void) {
+    func confirmUser(completion: @escaping(Bool) -> Void) {
         
         guard let data: Data = userDefaults.value(forKey: "User") as? Data else {
             completion(false)
             return
         }
+    
+        completion(true)
+    }
+    
+    func removeUser() {
         
-        let user: User = try! JSONDecoder().decode(User.self, from: data)
+        if let data: Data = userDefaults.value(forKey: "User") as? Data {
+            userDefaults.removeObject(forKey: "User")
+        }
+    }
+    
+    func confirmLogin(completion: @escaping(Bool) -> Void) {
         
-        if user.login == true {
-            return completion(true)
+        if let data: Data = userDefaults.value(forKey: "User") as? Data {
+            let user: User = try! JSONDecoder().decode(User.self, from: data)
+            if user.login == true {
+                completion(true)
+                return
+            }
         }
         
         completion(false)
@@ -61,11 +74,11 @@ class LoginModel {
                 
                 let recodeUser: User = User(id: self.user!.id, password: self.user!.password, feed: self.user!.feed, login: true, accessTokeValue: self.user!.accessTokeValue, subscription: self.user!.subscription, subsciptInterval: self.user!.subsciptInterval)
 
-                guard let data: Data = try? JSONEncoder().encode(recodeUser) else { return }
-                
-                userDefaults.setValue(data, forKey: "User")
-  
-                return completion(true)
+                if let data: Data = try? JSONEncoder().encode(recodeUser) {
+                    userDefaults.setValue(data, forKey: "User")
+                    completion(true)
+                    return
+                }
             }
         }
 
@@ -85,9 +98,9 @@ class LoginModel {
         switch idValidator.validate() {
             
         case .none: break
-        case .required(_):
+        case .requiredPass(_):
             errorMessage = "idを入力してください"
-        case .toolong(_):
+        case .isIncorrectCount(_):
             errorMessage = "idは4文字で入力してください"
         }
         
@@ -96,9 +109,9 @@ class LoginModel {
         switch passwordValidator.validate() {
             
         case .none: break
-        case .required(_):
+        case .requiredPass(_):
             errorMessage = "パスワードを入力してください"
-        case .toolong(_):
+        case .isIncorrectCount(_):
             errorMessage = "パスワードは8文字で入力してください"
         }
         
@@ -116,11 +129,12 @@ class LoginModel {
                 
                 let recodeUser: User = User(id: self.user!.id, password: self.user!.password, feed: self.user!.feed, login: true, accessTokeValue: self.user!.accessTokeValue, subscription: self.user!.subscription, subsciptInterval: self.user!.subsciptInterval)
   
-                guard let data: Data = try? JSONEncoder().encode(recodeUser) else { return }
-                userDefaults.setValue(data, forKey: "User")
-                
-                completion(true)
-                return
+                if let data: Data = try? JSONEncoder().encode(recodeUser) {
+                    userDefaults.setValue(data, forKey: "User")
+                    
+                    completion(true)
+                    return
+                }
             }
         } else {
             completion(false)

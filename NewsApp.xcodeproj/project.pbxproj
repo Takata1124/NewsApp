@@ -250,12 +250,12 @@
 		68BF674327F723A300A451C3 /* NewsApp */ = {
 			isa = PBXGroup;
 			children = (
+				68BF679927F9DBAB00A451C3 /* NewsApp.entitlements */,
 				68A434BE281198CE00D4093C /* Delegate */,
 				688EB3352805BF1C008FB693 /* Data */,
 				688EB3342805AC70008FB693 /* Storyboard */,
 				688EB33128044823008FB693 /* View */,
 				688EB33028031C46008FB693 /* Operation */,
-				68BF679927F9DBAB00A451C3 /* NewsApp.entitlements */,
 				688EB32627FF2DCC008FB693 /* ViewCell */,
 				688EB32327FF2665008FB693 /* Extensions */,
 				68BF679C27FAA6BF00A451C3 /* Validator */,

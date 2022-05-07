@@ -42,11 +42,11 @@ class SettingDetailView: UIView {
     var tableSelect: Bool = false {
         didSet {
             if tableSelect {
-                tableSwitch.isOn = true
-                tableCategory.text = "CollectionView"
+                tableCategorySwitch.isOn = true
+                tableCategoryLabel.text = "CollectionView"
             } else {
-                tableSwitch.isOn = false
-                tableCategory.text = "TableView"
+                tableCategorySwitch.isOn = false
+                tableCategoryLabel.text = "TableView"
             }
         }
     }
@@ -72,50 +72,20 @@ class SettingDetailView: UIView {
         return slider
     }()
     
-    let valueLabel: UILabel = {
-        let label = UILabel(frame: CGRect(x: UIScreen.main.bounds.width / 2 - 50, y: 300, width: 100, height: 50))
-        label.textAlignment = .center
-        return label
-    }()
+    var modeSwitch = BaseSwitch()
+    var tableCategorySwitch = BaseSwitch()
+    var subscriptSwitch = BaseSwitch()
     
-    var modeLabel: UILabel = {
-        let label = UILabel(frame: CGRect(x: UIScreen.main.bounds.width / 2 - 50, y: 300, width: 100, height: 50))
-        label.textAlignment = .center
-        return label
-    }()
+    var tableCategoryLabel = BaseLabel(frame: CGRect(x: UIScreen.main.bounds.width / 2 - 150, y: 300, width: 300, height: 50))
     
-    let modeSwitch: UISwitch = {
-        let uiswitch = UISwitch(frame: CGRect(x: UIScreen.main.bounds.width / 2 - 25, y: UIScreen.main.bounds.height / 2, width: 50, height: 31))
-        return uiswitch
-    }()
+    var subscriptLabel = BaseLabel(frame: CGRect(x: UIScreen.main.bounds.width / 2 - 150, y: 300, width: 300, height: 50))
     
-    let tableSwitch: UISwitch = {
-        let tableswitch = UISwitch(frame: CGRect(x: UIScreen.main.bounds.width / 2 - 25, y: UIScreen.main.bounds.height / 2, width: 50, height: 31))
-        return tableswitch
-    }()
+    var timeLabel = BaseLabel(frame: CGRect(x: UIScreen.main.bounds.width / 2 - 150, y: 150, width: 300, height: 50))
     
-    var tableCategory: UILabel = {
-        let label = UILabel(frame: CGRect(x: UIScreen.main.bounds.width / 2 - 150, y: 300, width: 300, height: 50))
-        label.textAlignment = .center
-        return label
-    }()
+    var valueLabel = BaseLabel(frame: CGRect(x: UIScreen.main.bounds.width / 2 - 50, y: 300, width: 100, height: 50))
     
-    var subscriptSwitch: UISwitch = {
-        let uiswitch = UISwitch(frame: CGRect(x: UIScreen.main.bounds.width / 2 - 25, y: UIScreen.main.bounds.height / 2, width: 50, height: 31))
-        return uiswitch
-    }()
-    
-    var subscriptLabel: UILabel = {
-        let label = UILabel(frame: CGRect(x: UIScreen.main.bounds.width / 2 - 150, y: 300, width: 300, height: 50))
-        label.textAlignment = .center
-        return label
-    }()
-    
-    var timeLabel: UILabel = {
-        let label = UILabel(frame: CGRect(x: UIScreen.main.bounds.width / 2 - 150, y: 150, width: 300, height: 50))
-        label.textAlignment = .center
-        return label
-    }()
+    var modeLabel = BaseLabel(frame: CGRect(x: UIScreen.main.bounds.width / 2 - 50, y: 300, width: 100, height: 50))
+
     
     let timePickerView: UIPickerView = {
         let pickerView = UIPickerView()
@@ -166,8 +136,8 @@ class SettingDetailView: UIView {
     
     private func tableswitchLayout() {
         
-        self.addSubview(tableSwitch)
-        self.addSubview(tableCategory)
+        self.addSubview(tableCategorySwitch)
+        self.addSubview(tableCategoryLabel)
         
         if appDelegate.cellType == .Grid {
             tableSelect = true
@@ -217,3 +187,31 @@ class SettingDetailView: UIView {
         }
     }
 }
+
+class BaseLabel: UILabel {
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        self.textAlignment = .center
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+class BaseSwitch: UISwitch {
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        self.frame = CGRect(x: UIScreen.main.bounds.width / 2 - 25, y: UIScreen.main.bounds.height / 2, width: 50, height: 31)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+

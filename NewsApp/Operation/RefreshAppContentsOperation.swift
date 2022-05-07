@@ -165,12 +165,11 @@ class getXMLDataOperation: Operation, XMLParserDelegate, UNUserNotificationCente
         }
 
         let jsonEncoder = JSONEncoder()
-        guard let data = try? jsonEncoder.encode(tempFeedItems) else {
-            return
+        
+        if let data = try? jsonEncoder.encode(tempFeedItems) {
+            
+            userdefaults.set(data, forKey: "StoreFeedItems")
+            print("saveData")
         }
-        
-        userdefaults.set(data, forKey: "StoreFeedItems")
-        
-        print("saveData")
     }
 }

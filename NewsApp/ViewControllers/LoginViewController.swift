@@ -89,12 +89,13 @@ class LoginViewController: UIViewController, UITextFieldDelegate, LoginButtonDel
     
     private func alreadyUserLogin() {
         
-        LoginModel.shared.alreadyConfirmLogin { success in
+        LoginModel.shared.confirmLogin { success in
             
             if success {
                 self.performSegue(withIdentifier: "goCollection", sender: nil)
                 return
             }
+            
             return
         }
     }
@@ -102,8 +103,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate, LoginButtonDel
     func loginButton(_ button: LoginButton, didSucceedLogin loginResult: LoginResult) {
         print("LINE認証成功")
         print("アクセストークン:\(loginResult.accessToken.value)")
-        print("ここでログイン処理を呼び出す")
-        
         print(loginResult.userProfile?.userID ?? "")
         
         self.accessTokenValue = loginResult.userProfile!.userID
@@ -135,7 +134,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, LoginButtonDel
                 return
             }
 
-            print("Rss選択に移れませんでした")
+            print("ユーザー情報がありませんでした")
             return
         }
     }
@@ -150,6 +149,30 @@ class LoginViewController: UIViewController, UITextFieldDelegate, LoginButtonDel
     }
     
     @IBAction func goSignUpView(_ sender: Any) {
-        performSegue(withIdentifier: "goSignUp", sender: nil)
+        
+        LoginModel.shared.confirmUser { success in
+            if success {
+                
+                let alert = UIAlertController(title: "確認", message: "ユーザー情報が存在します。消去して再度ユーザー情報を作成しますか？", preferredStyle: .alert)
+                
+                let addActionAlert: UIAlertAction = UIAlertAction(title: "YES", style: .default, handler: { Void in
+                    LoginModel.shared.removeUser()
+                    self.performSegue(withIdentifier: "goSignUp", sender: nil)
+                })
+                
+                let cancelAction: UIAlertAction = UIAlertAction(title: "No", style: .cancel, handler: {
+                    (action: UIAlertAction!) -> Void in
+                    alert.dismiss(animated: false, completion: nil)
+                })
+                
+                alert.addAction(addActionAlert)
+                alert.addAction(cancelAction)
+                
+                self.present(alert, animated: true)
+                
+            } else {
+                self.performSegue(withIdentifier: "goSignUp", sender: nil)
+            }
+        }
     }
 }

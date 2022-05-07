@@ -14,11 +14,11 @@ struct IdValidator: Validator {
     func validate() -> IdValidateResult {
         
         if id.isEmpty {
-            return .required("idが入力されていません")
+            return .requiredPass("idが入力されていません")
         }
         
         if id.count != 4 {
-            return .toolong(4)
+            return .isIncorrectCount(4)
         }
         
         return .none
@@ -28,8 +28,9 @@ struct IdValidator: Validator {
 enum IdValidateResult: ValidationResult {
     
     case none
-    case required(String)
-    case toolong(Int)
+    case requiredPass(String)
+    case isIncorrectCount(Int)
     
     var isOk: Bool { if case .none = self { return true } else { return false } }
 }
+

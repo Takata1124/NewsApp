@@ -16,7 +16,9 @@ protocol Validator {
 
 extension Validator {
     
-    func isValid() -> Bool { validate().isOk }
+    func isValid() -> Bool {
+        validate().isOk
+    }
 }
 
 protocol ValidationResult {
