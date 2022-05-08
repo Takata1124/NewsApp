@@ -52,7 +52,6 @@ class SettingDetailView: UIView {
     }
     
     var timeLabelText: Double = 1 {
-        
         didSet {
             timeLabel.text = "現在の取得時間は\(timeLabelText)分です"
         }
@@ -61,39 +60,60 @@ class SettingDetailView: UIView {
     private let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
     private let appDelegateWindow = UIApplication.shared.windows.first
     
+    var modeSwitch = BaseSwitch()
+    var tableCategorySwitch = BaseSwitch()
+    var subscriptSwitch = BaseSwitch()
+    
+    var tableCategoryLabel = BaseLabel(frame: CGRect(x: UIScreen.main.bounds.width / 2 - 150, y: 300, width: 300, height: 50))
+    var subscriptLabel = BaseLabel(frame: CGRect(x: UIScreen.main.bounds.width / 2 - 150, y: 300, width: 300, height: 50))
+    var timeLabel = BaseLabel(frame: CGRect(x: UIScreen.main.bounds.width / 2 - 150, y: 150, width: 300, height: 50))
+    var valueLabel = BaseLabel(frame: CGRect(x: UIScreen.main.bounds.width / 2 - 50, y: 300, width: 100, height: 50))
+    var modeLabel = BaseLabel(frame: CGRect(x: UIScreen.main.bounds.width / 2 - 50, y: 300, width: 100, height: 50))
+    
     let letterSlider: UISlider = {
+        
         let slider = UISlider(frame: CGRect(x: UIScreen.main.bounds.width / 2 - 175, y: UIScreen.main.bounds.height / 2, width:350, height:30))
         slider.backgroundColor = UIColor.white
         slider.layer.cornerRadius = 10.0
         slider.layer.masksToBounds = false
         slider.minimumValue = 10
         slider.maximumValue = 20
-
+        
         return slider
     }()
     
-    var modeSwitch = BaseSwitch()
-    var tableCategorySwitch = BaseSwitch()
-    var subscriptSwitch = BaseSwitch()
-    
-    var tableCategoryLabel = BaseLabel(frame: CGRect(x: UIScreen.main.bounds.width / 2 - 150, y: 300, width: 300, height: 50))
-    
-    var subscriptLabel = BaseLabel(frame: CGRect(x: UIScreen.main.bounds.width / 2 - 150, y: 300, width: 300, height: 50))
-    
-    var timeLabel = BaseLabel(frame: CGRect(x: UIScreen.main.bounds.width / 2 - 150, y: 150, width: 300, height: 50))
-    
-    var valueLabel = BaseLabel(frame: CGRect(x: UIScreen.main.bounds.width / 2 - 50, y: 300, width: 100, height: 50))
-    
-    var modeLabel = BaseLabel(frame: CGRect(x: UIScreen.main.bounds.width / 2 - 50, y: 300, width: 100, height: 50))
-
-    
     let timePickerView: UIPickerView = {
+        
         let pickerView = UIPickerView()
         pickerView.layer.borderWidth = 1.0
         pickerView.layer.borderColor = UIColor.modeTextColor.cgColor
         pickerView.frame = CGRect(x: UIScreen.main.bounds.width / 2 - 100, y: UIScreen.main.bounds.height / 2 - 100, width: 200, height: 200)
         return pickerView
     }()
+    
+    var userStackView: UIStackView?
+    
+    var idLabel = BaseLabel()
+    var passwordLabel = BaseLabel()
+    var feedLabel = BaseLabel()
+    var loginLabel = BaseLabel()
+    var subscriptionLabel = BaseLabel()
+    var subscriptionIntervalLabel = BaseLabel()
+    var accessTokenValueLabel = BaseLabel()
+    
+    var user: User? {
+        didSet {
+            DispatchQueue.main.async {
+                self.idLabel.text = "idは\(String(describing: self.user!.id))"
+                self.passwordLabel.text = "passwordは\(String(describing: self.user!.password))"
+                self.feedLabel.text = "トピックは\(String(describing: self.user!.feed))"
+                self.loginLabel.text = "Login状態は\(String(describing: self.user!.login.description))"
+                self.subscriptLabel.text = "購読状態は\(String(describing: self.user!.subscription.description))"
+                self.subscriptionIntervalLabel.text = "購読感覚は\(String(describing: self.user!.subsciptInterval.description))"
+                self.accessTokenValueLabel.text = "アクセストークンは\(String(describing:self.user!.accessTokeValue))"
+            }
+        }
+    }
     
     override init(frame: CGRect){
         super.init(frame: frame)
@@ -104,7 +124,7 @@ class SettingDetailView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
     func confirmSelectCell(selectCell: String) {
         
         self.selectCell = selectCell
@@ -113,6 +133,9 @@ class SettingDetailView: UIView {
     private func selectCategorySetting(selectCell: String) {
         
         switch selectCell {
+            
+        case "ユーザー情報":
+            userInformationLayout()
             
         case "一覧画面表示切り替え":
             tableswitchLayout()
@@ -132,6 +155,32 @@ class SettingDetailView: UIView {
         default:
             print("default")
         }
+    }
+    
+    private func userInformationLayout() {
+        
+        self.userStackView = UIStackView()
+        self.userStackView?.axis = .vertical
+        self.userStackView?.alignment = .leading
+        self.userStackView?.distribution = .fillEqually
+        self.userStackView?.spacing = 10
+        self.userStackView?.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.addSubview(self.userStackView!)
+        
+        self.userStackView?.addArrangedSubview(idLabel)
+        self.userStackView?.addArrangedSubview(passwordLabel)
+        self.userStackView?.addArrangedSubview(feedLabel)
+        self.userStackView?.addArrangedSubview(loginLabel)
+        self.userStackView?.addArrangedSubview(subscriptLabel)
+        self.userStackView?.addArrangedSubview(subscriptionIntervalLabel)
+        self.userStackView?.addArrangedSubview(accessTokenValueLabel)
+        
+        [self.userStackView?.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+         userStackView?.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+         userStackView?.widthAnchor.constraint(equalToConstant: 300),
+         userStackView?.heightAnchor.constraint(equalToConstant: 300)
+        ].forEach { $0?.isActive = true }
     }
     
     private func tableswitchLayout() {
@@ -165,7 +214,7 @@ class SettingDetailView: UIView {
             subscriptionSelect = false
         }
     }
-
+    
     private func sliderLayout() {
         
         self.addSubview(letterSlider)
@@ -187,31 +236,3 @@ class SettingDetailView: UIView {
         }
     }
 }
-
-class BaseLabel: UILabel {
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        
-        self.textAlignment = .center
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-}
-
-class BaseSwitch: UISwitch {
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        
-        self.frame = CGRect(x: UIScreen.main.bounds.width / 2 - 25, y: UIScreen.main.bounds.height / 2, width: 50, height: 31)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-}
-
-

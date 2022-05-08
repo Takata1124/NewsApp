@@ -43,7 +43,6 @@ class ArticleViewController: UIViewController, UINavigationControllerDelegate {
     private func setupLayout() {
         
         navigationItem.title = "\(titleName)"
-        //戻るボタンを非表示
         self.navigationItem.hidesBackButton = true
         
         navigationController?.delegate = self

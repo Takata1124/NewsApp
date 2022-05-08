@@ -27,10 +27,9 @@ class RssModel {
         let user = User(id: id, password: password, feed: selectFeed, login: true, accessTokeValue: accessTokeValue, subscription: false, subsciptInterval: 1.0)
 
         if let data: Data = try? JSONEncoder().encode(user) {
-            self.userDefaults.setValue(data, forKey: "User")
             
+            self.userDefaults.setValue(data, forKey: "User")
             let results = realm.objects(RealmFeedItem.self)
-
             try! realm.write {
                 realm.delete(results)
                 completion(true)

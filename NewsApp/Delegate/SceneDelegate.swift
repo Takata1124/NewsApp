@@ -12,7 +12,6 @@ import BackgroundTasks
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     var window: UIWindow?
-    let userDefaults = UserDefaults.standard
     
     private let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
     
@@ -45,7 +44,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     func sceneDidEnterBackground(_ scene: UIScene) {
 //        print("background")
-        
+        //バックエンド時に購読設定を設定
         if appDelegate.subscription {
             BGTaskScheduler.shared.getPendingTaskRequests { requests in
 

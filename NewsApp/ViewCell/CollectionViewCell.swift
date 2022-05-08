@@ -13,7 +13,6 @@ class CollectionViewCell: SwipeCollectionViewCell {
     let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
     
     static let identifier = "collectionViewCell"
-    
     private var feedItem: FeedItem?
     
     private var read: Bool = false {

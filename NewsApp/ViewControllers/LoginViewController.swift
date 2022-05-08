@@ -153,7 +153,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, LoginButtonDel
         LoginModel.shared.confirmUser { success in
             if success {
                 
-                let alert = UIAlertController(title: "確認", message: "ユーザー情報が存在します。消去して再度ユーザー情報を作成しますか？", preferredStyle: .alert)
+                let alert = UIAlertController(title: "確認", message: "ユーザー情報が存在します。消去して新規ユーザー情報を作成しますか？", preferredStyle: .alert)
                 
                 let addActionAlert: UIAlertAction = UIAlertAction(title: "YES", style: .default, handler: { Void in
                     LoginModel.shared.removeUser()

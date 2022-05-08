@@ -47,7 +47,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     var storeFeedItems: [FeedItem] = []
     var navigationController: UINavigationController?
     
-    let usernotificationCenter = UNUserNotificationCenter.current()
+    let unuserNotificationCenter = UNUserNotificationCenter.current()
     
     var realm: Realm?
     var window: UIWindow?
@@ -59,6 +59,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
             print(user.id)
             print(user.password)
             print(user.login)
+            print(user.accessTokeValue)
         }
         
         UINavigationBar.appearance().tintColor = UIColor.modeTextColor
@@ -133,7 +134,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         
         if #available (iOS 10.0, *) {
             
-            self.usernotificationCenter.requestAuthorization(options: [.sound, .alert, .badge], completionHandler: {
+            self.unuserNotificationCenter.requestAuthorization(options: [.sound, .alert, .badge], completionHandler: {
                 (granted, error) in
                 
                 DispatchQueue.main.async {
@@ -146,7 +147,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
             })
         }
         
-        self.usernotificationCenter.getNotificationSettings { settings in
+        self.unuserNotificationCenter.getNotificationSettings { settings in
             
             DispatchQueue.main.async {
                 
@@ -163,7 +164,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                     
                     let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
                     let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
-                    self.usernotificationCenter.delegate = self
+                    self.unuserNotificationCenter.delegate = self
                     
                     UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
                     

@@ -72,9 +72,9 @@ class LoginModel {
             
             if accessToken == user.accessTokeValue {
                 
-                let recodeUser: User = User(id: self.user!.id, password: self.user!.password, feed: self.user!.feed, login: true, accessTokeValue: self.user!.accessTokeValue, subscription: self.user!.subscription, subsciptInterval: self.user!.subsciptInterval)
+                let recodingUser: User = User(id: self.user!.id, password: self.user!.password, feed: self.user!.feed, login: true, accessTokeValue: self.user!.accessTokeValue, subscription: self.user!.subscription, subsciptInterval: self.user!.subsciptInterval)
 
-                if let data: Data = try? JSONEncoder().encode(recodeUser) {
+                if let data: Data = try? JSONEncoder().encode(recodingUser) {
                     userDefaults.setValue(data, forKey: "User")
                     completion(true)
                     return

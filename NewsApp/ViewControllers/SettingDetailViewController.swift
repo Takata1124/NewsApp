@@ -11,7 +11,11 @@ class SettingDetailViewController: UIViewController {
 
     private let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
     private let appDelegateWindow = UIApplication.shared.windows.first
-    private var timeArray: [String] = []
+    private var timeArray: [String] = [] {
+        didSet {
+            settingDetailView.timePickerView.reloadAllComponents()
+        }
+    }
     
     var selectCell: String = ""
     
@@ -23,15 +27,24 @@ class SettingDetailViewController: UIViewController {
     
     let settingDetailView = SettingDetailView()
     
+    var settingDetailModel: SettingDetailModel? {
+        didSet {
+            registerModel()
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = UIColor.modeColor
         navigationItem.title = "\(selectCell)"
         
-        setupTimeLayout()
+        self.settingDetailModel = SettingDetailModel()
         
-        setupSettingDetailView()
+        settingDetailModel?.setupTimeLayout()
+        settingDetailModel?.confirmUserData()
+        
+        view.addSubview(settingDetailView)
     }
     
     override func viewDidLayoutSubviews() {
@@ -39,8 +52,10 @@ class SettingDetailViewController: UIViewController {
         settingDetailView.frame = view.frame
     }
     
-    private func setupSettingDetailView() {
-
+    private func registerModel() {
+        
+        guard let model = settingDetailModel else { return }
+        
         settingDetailView.confirmSelectCell(selectCell: self.selectCell)
         settingDetailView.letterSlider.addTarget(self, action: #selector(onStartPointlabel(_:)), for: .valueChanged)
         settingDetailView.modeSwitch.addTarget(self, action: #selector(modeChange), for: UIControl.Event.valueChanged)
@@ -49,14 +64,14 @@ class SettingDetailViewController: UIViewController {
         settingDetailView.timePickerView.delegate = self
         settingDetailView.timePickerView.dataSource = self
         
-        view.addSubview(settingDetailView)
-    }
-
-    private func setupTimeLayout() {
+        model.notificationCenter.addObserver(forName: .init(rawValue: SettingDetailModel.timeArrayNotificationName), object: nil, queue: nil) { notification in
+            self.timeArray = notification.userInfo?["timeArray"] as! [String]
+        }
         
-        for i in 1..<25 {
-            let i: String = "\(i)"
-            timeArray.append(i)
+        model.notificationCenter.addObserver(forName: .init(rawValue: SettingDetailModel.userNotificationName), object: nil, queue: nil) { notification in
+            let user: User = notification.userInfo?["user"] as! User
+            print(user)
+            self.settingDetailView.user = user
         }
     }
 

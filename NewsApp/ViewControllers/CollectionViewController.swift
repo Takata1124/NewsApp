@@ -182,7 +182,7 @@ class CollectionViewController: UIViewController {
         
         let feed = collectionModel?.rssFeed()
         navigationItem.title = feed
-        //戻るボタン非表示
+        
         self.navigationItem.hidesBackButton = true
         
         orderButton.setTitle(buttonTitle, for: .normal)

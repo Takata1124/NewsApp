@@ -16,7 +16,6 @@ class CollectionModel: NSObject {
     static let notificationAlertName = "AlertStoreData"
     
     private let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
-    
     private var selectFeed: String = ""
     private var feedUrl: String = ""
     
@@ -118,9 +117,10 @@ class CollectionModel: NSObject {
     
     private func fetchUserFeed() {
         
-        guard let data: Data = userDefaults.value(forKey: "User") as? Data else { return }
-        let user: User = try! JSONDecoder().decode(User.self, from: data)
-        self.selectFeed = user.feed
+        if let data: Data = userDefaults.value(forKey: "User") as? Data {
+            let user: User = try! JSONDecoder().decode(User.self, from: data)
+            self.selectFeed = user.feed
+        }
     }
     
     private func saveFeedItems(feedItems: [FeedItem]) {
@@ -244,9 +244,7 @@ class CollectionModel: NSObject {
     func deleteStoreFeedItems() {
         
         appDelegate.storeFeedItems = []
-        
         userDefaults.removeObject(forKey: "StoreFeedItems")
-        
         self.notificationAlert()
     }
     
