@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import RealmSwift
 
 class LoginModel {
     
@@ -13,25 +14,29 @@ class LoginModel {
     static let notificationName = "LoginErrerMessage"
     let notificationCenter = NotificationCenter()
     
+    private let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
+    
     let userDefaults = UserDefaults.standard
     private var user: User?
     private var userId: String = ""
     private var userPassword: String = ""
-    private var errorMessage: String = "" {
+    
+    var errorMessage: String = "" {
         didSet {
             notificationCenter.post(name: .init(rawValue: LoginModel.notificationName), object: errorMessage)
         }
     }
     
+    let realm: Realm?
+    
     private init() {
+        
+        self.realm = appDelegate.realm
         
         if let data: Data = userDefaults.value(forKey: "User") as? Data {
             self.user = try! JSONDecoder().decode(User.self, from: data)
             self.userId = self.user!.id
             self.userPassword = self.user!.password
-        } else {
-            errorMessage = "ユーザー情報がありません"
-            return
         }
     }
     
@@ -49,7 +54,15 @@ class LoginModel {
         
         userDefaults.removeObject(forKey: "userLogin")
         userDefaults.removeObject(forKey: "User")
-        
+        //端末内情報の削除
+        if let results = realm?.objects(RealmFeedItem.self) {
+            try! realm?.write {
+                self.realm?.delete(results)
+                completion(true)
+                return
+            }
+        }
+
         completion(true)
     }
     
@@ -64,15 +77,6 @@ class LoginModel {
     }
     
     func LoginAction(idText: String, passwordText: String, completion: @escaping(Bool) -> Void) {
-        
-        if let data: Data = userDefaults.value(forKey: "User") as? Data {
-            self.user = try! JSONDecoder().decode(User.self, from: data)
-            self.userId = self.user!.id
-            self.userPassword = self.user!.password
-        } else {
-            errorMessage = "ユーザー情報がありません"
-            return
-        }
         
         if self.user == nil {
             errorMessage = "ユーザー情報がありません"
@@ -136,7 +140,7 @@ class LoginModel {
         }
     }
     
-    private func LoginQuery(idText: String, passwordText: String) -> Bool {
+    func LoginQuery(idText: String, passwordText: String) -> Bool {
         
         return userId == idText && userPassword == passwordText
     }
@@ -149,6 +153,7 @@ class LoginModel {
             if accessToken == user.accessTokeValue {
                 
                 let recodingUser: User = User(id: self.user!.id, password: self.user!.password, feed: self.user!.feed, login: true, accessTokeValue: self.user!.accessTokeValue, subscription: self.user!.subscription, subsciptInterval: self.user!.subsciptInterval)
+                
                 if let data: Data = try? JSONEncoder().encode(recodingUser) {
                     userDefaults.setValue(data, forKey: "User")
                     userDefaults.setValue(true, forKey: "userLogin")
@@ -160,7 +165,5 @@ class LoginModel {
         
         completion(false)
     }
-    
-    
 }
 

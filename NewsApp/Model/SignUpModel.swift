@@ -18,7 +18,7 @@ class SignUpModel {
 
     let userDefaults = UserDefaults.standard
     
-    private var errorMessage: String = "" {
+    var errorMessage: String = "" {
         didSet {
             notificationCenter.post(name: .init(rawValue: SignUpModel.notificationName), object: errorMessage)
         }

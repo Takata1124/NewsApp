@@ -102,9 +102,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate, LoginButtonDel
     }
     
     func loginButton(_ button: LoginButton, didSucceedLogin loginResult: LoginResult) {
-        print("LINE認証成功")
-        print("アクセストークン:\(loginResult.accessToken.value)")
-        print(loginResult.userProfile?.userID ?? "")
+//        print("LINE認証成功")
+//        print("アクセストークン:\(loginResult.accessToken.value)")
+//        print(loginResult.userProfile?.userID ?? "")
         
         self.accessTokenValue = loginResult.userProfile!.userID
         
@@ -189,4 +189,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate, LoginButtonDel
             }
         }
     }
+    
+    func mcall(str: String) -> String {
+          return str
+        }
 }

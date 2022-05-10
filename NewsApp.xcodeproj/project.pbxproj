@@ -13,6 +13,10 @@
 		68520053282746D3000A5AC2 /* BaseLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68520052282746D3000A5AC2 /* BaseLabel.swift */; };
 		6884BF10282747BA003111C8 /* BaseSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6884BF0F282747BA003111C8 /* BaseSwitch.swift */; };
 		6884BF12282748BE003111C8 /* SettingDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6884BF11282748BE003111C8 /* SettingDetailModel.swift */; };
+		6884BF15282A0ED5003111C8 /* LoginUnitTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6884BF14282A0ED5003111C8 /* LoginUnitTest.swift */; };
+		6884BF17282A0FCC003111C8 /* SignUpUnitTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6884BF16282A0FCC003111C8 /* SignUpUnitTest.swift */; };
+		6884BF19282A3EA9003111C8 /* CollectionViewUnitTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6884BF18282A3EA9003111C8 /* CollectionViewUnitTest.swift */; };
+		6884BF1B282A6F42003111C8 /* SettingUnitTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6884BF1A282A6F42003111C8 /* SettingUnitTest.swift */; };
 		688EB31427FADB98008FB693 /* NavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688EB31327FADB98008FB693 /* NavigationViewController.swift */; };
 		688EB31627FCAE72008FB693 /* Extensions_UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688EB31527FCAE72008FB693 /* Extensions_UIColor.swift */; };
 		688EB31C27FE8DA7008FB693 /* CollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688EB31B27FE8DA7008FB693 /* CollectionViewController.swift */; };
@@ -77,6 +81,10 @@
 		68520052282746D3000A5AC2 /* BaseLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseLabel.swift; sourceTree = "<group>"; };
 		6884BF0F282747BA003111C8 /* BaseSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseSwitch.swift; sourceTree = "<group>"; };
 		6884BF11282748BE003111C8 /* SettingDetailModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingDetailModel.swift; sourceTree = "<group>"; };
+		6884BF14282A0ED5003111C8 /* LoginUnitTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginUnitTest.swift; sourceTree = "<group>"; };
+		6884BF16282A0FCC003111C8 /* SignUpUnitTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpUnitTest.swift; sourceTree = "<group>"; };
+		6884BF18282A3EA9003111C8 /* CollectionViewUnitTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewUnitTest.swift; sourceTree = "<group>"; };
+		6884BF1A282A6F42003111C8 /* SettingUnitTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingUnitTest.swift; sourceTree = "<group>"; };
 		688EB31327FADB98008FB693 /* NavigationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationViewController.swift; sourceTree = "<group>"; };
 		688EB31527FCAE72008FB693 /* Extensions_UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions_UIColor.swift; sourceTree = "<group>"; };
 		688EB31B27FE8DA7008FB693 /* CollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewController.swift; sourceTree = "<group>"; };
@@ -184,6 +192,17 @@
 			path = UISwitch;
 			sourceTree = "<group>";
 		};
+		6884BF13282A08D4003111C8 /* UnitTest */ = {
+			isa = PBXGroup;
+			children = (
+				6884BF14282A0ED5003111C8 /* LoginUnitTest.swift */,
+				6884BF16282A0FCC003111C8 /* SignUpUnitTest.swift */,
+				6884BF18282A3EA9003111C8 /* CollectionViewUnitTest.swift */,
+				6884BF1A282A6F42003111C8 /* SettingUnitTest.swift */,
+			);
+			path = UnitTest;
+			sourceTree = "<group>";
+		};
 		688EB32327FF2665008FB693 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -251,7 +270,8 @@
 		68BF673827F723A300A451C3 = {
 			isa = PBXGroup;
 			children = (
-				68D1C34728155C820046D298 /* Test */,
+				68D1C34728155C820046D298 /* UITest */,
+				6884BF13282A08D4003111C8 /* UnitTest */,
 				68BF674327F723A300A451C3 /* NewsApp */,
 				68BF675A27F723A400A451C3 /* NewsAppTests */,
 				68BF676427F723A400A451C3 /* NewsAppUITests */,
@@ -348,14 +368,14 @@
 			path = Validator;
 			sourceTree = "<group>";
 		};
-		68D1C34728155C820046D298 /* Test */ = {
+		68D1C34728155C820046D298 /* UITest */ = {
 			isa = PBXGroup;
 			children = (
 				68D1C345281555620046D298 /* LineLoginUITest.swift */,
 				68D1C34828155CAD0046D298 /* DefaultLoginTest.swift */,
 				68D1C34C28156DAE0046D298 /* SignUpUITest.swift */,
 			);
-			path = Test;
+			path = UITest;
 			sourceTree = "<group>";
 		};
 		EBA70B6E8E54F82E722657FE /* Pods */ = {
@@ -650,6 +670,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				68BF675C27F723A400A451C3 /* NewsAppTests.swift in Sources */,
+				6884BF17282A0FCC003111C8 /* SignUpUnitTest.swift in Sources */,
+				6884BF19282A3EA9003111C8 /* CollectionViewUnitTest.swift in Sources */,
+				6884BF15282A0ED5003111C8 /* LoginUnitTest.swift in Sources */,
+				6884BF1B282A6F42003111C8 /* SettingUnitTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

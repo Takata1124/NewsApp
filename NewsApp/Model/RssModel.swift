@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import RealmSwift
 
 class RssModel {
     
@@ -14,9 +13,7 @@ class RssModel {
     
     static let shared = RssModel()
     static let notificationName = "RssErrerMessage"
-    
-    private let userDefaults = UserDefaults.standard
-    let realm = try! Realm()
+    let userDefaults = UserDefaults.standard
     
     init() {}
     
@@ -30,13 +27,6 @@ class RssModel {
             
             self.userDefaults.setValue(true, forKey: "userLogin")
             self.userDefaults.setValue(data, forKey: "User")
-      
-            let results = realm.objects(RealmFeedItem.self)
-            try! realm.write {
-                realm.delete(results)
-                completion(true)
-                return
-            }
         }
         
         completion(false)

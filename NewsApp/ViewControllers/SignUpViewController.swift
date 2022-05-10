@@ -14,9 +14,9 @@ class SignUpViewController: UIViewController {
     @IBOutlet weak var idTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var SignUpButton: UIButton!
-  
+    
     @IBOutlet weak var lineView: UIView!
-
+    
     var id: String = ""
     var password: String = ""
     
@@ -29,10 +29,10 @@ class SignUpViewController: UIViewController {
             }
         }
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         setupLayout()
         
         SignUpModel.shared.notificationCenter.addObserver(self, selector: #selector(self.handleErrorMessage(_:)), name: Notification.Name(rawValue: SignUpModel.notificationName), object: nil)
@@ -72,7 +72,7 @@ class SignUpViewController: UIViewController {
         
         self.view.endEditing(true)
     }
-
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         if segue.identifier == "goRss" {

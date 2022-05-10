@@ -17,7 +17,7 @@ class CollectionModel: NSObject {
     
     private let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
     private var selectFeed: String = ""
-    private var feedUrl: String = ""
+    var feedUrl: String = ""
     
     var feedItems: [FeedItem] = []
     
@@ -251,7 +251,6 @@ class CollectionModel: NSObject {
     func saveSelected(indexPath: IndexPath) {
         
         let selectedTitle: String = self.filterFeedItems[indexPath.row].title
-        
         let predicate = NSPredicate(format: "title == %@", "\(selectedTitle)")
         let result = realm.objects(RealmFeedItem.self).filter(predicate)
         
