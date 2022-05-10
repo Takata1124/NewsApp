@@ -48,7 +48,6 @@ class SignUpViewController: UIViewController {
     private func setupLayout() {
         
         navigationItem.title = "SignUp"
-        //戻るボタンを非表示
         self.navigationItem.hidesBackButton = true
         
         idTextField.layer.borderWidth = 1.0
@@ -85,8 +84,12 @@ class SignUpViewController: UIViewController {
     }
     
     @IBAction func goBackLoginView(_ sender: Any) {
-
-        self.navigationController?.popViewController(animated: true)
+        
+        SignUpModel.shared.confirmUser { isData in
+            if isData {
+                self.navigationController?.popViewController(animated: true)
+            }
+        }
     }
     
     @IBAction func goRssView(_ sender: Any) {

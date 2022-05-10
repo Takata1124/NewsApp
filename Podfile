@@ -9,6 +9,7 @@ target 'NewsApp' do
   pod 'RealmSwift'
   pod 'SwipeCellKit'
   pod 'LineSDKSwift', '~> 5.0'
+  pod 'PKHUD', '~> 5.0'
 
   target 'NewsAppTests' do
     inherit! :search_paths

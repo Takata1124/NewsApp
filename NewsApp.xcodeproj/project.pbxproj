@@ -211,6 +211,8 @@
 		688EB33128044823008FB693 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				6884BF0E2827479A003111C8 /* UISwitch */,
+				68520051282746BA000A5AC2 /* UILabel */,
 				688EB33228045487008FB693 /* SettingDetailView.swift */,
 			);
 			path = View;
@@ -272,8 +274,6 @@
 		68BF674327F723A300A451C3 /* NewsApp */ = {
 			isa = PBXGroup;
 			children = (
-				6884BF0E2827479A003111C8 /* UISwitch */,
-				68520051282746BA000A5AC2 /* UILabel */,
 				68BF679927F9DBAB00A451C3 /* NewsApp.entitlements */,
 				68A434BE281198CE00D4093C /* Delegate */,
 				688EB3352805BF1C008FB693 /* Data */,
@@ -331,8 +331,8 @@
 				688EB3382805DA8B008FB693 /* SignUpModel.swift */,
 				688EB33A28068048008FB693 /* RssModel.swift */,
 				688EB33C2806FCEC008FB693 /* CollectionModel.swift */,
-				688EB33E28083140008FB693 /* SettingModel.swift */,
 				688EB3422809B70C008FB693 /* ArticleModel.swift */,
+				688EB33E28083140008FB693 /* SettingModel.swift */,
 				6884BF11282748BE003111C8 /* SettingDetailModel.swift */,
 			);
 			path = Model;

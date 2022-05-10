@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import PKHUD
 
 class SettingViewController: UIViewController, UINavigationControllerDelegate {
     
@@ -14,6 +15,8 @@ class SettingViewController: UIViewController, UINavigationControllerDelegate {
     var selectCell: String = ""
     let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
     var deleteAction: Bool = false
+    
+    let userDefaults = UserDefaults.standard
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,14 +45,11 @@ class SettingViewController: UIViewController, UINavigationControllerDelegate {
     
     private func UserLogout(completion: @escaping() -> Void) {
         
-        SettingModel.shared.UserLogout()
-        completion()
-    }
-    
-    private func removeUserDefaults(completion: @escaping() -> Void) {
-        
-        SettingModel.shared.removeUser()
-        completion()
+        SettingModel.shared.UserLogout { isLogout in
+            if isLogout {
+                completion()
+            }
+        }
     }
     
     private func selectView(selectCell: String) {
@@ -67,18 +67,13 @@ class SettingViewController: UIViewController, UINavigationControllerDelegate {
                 self.navigationController?.popViewController(animated: true)
             }
 
-        case "ユーザー情報の削除":
-            removeUserDefaults {
-                DispatchQueue.main.async {
-                    self.navigationController?.popToRootViewController(animated: true)
-                }
-            }
-
         case "ログアウト":
             UserLogout {
-                DispatchQueue.main.async {
+                HUD.show(.progress, onView: self.view)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 7, execute: {
                     self.navigationController?.popToRootViewController(animated: true)
-                }
+                    HUD.hide()
+                })
             }
             
         default:

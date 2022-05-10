@@ -2,6 +2,7 @@ PODS:
   - LineSDKSwift (5.8.1):
     - LineSDKSwift/Core (= 5.8.1)
   - LineSDKSwift/Core (5.8.1)
+  - PKHUD (5.3.0)
   - Realm (10.25.1):
     - Realm/Headers (= 10.25.1)
   - Realm/Headers (10.25.1)
@@ -11,22 +12,25 @@ PODS:
 
 DEPENDENCIES:
   - LineSDKSwift (~> 5.0)
+  - PKHUD (~> 5.0)
   - RealmSwift
   - SwipeCellKit
 
 SPEC REPOS:
   trunk:
     - LineSDKSwift
+    - PKHUD
     - Realm
     - RealmSwift
     - SwipeCellKit
 
 SPEC CHECKSUMS:
   LineSDKSwift: 55ea1486ad3b2802b7e00f80aeb5844e3ed3faa3
+  PKHUD: 98f3e4bc904b9c916f1c5bb6d765365b5357291b
   Realm: 1a6e9b4f6983711655d8c0bcb6d2d29c3afbb1f3
   RealmSwift: e72669550d27082aa4fad5d176f5076cfe806245
   SwipeCellKit: 3972254a826da74609926daf59b08d6c72e619ea
 
-PODFILE CHECKSUM: 12a14086c543c000c01f028f49119ec70d05f513
+PODFILE CHECKSUM: 117cecbe51b5259791648466d9d1e7205c5a467e
 
 COCOAPODS: 1.11.2

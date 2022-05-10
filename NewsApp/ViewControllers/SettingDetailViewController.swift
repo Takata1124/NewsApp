@@ -70,7 +70,6 @@ class SettingDetailViewController: UIViewController {
         
         model.notificationCenter.addObserver(forName: .init(rawValue: SettingDetailModel.userNotificationName), object: nil, queue: nil) { notification in
             let user: User = notification.userInfo?["user"] as! User
-            print(user)
             self.settingDetailView.user = user
         }
     }

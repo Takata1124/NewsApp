@@ -655,7 +655,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="evE-je-UX9">
-                                <rect key="frame" x="132" y="565.5" width="150" height="50"/>
+                                <rect key="frame" x="132" y="585.5" width="150" height="50"/>
                                 <color key="backgroundColor" systemColor="opaqueSeparatorColor"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="150" id="Val-Hy-dI9"/>
@@ -669,36 +669,19 @@
                                     <action selector="goRssView:" destination="ypd-Mr-Nsn" eventType="touchUpInside" id="HhM-Pc-bc0"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eVO-AN-B8E">
-                                <rect key="frame" x="57" y="645.5" width="300" height="50"/>
-                                <color key="backgroundColor" systemColor="opaqueSeparatorColor"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="50" id="Alu-a7-SXZ"/>
-                                    <constraint firstAttribute="width" constant="300" id="RWs-o2-PX0"/>
-                                </constraints>
-                                <color key="tintColor" name="modeTextColor"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="既にアカウントをお持ちの方"/>
-                                <connections>
-                                    <action selector="goBackLoginView:" destination="ypd-Mr-Nsn" eventType="touchUpInside" id="rt1-Jn-0oB"/>
-                                    <action selector="goSignUpView:" destination="BYZ-38-t0r" eventType="touchUpInside" id="LCJ-t8-4m9"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="3l5-2Q-UY5"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="aI0-jC-DLb" firstAttribute="top" secondItem="b5U-k5-1om" secondAttribute="bottom" constant="150" id="0C9-62-ABx"/>
                             <constraint firstItem="aI0-jC-DLb" firstAttribute="centerY" secondItem="d7w-Lg-WkP" secondAttribute="centerY" id="84v-hB-Xcg"/>
-                            <constraint firstItem="eVO-AN-B8E" firstAttribute="top" secondItem="evE-je-UX9" secondAttribute="bottom" constant="30" id="87M-hG-f8U"/>
                             <constraint firstItem="b5U-k5-1om" firstAttribute="leading" secondItem="3l5-2Q-UY5" secondAttribute="leading" constant="57" id="AMp-Hy-6OG"/>
                             <constraint firstItem="evE-je-UX9" firstAttribute="centerX" secondItem="d7w-Lg-WkP" secondAttribute="centerX" id="Eej-sX-pN0"/>
-                            <constraint firstItem="eVO-AN-B8E" firstAttribute="centerX" secondItem="d7w-Lg-WkP" secondAttribute="centerX" id="HPU-8t-MNP"/>
                             <constraint firstItem="S2S-tL-vkR" firstAttribute="top" secondItem="b5U-k5-1om" secondAttribute="bottom" constant="50" id="fRu-Ae-hZV"/>
                             <constraint firstItem="b5U-k5-1om" firstAttribute="centerX" secondItem="aI0-jC-DLb" secondAttribute="centerX" id="oaO-px-2cF"/>
                             <constraint firstItem="S2S-tL-vkR" firstAttribute="centerX" secondItem="d7w-Lg-WkP" secondAttribute="centerX" id="qZs-eu-Oyu"/>
                             <constraint firstItem="aI0-jC-DLb" firstAttribute="centerX" secondItem="d7w-Lg-WkP" secondAttribute="centerX" id="r2w-I0-mHk"/>
-                            <constraint firstItem="evE-je-UX9" firstAttribute="top" secondItem="aI0-jC-DLb" secondAttribute="bottom" constant="30" id="vzL-6J-kyH"/>
+                            <constraint firstItem="evE-je-UX9" firstAttribute="top" secondItem="aI0-jC-DLb" secondAttribute="bottom" constant="50" id="vzL-6J-kyH"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="CyR-BA-TvI"/>
@@ -716,7 +699,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="k6f-80-MwC"/>
+        <segue reference="9Sk-a3-jv2"/>
         <segue reference="zaf-qa-ab4"/>
     </inferredMetricsTieBreakers>
     <resources>

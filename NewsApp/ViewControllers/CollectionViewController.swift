@@ -37,7 +37,10 @@ class CollectionViewController: UIViewController {
     var filterFeedItems: [FeedItem] = [] {
         didSet {
             DispatchQueue.main.async {
-                self.collectionView.reloadData()
+                if let feed = self.collectionModel?.rssFeed() {
+                    self.navigationItem.title = "\(feed) (\(self.filterFeedItems.count))"
+                    self.collectionView.reloadData()
+                }
             }
         }
     }
@@ -179,9 +182,6 @@ class CollectionViewController: UIViewController {
     }
     
     private func setupLayout() {
-        
-        let feed = collectionModel?.rssFeed()
-        navigationItem.title = feed
         
         self.navigationItem.hidesBackButton = true
         

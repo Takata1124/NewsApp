@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import PKHUD
 
 class RssViewController: UIViewController {
 
@@ -53,9 +54,12 @@ extension RssViewController: UITableViewDelegate, UITableViewDataSource {
         RssModel.shared.saveUseData(id: self.id, password: self.password, accessTokeValue: self.accessTokenValue, indexPath: indexPath) { success in
             
             if success {
-                DispatchQueue.main.async {
+                HUD.show(.progress, onView: self.view)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 7, execute: {
                     self.performSegue(withIdentifier: "goCollection", sender: nil)
-                }
+                    HUD.hide()
+                })
+                    
             } else {
                 print("Rssの登録に失敗しました")
             }

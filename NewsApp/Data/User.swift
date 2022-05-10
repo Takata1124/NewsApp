@@ -13,7 +13,7 @@ struct User: Codable {
     let password: String
     let feed: String
     let login: Bool
-    let accessTokeValue: String
+    var accessTokeValue: String
     let subscription: Bool
     let subsciptInterval: Double
 }

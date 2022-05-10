@@ -7,6 +7,7 @@
 
 import UIKit
 import LineSDK
+import PKHUD
 
 class LoginViewController: UIViewController, UITextFieldDelegate, LoginButtonDelegate {
     
@@ -29,6 +30,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate, LoginButtonDel
     
     private var accessTokenValue: String = ""
     
+    let userDefaults = UserDefaults.standard
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -37,7 +40,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate, LoginButtonDel
         LoginModel.shared.notificationCenter.addObserver(self, selector: #selector(self.handleErrorMessage(_:)), name: Notification.Name(rawValue: LoginModel.notificationName), object: nil)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         
         alreadyUserLogin()
     }
@@ -95,8 +98,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate, LoginButtonDel
                 self.performSegue(withIdentifier: "goCollection", sender: nil)
                 return
             }
-            
-            return
         }
     }
     
@@ -110,11 +111,14 @@ class LoginViewController: UIViewController, UITextFieldDelegate, LoginButtonDel
         LoginModel.shared.lineLoginAction(accessToken: accessTokenValue) { success in
             
             if success {
-                self.performSegue(withIdentifier: "goCollection", sender: nil)
-                return
+                HUD.show(.progress, onView: self.view)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 7) {
+                    self.performSegue(withIdentifier: "goCollection", sender: nil)
+                    HUD.hide()
+                }
+            } else {
+                self.performSegue(withIdentifier: "LineToRss", sender: nil)
             }
-            
-            self.performSegue(withIdentifier: "LineToRss", sender: nil)
         }
     }
     
@@ -130,12 +134,14 @@ class LoginViewController: UIViewController, UITextFieldDelegate, LoginButtonDel
         
         LoginModel.shared.LoginAction(idText: idTextField.text ?? "", passwordText: passwordTextField.text ?? "") { success in
             if success {
-                self.performSegue(withIdentifier: "goCollection", sender: nil)
-                return
+                HUD.show(.progress, onView: self.view)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 7, execute: {
+                    self.idTextField.text = ""
+                    self.passwordTextField.text = ""
+                    self.performSegue(withIdentifier: "goCollection", sender: nil)
+                    HUD.hide()
+                })
             }
-
-            print("ユーザー情報がありませんでした")
-            return
         }
     }
     
@@ -143,7 +149,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate, LoginButtonDel
         
         if segue.identifier == "LineToRss" {
             let rssViewController = segue.destination as! RssViewController
-            
             rssViewController.accessTokenValue = self.accessTokenValue
         }
     }
@@ -156,8 +161,17 @@ class LoginViewController: UIViewController, UITextFieldDelegate, LoginButtonDel
                 let alert = UIAlertController(title: "確認", message: "ユーザー情報が存在します。消去して新規ユーザー情報を作成しますか？", preferredStyle: .alert)
                 
                 let addActionAlert: UIAlertAction = UIAlertAction(title: "YES", style: .default, handler: { Void in
-                    LoginModel.shared.removeUser()
-                    self.performSegue(withIdentifier: "goSignUp", sender: nil)
+                    LoginModel.shared.removeUser { isDelete in
+                        if isDelete {
+                            HUD.show(.progress, onView: self.view)
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 7) {
+                                self.idTextField.text = ""
+                                self.passwordTextField.text = ""
+                                self.performSegue(withIdentifier: "goSignUp", sender: nil)
+                                HUD.hide()
+                            }
+                        }
+                    }
                 })
                 
                 let cancelAction: UIAlertAction = UIAlertAction(title: "No", style: .cancel, handler: {

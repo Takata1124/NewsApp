@@ -108,8 +108,8 @@ class SettingDetailView: UIView {
                 self.passwordLabel.text = "passwordは\(String(describing: self.user!.password))"
                 self.feedLabel.text = "トピックは\(String(describing: self.user!.feed))"
                 self.loginLabel.text = "Login状態は\(String(describing: self.user!.login.description))"
-                self.subscriptLabel.text = "購読状態は\(String(describing: self.user!.subscription.description))"
-                self.subscriptionIntervalLabel.text = "購読感覚は\(String(describing: self.user!.subsciptInterval.description))"
+                self.subscriptionLabel.text = "購読状態は\(String(describing: self.user!.subscription.description))"
+                self.subscriptionIntervalLabel.text = "購読間隔は\(String(describing: self.user!.subsciptInterval.description))分間です"
                 self.accessTokenValueLabel.text = "アクセストークンは\(String(describing:self.user!.accessTokeValue))"
             }
         }
@@ -172,7 +172,7 @@ class SettingDetailView: UIView {
         self.userStackView?.addArrangedSubview(passwordLabel)
         self.userStackView?.addArrangedSubview(feedLabel)
         self.userStackView?.addArrangedSubview(loginLabel)
-        self.userStackView?.addArrangedSubview(subscriptLabel)
+        self.userStackView?.addArrangedSubview(subscriptionLabel)
         self.userStackView?.addArrangedSubview(subscriptionIntervalLabel)
         self.userStackView?.addArrangedSubview(accessTokenValueLabel)
         
