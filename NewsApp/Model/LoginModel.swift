@@ -16,10 +16,10 @@ class LoginModel {
     
     private let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
     
-    let userDefaults = UserDefaults.standard
-    private var user: User?
-    private var userId: String = ""
-    private var userPassword: String = ""
+    let userDefaults: UserDefaults
+    var user: User?
+    var userId: String = ""
+    var userPassword: String = ""
     
     var errorMessage: String = "" {
         didSet {
@@ -27,11 +27,17 @@ class LoginModel {
         }
     }
     
-    let realm: Realm?
-    
-    private init() {
+    var realm: Realm?
+
+    init(userDefaults: UserDefaults = UserDefaults.standard, realm: Realm = try! Realm()) {
         
-        self.realm = appDelegate.realm
+        self.userDefaults = userDefaults
+        self.realm = realm
+
+        setupStoredUserInformation()
+    }
+    
+    func setupStoredUserInformation() {
         
         if let data: Data = userDefaults.value(forKey: "User") as? Data {
             self.user = try! JSONDecoder().decode(User.self, from: data)
@@ -42,35 +48,43 @@ class LoginModel {
     
     func confirmUser(completion: @escaping(Bool) -> Void) {
         
-        guard let data: Data = userDefaults.value(forKey: "User") as? Data else {
+        if let data: Data = userDefaults.value(forKey: "User") as? Data {
+            completion(true)
+        } else {
             completion(false)
-            return
         }
-        
-        completion(true)
     }
     
     func removeUser(completion: @escaping(Bool) -> Void) {
         
         userDefaults.removeObject(forKey: "userLogin")
         userDefaults.removeObject(forKey: "User")
-        //端末内情報の削除
-        if let results = realm?.objects(RealmFeedItem.self) {
-            try! realm?.write {
-                self.realm?.delete(results)
+       
+        deleteStoreArticleData { success in
+            if success {
                 completion(true)
-                return
+            } else {
+                completion(false)
             }
         }
-
-        completion(true)
     }
-    
+
     func confirmLogin(completion: @escaping(Bool) -> Void) {
         
         if userDefaults.bool(forKey: "userLogin") {
             completion(true)
-            return
+        } else {
+            completion(false)
+        }
+    }
+    
+    func deleteStoreArticleData(completion: @escaping(Bool) -> Void) {
+        
+        if let results = realm?.objects(RealmFeedItem.self) {
+            try! realm?.write {
+                self.realm?.delete(results)
+                completion(true)
+            }
         } else {
             completion(false)
         }
@@ -148,6 +162,7 @@ class LoginModel {
     func lineLoginAction(accessToken: String, completion: @escaping(Bool) -> Void) {
         
         if let data: Data = userDefaults.value(forKey: "User") as? Data {
+            
             let user: User = try! JSONDecoder().decode(User.self, from: data)
             
             if accessToken == user.accessTokeValue {

@@ -6,20 +6,28 @@
 //
 
 import XCTest
+import RealmSwift
 @testable import NewsApp
 
 class LoginUnitTest: XCTestCase {
     
-    var loginModel: LoginModel!
+//    var loginDependency.testModel: LoginModel!
+    var loginDependency: LoginDependency!
  
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
-        self.loginModel = LoginModel.shared
+        super.setUp()
+        
+//        self.loginDependency.testModel = LoginModel.shared
+        self.loginDependency = LoginDependency()
     }
     
     override func tearDownWithError() throws {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
+        super.tearDown()
         
+        self.loginDependency.removeUserDefaults()
+        self.loginDependency.removeRealmData()
     }
     
     func testExample() throws {
@@ -35,75 +43,263 @@ class LoginUnitTest: XCTestCase {
     
     func testSuccessLogin() {
         
-        loginModel.LoginAction(idText: "1111", passwordText: "11111111") { success in
+        let testUser = self.loginDependency.testModel.userDefaults.object(forKey: "User")
+        XCTAssertNil(testUser)
+        
+        let testUserLogin = self.loginDependency.testModel.userDefaults.object(forKey: "userLogin")
+        XCTAssertNil(testUserLogin)
+        
+        loginDependency.setupUserInformation()
+        loginDependency.testModel.setupStoredUserInformation()
+
+        loginDependency.testModel.LoginAction(idText: "1111", passwordText: "11111111") { success in
             XCTAssertTrue(success)
+            
+            let testUser = self.loginDependency.testModel.userDefaults.object(forKey: "User")
+            XCTAssertNotNil(testUser)
+            
+            let userData = try! JSONDecoder().decode(User.self, from: testUser as! Data)
+            XCTAssertEqual(userData.id, "1111")
+            XCTAssertEqual(userData.password, "11111111")
         }
     }
     
     func testFailLogin() {
         
-        loginModel.LoginAction(idText: "111", passwordText: "1111111") { success in
+        loginDependency.setupUserInformation()
+        loginDependency.testModel.setupStoredUserInformation()
+        
+        loginDependency.testModel.LoginAction(idText: "111", passwordText: "1111111") { success in
             XCTAssertFalse(success)
         }
     }
  
     func testisEmptyId() {
         
-        loginModel.LoginAction(idText: "", passwordText: "11111111") { success in
+        loginDependency.setupUserInformation()
+        loginDependency.testModel.setupStoredUserInformation()
+        
+        loginDependency.testModel.LoginAction(idText: "", passwordText: "11111111") { success in
             XCTAssertFalse(success)
             
-            let errorMessage = self.loginModel.errorMessage
+            let errorMessage = self.loginDependency.testModel.errorMessage
             XCTAssertEqual(errorMessage, "idを入力してください")
         }
     }
     
     func testForMissIdCount() {
         
-        loginModel.LoginAction(idText: "11", passwordText: "11111111") { success in
+        loginDependency.setupUserInformation()
+        loginDependency.testModel.setupStoredUserInformation()
+        
+        loginDependency.testModel.LoginAction(idText: "11", passwordText: "11111111") { success in
             XCTAssertFalse(success)
             
-            let errorMessage = self.loginModel.errorMessage
+            let errorMessage = self.loginDependency.testModel.errorMessage
             XCTAssertEqual(errorMessage, "idは4文字で入力してください")
         }
     }
     
     func testIsEnptyPasswordCount() {
         
-        loginModel.LoginAction(idText: "1111", passwordText: "") { success in
+        loginDependency.setupUserInformation()
+        loginDependency.testModel.setupStoredUserInformation()
+        
+        loginDependency.testModel.LoginAction(idText: "1111", passwordText: "") { success in
             XCTAssertFalse(success)
             
-            let errorMessage = self.loginModel.errorMessage
+            let errorMessage = self.loginDependency.testModel.errorMessage
             XCTAssertEqual(errorMessage, "パスワードを入力してください")
         }
     }
     
-    func testMissPasswordCount() {
+    func testIsMissPasswordCount() {
         
-        loginModel.LoginAction(idText: "1111", passwordText: "1111") { success in
+        loginDependency.setupUserInformation()
+        loginDependency.testModel.setupStoredUserInformation()
+        
+        loginDependency.testModel.LoginAction(idText: "1111", passwordText: "1111") { success in
             XCTAssertFalse(success)
             
-            let errorMessage = self.loginModel.errorMessage
+            let errorMessage = self.loginDependency.testModel.errorMessage
             XCTAssertEqual(errorMessage, "パスワードは8文字で入力してください")
         }
     }
     
-    func testMissId() {
+    func testIsMissId() {
         
-        loginModel.LoginAction(idText: "1112", passwordText: "11111111") { success in
+        loginDependency.setupUserInformation()
+        loginDependency.testModel.setupStoredUserInformation()
+        
+        loginDependency.testModel.LoginAction(idText: "1112", passwordText: "11111111") { success in
             XCTAssertFalse(success)
             
-            let errorMessage = self.loginModel.errorMessage
+            let errorMessage = self.loginDependency.testModel.errorMessage
             XCTAssertEqual(errorMessage, "idが違います")
         }
     }
     
-    func testMissPassword() {
+    func testIsMissPassword() {
         
-        loginModel.LoginAction(idText: "1111", passwordText: "11111112") { success in
+        loginDependency.setupUserInformation()
+        loginDependency.testModel.setupStoredUserInformation()
+        
+        loginDependency.testModel.LoginAction(idText: "1111", passwordText: "11111112") { success in
             XCTAssertFalse(success)
             
-            let errorMessage = self.loginModel.errorMessage
+            let errorMessage = self.loginDependency.testModel.errorMessage
             XCTAssertEqual(errorMessage, "passwordが違います")
+        }
+    }
+    
+    func testIsConfirmStoredUserInformation() {
+        
+        loginDependency.setupUserInformation()
+        loginDependency.testModel.setupStoredUserInformation()
+
+        let userId = loginDependency.testModel.userId
+        XCTAssertEqual(userId, "1111")
+        
+        let userPassword = loginDependency.testModel.userPassword
+        XCTAssertEqual(userPassword, "11111111")
+    }
+    
+    func testIsConfirmUserExist() {
+        
+        loginDependency.setupUserInformation()
+        
+        loginDependency.testModel.confirmUser { success in
+            XCTAssertTrue(success)
+        }
+    }
+    
+    func testIsConfirmUserNotExist() {
+        
+        loginDependency.testModel.confirmUser { success in
+            XCTAssertFalse(success)
+        }
+    }
+    
+    func testIsRemoveUserData() {
+        
+        loginDependency.setupUserInformation()
+        loginDependency.setupUserLoginInformation()
+        
+        let loginResult: Bool = self.loginDependency.testModel.userDefaults.bool(forKey: "userLogin")
+        XCTAssertTrue(loginResult)
+                
+        let testUser = self.loginDependency.testModel.userDefaults.object(forKey: "User")
+        XCTAssertNotNil(testUser)
+        
+        let userData = try! JSONDecoder().decode(User.self, from: testUser as! Data)
+        XCTAssertEqual(userData.id, "1111")
+        
+        loginDependency.testModel.removeUser { success in
+            XCTAssertTrue(success)
+            
+            let loginResult = self.loginDependency.testModel.userDefaults.object(forKey: "userLogin")
+            XCTAssertNil(loginResult)
+            
+            let testUser = self.loginDependency.testModel.userDefaults.object(forKey: "User")
+            XCTAssertNil(testUser)
+        }
+    }
+    
+    func testIsConfirmUserLoginSituation() {
+        
+        loginDependency.setupUserLoginInformation()
+        loginDependency.testModel.confirmLogin { success in
+            XCTAssertTrue(success)
+        }
+        
+        loginDependency.setupUserLogoutInformation()
+        loginDependency.testModel.confirmLogin { success in
+            XCTAssertFalse(success)
+        }
+    }
+    
+    func testIsDeleteStoredArticleData() {
+        
+        loginDependency.setUpRealmData()
+        
+        let realmData = self.loginDependency.testModel.realm?.objects(RealmFeedItem.self)
+        XCTAssertNotEqual(realmData?.count, 0)
+        
+        loginDependency.testModel.deleteStoreArticleData { success in
+            XCTAssertTrue(success)
+            
+            let realmData = self.loginDependency.testModel.realm?.objects(RealmFeedItem.self)
+            XCTAssertEqual(realmData?.count, 0)
+        }
+    }
+    
+    func testIsLingLoginAction() {
+        
+        
+    }
+   
+}
+
+extension LoginUnitTest {
+    
+    struct LoginDependency {
+        
+        let testModel: LoginModel
+        let userDefaults: UserDefaults
+        static let suitName: String = "Test"
+        var testUser = User(id: "1111", password: "11111111", feed: "selectFeed", login: false, accessTokeValue: "", subscription: false, subsciptInterval: 1.0)
+        var testLineUser = User(id: "", password: "", feed: "selectFeed", login: false, accessTokeValue: "11111111", subscription: false, subsciptInterval: 1.0)
+        var realm: Realm?
+        
+        init() {
+            
+            self.userDefaults = UserDefaults(suiteName: LoginUnitTest.LoginDependency.suitName)!
+   
+            let configuration = Realm.Configuration(inMemoryIdentifier: "TestLoginModel")
+            self.realm = try! Realm(configuration: configuration)
+            
+            testModel = .init(userDefaults: self.userDefaults, realm: self.realm!)
+        }
+
+        func removeUserDefaults() {
+            
+            self.testModel.userDefaults.removePersistentDomain(forName: LoginUnitTest.LoginDependency.suitName)
+        }
+        
+        func setupUserInformation() {
+    
+            if let userData: Data = try? JSONEncoder().encode(self.testUser) {
+                self.testModel.userDefaults.set(userData, forKey: "User")
+            }
+        }
+        
+        func setupUserLoginInformation() {
+            
+            self.testModel.userDefaults.set(true, forKey: "userLogin")
+        }
+        
+        func setupUserLogoutInformation() {
+            
+            self.testModel.userDefaults.set(false, forKey: "userLogin")
+        }
+        
+        func setUpRealmData() {
+            
+            let realmFeedItem = RealmFeedItem()
+            realmFeedItem.title = "title"
+            realmFeedItem.url = "http//"
+            realmFeedItem.pubDate = "2022/1/1"
+            
+            try! self.testModel.realm?.write({
+                self.testModel.realm?.add(realmFeedItem)
+            })
+        }
+        
+        func removeRealmData() {
+            
+            try! self.testModel.realm?.write {
+                self.testModel.realm?.deleteAll()
+            }
         }
     }
 }

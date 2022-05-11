@@ -53,6 +53,7 @@ class CollectionModel: NSObject {
     }
     
     func deleteItems() {
+        
         self.filterFeedItems = []
     }
     
@@ -205,6 +206,7 @@ class CollectionModel: NSObject {
     }
     //更新データの有無を通知
     func notificationAlert() {
+        
         if appDelegate.storeFeedItems != [] {
             self.notificationCenter.post(name: Notification.Name(CollectionModel.notificationAlertName), object: nil, userInfo: ["alert": true])
         } else {
@@ -298,13 +300,16 @@ class CollectionModel: NSObject {
     func filterStar(isStarFilter: Bool, buttonTitle: String)  {
         
         if isStarFilter {
+            
             let result = realm.objects(RealmFeedItem.self).filter("star = true")
             var tempArray: [FeedItem] = []
             result.forEach { item in
                 tempArray.append(FeedItem(title: item.title, url: item.url, pubDate: item.pubDate, star: item.star, read: item.read, afterRead: item.afterRead))
             }
             self.filterFeedItems = tempArray
+            
         } else {
+            
             self.deleteItems()
             self.fetchFeedDate()
         }
@@ -315,13 +320,16 @@ class CollectionModel: NSObject {
     func filterRead(isReadFilter: Bool, buttonTitle: String) {
         
         if isReadFilter {
+            
             let result = realm.objects(RealmFeedItem.self).filter("read = true")
             var tempArray: [FeedItem] = []
             result.forEach { item in
                 tempArray.append(FeedItem(title: item.title, url: item.url, pubDate: item.pubDate, star: item.star, read: item.read, afterRead: item.afterRead))
             }
             self.filterFeedItems = tempArray
+            
         } else {
+            
             self.deleteItems()
             self.fetchFeedDate()
         }

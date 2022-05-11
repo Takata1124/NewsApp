@@ -56,10 +56,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         
         if let data: Data = userdefaults.value(forKey: "User") as? Data {
             let user = try! JSONDecoder().decode(User.self, from: data)
-            print(user.id)
-            print(user.password)
-            print(user.login)
-            print(user.accessTokeValue)
+//            print(user.id)
+//            print(user.password)
+//            print(user.login)
+//            print(user.accessTokeValue)
         }
         
         UINavigationBar.appearance().tintColor = UIColor.modeTextColor
@@ -71,11 +71,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
             self.handleAppRefresh(task: task as! BGAppRefreshTask)
         }
         
-        DispatchQueue.main.async {
-            
-            self.realmMigration()
-            self.realm = try! Realm()
-        }
+        self.realmMigration()
+        self.realm = try! Realm()
         
         if let data: Data = userdefaults.value(forKey: "User") as? Data {
             let user: User = try! JSONDecoder().decode(User.self, from: data)

@@ -13,9 +13,11 @@ class RssModel {
     
     static let shared = RssModel()
     static let notificationName = "RssErrerMessage"
-    let userDefaults = UserDefaults.standard
+    var userDefaults: UserDefaults
     
-    init() {}
+    init(userDefaults: UserDefaults = UserDefaults.standard ) {
+        self.userDefaults = userDefaults
+    }
     
     func saveUseData(id: String, password: String, accessTokeValue: String, indexPath :IndexPath, completion: @escaping(Bool) -> Void) {
         
@@ -27,9 +29,10 @@ class RssModel {
             
             self.userDefaults.setValue(true, forKey: "userLogin")
             self.userDefaults.setValue(data, forKey: "User")
+            completion(true)
+            
+        } else {
+            completion(false)
         }
-        
-        completion(false)
-        return
     }
 }

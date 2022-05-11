@@ -29,7 +29,6 @@ class getXMLDataOperation: Operation, XMLParserDelegate, UNUserNotificationCente
     
     override init() {
         super.init()
-        
     }
     
     override func main() {
@@ -154,19 +153,20 @@ class getXMLDataOperation: Operation, XMLParserDelegate, UNUserNotificationCente
     
     private func saveXMLData(feeditems: [FeedItem]) {
         
-        var tempFeedItems: [FeedItem] = []
-        tempFeedItems += feeditems
-        
-        let jsonDecoder = JSONDecoder()
+        var temporaryFeedItem: [FeedItem] = []
+        temporaryFeedItem += feeditems
+
         if let data = userdefaults.data(forKey: "StoreFeedItems") {
+            
+            let jsonDecoder = JSONDecoder()
             if let storeData = try? jsonDecoder.decode([FeedItem].self, from: data) {
-                tempFeedItems += storeData
+                temporaryFeedItem += storeData
             }
         }
 
         let jsonEncoder = JSONEncoder()
         
-        if let data = try? jsonEncoder.encode(tempFeedItems) {
+        if let data = try? jsonEncoder.encode(temporaryFeedItem) {
             
             userdefaults.set(data, forKey: "StoreFeedItems")
             print("saveData")
