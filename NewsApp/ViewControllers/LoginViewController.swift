@@ -40,7 +40,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate, LoginButtonDel
         LoginModel.shared.notificationCenter.addObserver(self, selector: #selector(self.handleErrorMessage(_:)), name: Notification.Name(rawValue: LoginModel.notificationName), object: nil)
     }
     
-    override func viewDidAppear(_ animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
+        
+        LoginModel.shared.setupStoredUserInformation()
         
         alreadyUserLogin()
     }
@@ -95,8 +97,14 @@ class LoginViewController: UIViewController, UITextFieldDelegate, LoginButtonDel
         LoginModel.shared.confirmLogin { success in
             
             if success {
+                
                 self.performSegue(withIdentifier: "goCollection", sender: nil)
-                return
+                
+            } else {
+                
+                LoginModel.shared.LoginAction(idText: "", passwordText: "") { success in
+                    print(success)
+                }
             }
         }
     }
@@ -189,8 +197,4 @@ class LoginViewController: UIViewController, UITextFieldDelegate, LoginButtonDel
             }
         }
     }
-    
-    func mcall(str: String) -> String {
-          return str
-        }
 }

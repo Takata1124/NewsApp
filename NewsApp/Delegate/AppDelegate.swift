@@ -56,10 +56,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         
         if let data: Data = userdefaults.value(forKey: "User") as? Data {
             let user = try! JSONDecoder().decode(User.self, from: data)
-//            print(user.id)
-//            print(user.password)
-//            print(user.login)
-//            print(user.accessTokeValue)
+            print(user.id)
+            print(user.password)
+            print(user.login)
+            print(user.accessTokeValue)
         }
         
         UINavigationBar.appearance().tintColor = UIColor.modeTextColor

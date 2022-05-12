@@ -157,10 +157,10 @@ class LoginUnitTest: XCTestCase {
         loginDependency.setupUserInformation()
         loginDependency.testModel.setupStoredUserInformation()
 
-        let userId = loginDependency.testModel.userId
+        let userId = loginDependency.testModel.user?.id
         XCTAssertEqual(userId, "1111")
         
-        let userPassword = loginDependency.testModel.userPassword
+        let userPassword = loginDependency.testModel.user?.password
         XCTAssertEqual(userPassword, "11111111")
     }
     
@@ -233,11 +233,43 @@ class LoginUnitTest: XCTestCase {
         }
     }
     
-    func testIsLingLoginAction() {
+    func testIsSuccessLingLoginAction() {
         
+        let currentLoginObject = self.loginDependency.testModel.userDefaults.object(forKey: "userLogin")
+        XCTAssertNil(currentLoginObject)
         
+        loginDependency.setupLingUserLogoutInformation()
+        loginDependency.testModel.setupStoredUserInformation()
+        
+        let currentLoginSituation = self.loginDependency.testModel.userDefaults.bool(forKey: "userLogin")
+        XCTAssertFalse(currentLoginSituation)
+        
+        loginDependency.testModel.lineLoginAction(accessToken: "11111111") { success in
+            XCTAssertTrue(success)
+            
+            let currentLoginSituation = self.loginDependency.testModel.userDefaults.bool(forKey: "userLogin")
+            XCTAssertTrue(currentLoginSituation)
+        }
     }
-   
+    
+    func testIsFailLineLoginAction() {
+        
+        let currentLoginObject = self.loginDependency.testModel.userDefaults.object(forKey: "userLogin")
+        XCTAssertNil(currentLoginObject)
+        
+        loginDependency.setupUserLogoutInformation()
+        loginDependency.testModel.setupStoredUserInformation()
+        
+        let currentLoginSituation = self.loginDependency.testModel.userDefaults.bool(forKey: "userLogin")
+        XCTAssertFalse(currentLoginSituation)
+        
+        loginDependency.testModel.lineLoginAction(accessToken: "1111") { success in
+            XCTAssertFalse(success)
+            
+            let currentLoginSituation = self.loginDependency.testModel.userDefaults.bool(forKey: "userLogin")
+            XCTAssertFalse(currentLoginSituation)
+        }
+    }
 }
 
 extension LoginUnitTest {
@@ -281,6 +313,13 @@ extension LoginUnitTest {
         func setupUserLogoutInformation() {
             
             self.testModel.userDefaults.set(false, forKey: "userLogin")
+        }
+        
+        func setupLingUserLogoutInformation() {
+            
+            if let userData: Data = try? JSONEncoder().encode(self.testLineUser) {
+                self.testModel.userDefaults.set(userData, forKey: "User")
+            }
         }
         
         func setUpRealmData() {

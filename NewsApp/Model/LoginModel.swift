@@ -18,8 +18,7 @@ class LoginModel {
     
     let userDefaults: UserDefaults
     var user: User?
-    var userId: String = ""
-    var userPassword: String = ""
+
     
     var errorMessage: String = "" {
         didSet {
@@ -34,15 +33,13 @@ class LoginModel {
         self.userDefaults = userDefaults
         self.realm = realm
 
-        setupStoredUserInformation()
     }
     
     func setupStoredUserInformation() {
-        
+
         if let data: Data = userDefaults.value(forKey: "User") as? Data {
             self.user = try! JSONDecoder().decode(User.self, from: data)
-            self.userId = self.user!.id
-            self.userPassword = self.user!.password
+
         }
     }
     
@@ -73,7 +70,9 @@ class LoginModel {
         
         if userDefaults.bool(forKey: "userLogin") {
             completion(true)
+            
         } else {
+            
             completion(false)
         }
     }
@@ -128,26 +127,20 @@ class LoginModel {
         
         if idValidator.isValid() && passwordValidator.isValid() {
             
-            if userId != idText {
+            if user?.id != idText {
                 errorMessage = "idが違います"
             }
             
-            if userPassword != passwordText {
+            if user?.password != passwordText {
                 errorMessage = "passwordが違います"
             }
             
             if LoginQuery(idText: idText, passwordText: passwordText) {
                 
-                let recodingUser: User = User(id: self.user!.id, password: self.user!.password, feed: self.user!.feed, login: true, accessTokeValue: self.user!.accessTokeValue, subscription: self.user!.subscription, subsciptInterval: self.user!.subsciptInterval)
+                userDefaults.setValue(true, forKey: "userLogin")
                 
-                if let data: Data = try? JSONEncoder().encode(recodingUser) {
-                    
-                    userDefaults.setValue(true, forKey: "userLogin")
-                    userDefaults.setValue(data, forKey: "User")
-                    
-                    completion(true)
-                    return
-                }
+                completion(true)
+                return
             }
         } else {
             completion(false)
@@ -156,10 +149,16 @@ class LoginModel {
     
     func LoginQuery(idText: String, passwordText: String) -> Bool {
         
-        return userId == idText && userPassword == passwordText
+        return user?.id == idText && user?.password == passwordText
     }
     
     func lineLoginAction(accessToken: String, completion: @escaping(Bool) -> Void) {
+        
+        if self.user?.id != "" {
+            errorMessage = "id, passwordでログインしてください"
+            completion(false)
+            return
+        }
         
         if let data: Data = userDefaults.value(forKey: "User") as? Data {
             
@@ -167,14 +166,9 @@ class LoginModel {
             
             if accessToken == user.accessTokeValue {
                 
-                let recodingUser: User = User(id: self.user!.id, password: self.user!.password, feed: self.user!.feed, login: true, accessTokeValue: self.user!.accessTokeValue, subscription: self.user!.subscription, subsciptInterval: self.user!.subsciptInterval)
-                
-                if let data: Data = try? JSONEncoder().encode(recodingUser) {
-                    userDefaults.setValue(data, forKey: "User")
-                    userDefaults.setValue(true, forKey: "userLogin")
-                    completion(true)
-                    return
-                }
+                userDefaults.setValue(true, forKey: "userLogin")
+                completion(true)
+                return
             }
         }
         
