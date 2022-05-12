@@ -49,7 +49,6 @@ class SettingModel {
         
         appDelegate.storeFeedItems = []
         userDefaults.removeObject(forKey: "StoreFeedItems")
-        
         completion()
     }
 }

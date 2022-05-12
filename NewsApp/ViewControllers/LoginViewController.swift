@@ -110,22 +110,28 @@ class LoginViewController: UIViewController, UITextFieldDelegate, LoginButtonDel
     }
     
     func loginButton(_ button: LoginButton, didSucceedLogin loginResult: LoginResult) {
-//        print("LINE認証成功")
-//        print("アクセストークン:\(loginResult.accessToken.value)")
-//        print(loginResult.userProfile?.userID ?? "")
-        
+
         self.accessTokenValue = loginResult.userProfile!.userID
         
         LoginModel.shared.lineLoginAction(accessToken: accessTokenValue) { success in
-            
-            if success {
+ 
+            switch success {
+               //id, passwordでログインしたユーザー情報がある場合
+            case 0:
+                break
+                //Lineでログインしたユーザー情報がある場合
+            case 1:
                 HUD.show(.progress, onView: self.view)
                 DispatchQueue.main.asyncAfter(deadline: .now() + 7) {
                     self.performSegue(withIdentifier: "goCollection", sender: nil)
                     HUD.hide()
                 }
-            } else {
+                //ユーザー情報がある場合
+            case 2:
                 self.performSegue(withIdentifier: "LineToRss", sender: nil)
+   
+            default:
+                break
             }
         }
     }

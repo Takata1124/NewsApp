@@ -109,9 +109,9 @@ class LoginModel {
             
         case .none: break
         case .requiredPass(_):
-            errorMessage = "idを入力してください"
+            errorMessage = "IDを入力してください"
         case .isIncorrectCount(_):
-            errorMessage = "idは4文字で入力してください"
+            errorMessage = "IDは4文字で入力してください"
         }
         
         let passwordValidator = PasswordValidator(password: passwordText)
@@ -120,19 +120,19 @@ class LoginModel {
             
         case .none: break
         case .requiredPass(_):
-            errorMessage = "パスワードを入力してください"
+            errorMessage = "Passwordを入力してください"
         case .isIncorrectCount(_):
-            errorMessage = "パスワードは8文字で入力してください"
+            errorMessage = "Passwordは8文字で入力してください"
         }
         
         if idValidator.isValid() && passwordValidator.isValid() {
             
             if user?.id != idText {
-                errorMessage = "idが違います"
+                errorMessage = "IDが違います"
             }
             
             if user?.password != passwordText {
-                errorMessage = "passwordが違います"
+                errorMessage = "Passwordが違います"
             }
             
             if LoginQuery(idText: idText, passwordText: passwordText) {
@@ -152,11 +152,11 @@ class LoginModel {
         return user?.id == idText && user?.password == passwordText
     }
     
-    func lineLoginAction(accessToken: String, completion: @escaping(Bool) -> Void) {
+    func lineLoginAction(accessToken: String, completion: @escaping(Int) -> Void) {
         
-        if self.user?.id != "" {
-            errorMessage = "id, passwordでログインしてください"
-            completion(false)
+        if self.user?.id != nil {
+            errorMessage = "ID, Passwordでログインしてください"
+            completion(0)
             return
         }
         
@@ -167,12 +167,12 @@ class LoginModel {
             if accessToken == user.accessTokeValue {
                 
                 userDefaults.setValue(true, forKey: "userLogin")
-                completion(true)
+                completion(1)
                 return
             }
         }
         
-        completion(false)
+        completion(2)
     }
 }
 
