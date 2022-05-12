@@ -39,7 +39,6 @@ class LoginModel {
 
         if let data: Data = userDefaults.value(forKey: "User") as? Data {
             self.user = try! JSONDecoder().decode(User.self, from: data)
-
         }
     }
     
@@ -69,8 +68,8 @@ class LoginModel {
     func confirmLogin(completion: @escaping(Bool) -> Void) {
         
         if userDefaults.bool(forKey: "userLogin") {
-            completion(true)
             
+            completion(true)
         } else {
             
             completion(false)
@@ -153,8 +152,13 @@ class LoginModel {
     }
     
     func lineLoginAction(accessToken: String, completion: @escaping(Int) -> Void) {
+
+        guard let id = self.user?.id else {
+            completion(2)
+            return
+        }
         
-        if self.user?.id != nil {
+        if id != "" {
             errorMessage = "ID, Passwordでログインしてください"
             completion(0)
             return
