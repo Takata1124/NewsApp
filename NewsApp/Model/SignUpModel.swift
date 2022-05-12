@@ -16,7 +16,7 @@ class SignUpModel {
     var id: String = ""
     var password: String = ""
 
-    let userDefaults = UserDefaults.standard
+    let userDefaults: UserDefaults
     
     var errorMessage: String = "" {
         didSet {
@@ -24,17 +24,9 @@ class SignUpModel {
         }
     }
 
-    init() { }
-    
-    func confirmUser(completion: @escaping(Bool) -> Void) {
-        
-        if let data: Data = userDefaults.value(forKey: "User") as? Data {
-            self.errorMessage = "ユーザーデータが存在します"
-            completion(true)
-        } else {
-            self.errorMessage = "ユーザーデータが存在しません"
-            completion(false)
-        }
+    init(userDefaults: UserDefaults = UserDefaults.standard) {
+
+        self.userDefaults = userDefaults
     }
     
     func makingUserData(idText: String, passwordText: String, completion: @escaping(Bool) -> Void) {

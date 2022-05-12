@@ -44,9 +44,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     }
     
     let userdefaults = UserDefaults.standard
-    var storeFeedItems: [FeedItem] = []
+    var storedFeedItems: [FeedItem] = []
     var navigationController: UINavigationController?
-    
     let unuserNotificationCenter = UNUserNotificationCenter.current()
     
     var realm: Realm?
@@ -54,14 +53,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     
     func application(_ : UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
-        if let data: Data = userdefaults.value(forKey: "User") as? Data {
-            let user = try! JSONDecoder().decode(User.self, from: data)
-            print(user.id)
-            print(user.password)
-            print(user.login)
-            print(user.accessTokeValue)
-        }
-        
+        self.realmMigration()
+        self.realm = try! Realm()
+
         UINavigationBar.appearance().tintColor = UIColor.modeTextColor
         UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: UIColor.modeTextColor]
         
@@ -70,10 +64,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         BGTaskScheduler.shared.register(forTaskWithIdentifier: "com.MeasurementSample.refresh", using: nil) { task in
             self.handleAppRefresh(task: task as! BGAppRefreshTask)
         }
-        
-        self.realmMigration()
-        self.realm = try! Realm()
-        
+ 
         if let data: Data = userdefaults.value(forKey: "User") as? Data {
             let user: User = try! JSONDecoder().decode(User.self, from: data)
             self.subscription = user.subscription
@@ -95,11 +86,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         let store = try? jsonDecoder.decode([FeedItem].self, from: data)
         
         store?.forEach({ item in
-            storeFeedItems.append(item)
+            storedFeedItems.append(item)
         })
         
-        print(storeFeedItems)
-      
+//        print(storedFeedItems)
+        
         return true
     }
     
@@ -126,7 +117,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         
         Realm.Configuration.defaultConfiguration = config
     }
-
+    
     private func notificationAlert() {
         
         if #available (iOS 10.0, *) {
@@ -188,18 +179,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         print("Call to task")
         
         scheduleAppRefresh()
-  
-        if var dateArray = self.userdefaults.value(forKey: "date") as? [Date] {
-            let nowDay = Date()
-            var tempArray = userdefaults.array(forKey: "date")
-            tempArray?.append(nowDay)
-            self.userdefaults.set(tempArray, forKey: "date")
-        } else {
-            let nowDay = Date()
-            var dtArray: [Date] = []
-            dtArray.append(nowDay)
-            self.userdefaults.set(dtArray, forKey: "date")
-        }
         
         let operationQueue = OperationQueue()
         operationQueue.maxConcurrentOperationCount = 1

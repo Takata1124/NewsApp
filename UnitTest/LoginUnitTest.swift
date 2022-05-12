@@ -10,20 +10,16 @@ import RealmSwift
 @testable import NewsApp
 
 class LoginUnitTest: XCTestCase {
-    
-//    var loginDependency.testModel: LoginModel!
+ 
     var loginDependency: LoginDependency!
  
     override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
         super.setUp()
-        
-//        self.loginDependency.testModel = LoginModel.shared
+
         self.loginDependency = LoginDependency()
     }
     
     override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
         super.tearDown()
         
         self.loginDependency.removeUserDefaults()
@@ -290,13 +286,25 @@ class LoginUnitTest: XCTestCase {
     func testIsDifferLineUserExistWhenIdLogin() {
         
         loginDependency.setupLineUserLoginInformation()
+        loginDependency.testModel.setupStoredUserInformation()
         
-        let currentLoginSituation = self.loginDependency.testModel.userDefaults.bool(forKey: "userLogin")
-        XCTAssertFalse(currentLoginSituation)
-        
-        
+        loginDependency.testModel.LoginAction(idText: "1111", passwordText: "11111111") { success in
+            XCTAssertFalse(success)
+            
+            let errorMessage = self.loginDependency.testModel.errorMessage
+            XCTAssertEqual(errorMessage, "Lineでログインしてください")
+        }
     }
     
+    func testIsNothingUserLoginInformation() {
+        
+        loginDependency.testModel.LoginAction(idText: "1111", passwordText: "11111111") { success in
+            XCTAssertFalse(success)
+            
+            let errorMessage = self.loginDependency.testModel.errorMessage
+            XCTAssertEqual(errorMessage, "ユーザー情報がありません")
+        }
+    }
 }
 
 extension LoginUnitTest {

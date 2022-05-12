@@ -37,7 +37,7 @@ class CollectionViewController: UIViewController {
     var filterFeedItems: [FeedItem] = [] {
         didSet {
             DispatchQueue.main.async {
-                if let feed = self.collectionModel?.rssFeed() {
+                if let feed = self.collectionModel?.selectFeed {
                     self.navigationItem.title = "\(feed) (\(self.filterFeedItems.count))"
                     self.collectionView.reloadData()
                 }
@@ -63,7 +63,7 @@ class CollectionViewController: UIViewController {
         didSet {
             if deleteAction {
                 self.filterFeedItems = []
-                collectionModel?.deleteItems()
+                collectionModel?.deleteTableItems()
             }
         }
     }
@@ -191,7 +191,7 @@ class CollectionViewController: UIViewController {
         readButton.tintColor = .modeTextColor
         afterReadButton.tintColor = .modeTextColor
         
-        if appDelegate.storeFeedItems != [] {
+        if appDelegate.storedFeedItems != [] {
             nortificationButton.image = UIImage(systemName: "bell.fill")
         } else {
             nortificationButton.image = UIImage(systemName: "bell")
@@ -213,12 +213,18 @@ class CollectionViewController: UIViewController {
             return
         }
         
-        if filterFeedItems != [] && appDelegate.storeFeedItems != [] {
-            collectionModel?.comparedFeedItem(completion: {
+        if filterFeedItems != [] && appDelegate.storedFeedItems != [] {
+            
+            collectionModel?.comparedFeedItem(feedItems: appDelegate.storedFeedItems, completion: { FeedItems in
+                
+                self.collectionModel?.saveFeedItems(feedItems: FeedItems)
                 self.collectionModel?.nowfilterFeedItemOrder(buttonTitle: self.buttonTitle)
-                self.collectionModel?.deleteStoreFeedItems()
+                self.collectionModel?.deleteStoredFeedItems()
+                self.appDelegate.storedFeedItems = []
             })
+            
         } else {
+            
             collectionModel?.getXMLData()
         }
         //budge削除

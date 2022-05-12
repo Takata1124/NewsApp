@@ -47,7 +47,7 @@ class SettingModel {
     
     func deleteSubscriptionData(completion: @escaping() -> Void) {
         
-        appDelegate.storeFeedItems = []
+        appDelegate.storedFeedItems = []
         userDefaults.removeObject(forKey: "StoreFeedItems")
         completion()
     }

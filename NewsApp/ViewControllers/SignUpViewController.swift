@@ -14,7 +14,6 @@ class SignUpViewController: UIViewController {
     @IBOutlet weak var idTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var SignUpButton: UIButton!
-    
     @IBOutlet weak var lineView: UIView!
     
     var id: String = ""
@@ -76,19 +75,11 @@ class SignUpViewController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         if segue.identifier == "goRss" {
+            
             let rssView = segue.destination as! RssViewController
             
             rssView.id = SignUpModel.shared.id
             rssView.password = SignUpModel.shared.password
-        }
-    }
-    
-    @IBAction func goBackLoginView(_ sender: Any) {
-        
-        SignUpModel.shared.confirmUser { isData in
-            if isData {
-                self.navigationController?.popViewController(animated: true)
-            }
         }
     }
     

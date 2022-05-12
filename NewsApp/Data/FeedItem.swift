@@ -7,8 +7,12 @@
 
 import Foundation
 
-class FeedItem: Equatable, Codable {
+class FeedItem: Equatable, Codable, Comparable {
     
+    static func < (lhs: FeedItem, rhs: FeedItem) -> Bool {
+        return lhs.pubDate == rhs.pubDate
+    }
+  
     static func == (lhs: FeedItem, rhs: FeedItem) -> Bool {
         return lhs.title == rhs.title
     }

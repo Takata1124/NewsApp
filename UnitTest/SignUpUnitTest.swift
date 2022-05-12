@@ -10,16 +10,16 @@ import XCTest
 
 class SignUpUnitTest: XCTestCase {
     
-    var signUpModel: SignUpModel!
+    var signUpDependency: SignUpDependency!
     
     override func setUpWithError() throws {
         
-        self.signUpModel = SignUpModel.shared
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+        self.signUpDependency = SignUpDependency()
     }
     
     override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+        
+        self.signUpDependency.removeUserDefaults()
     }
     
     func testExample() throws {
@@ -40,48 +40,70 @@ class SignUpUnitTest: XCTestCase {
     
     func testSuccessMakeUser() {
         
-        signUpModel.makingUserData(idText: "1111", passwordText: "11111111") { success in
+        signUpDependency.testModel.makingUserData(idText: "1111", passwordText: "11111111") { success in
             XCTAssertTrue(success)
         }
     }
     
-    func testIsEmptyId() {
+    func testIsFailEmptyId() {
         
-        signUpModel.makingUserData(idText: "", passwordText: "11111111") { success in
+        signUpDependency.testModel.makingUserData(idText: "", passwordText: "11111111") { success in
             XCTAssertFalse(success)
             
-            let errorMessage = self.signUpModel.errorMessage
+            let errorMessage = self.signUpDependency.testModel.errorMessage
             XCTAssertEqual(errorMessage, "idを入力してください")
         }
     }
     
-    func testMissIdCount() {
+    func testIsFailIncorrectIdCount() {
 
-        signUpModel.makingUserData(idText: "11", passwordText: "11111111") { success in
+        signUpDependency.testModel.makingUserData(idText: "11", passwordText: "11111111") { success in
             XCTAssertFalse(success)
             
-            let errorMessage = self.signUpModel.errorMessage
+            let errorMessage = self.signUpDependency.testModel.errorMessage
             XCTAssertEqual(errorMessage, "idは4文字で入力してください")
         }
     }
     
-    func testIsEmptyPassword() {
+    func testIsFailEmptyPassword() {
         
-        signUpModel.makingUserData(idText: "1111", passwordText: "") { success in
+        signUpDependency.testModel.makingUserData(idText: "1111", passwordText: "") { success in
             XCTAssertFalse(success)
             
-            let errorMessage = self.signUpModel.errorMessage
+            let errorMessage = self.signUpDependency.testModel.errorMessage
             XCTAssertEqual(errorMessage, "パスワードを入力してください")
         }
     }
     
-    func testMissPasswordCount() {
+    func testIsFailIncorrectPasswordCount() {
         
-        signUpModel.makingUserData(idText: "1111", passwordText: "1111") { success in
+        signUpDependency.testModel.makingUserData(idText: "1111", passwordText: "1111") { success in
             XCTAssertFalse(success)
             
-            let errorMessage = self.signUpModel.errorMessage
+            let errorMessage = self.signUpDependency.testModel.errorMessage
             XCTAssertEqual(errorMessage, "パスワードは8文字で入力してください")
+        }
+    }
+}
+
+extension SignUpUnitTest {
+    
+    struct SignUpDependency {
+        
+        let testModel: SignUpModel
+        let userDefaults: UserDefaults
+        static let suitName: String = "Test"
+        var testUser = User(id: "1111", password: "11111111", feed: "selectFeed", login: false, accessTokeValue: "", subscription: false, subsciptInterval: 1.0)
+        
+        init() {
+            
+            self.userDefaults = UserDefaults(suiteName: SignUpUnitTest.SignUpDependency.suitName)!
+            testModel = .init(userDefaults: self.userDefaults)
+        }
+
+        func removeUserDefaults() {
+            
+            self.testModel.userDefaults.removePersistentDomain(forName: SignUpUnitTest.SignUpDependency.suitName)
         }
     }
 }
