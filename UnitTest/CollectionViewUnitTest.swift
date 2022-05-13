@@ -52,7 +52,7 @@ class CollectionUnitTest: XCTestCase {
         testFeedItems = collectionDependency.testModel.filterFeedItems
         XCTAssertEqual(testFeedItems.count, 0)
     }
-    
+
     func testIsFetchUserFeed() {
         
         var selectedFeed: String = ""
@@ -70,17 +70,19 @@ class CollectionUnitTest: XCTestCase {
     
     func testIsSuccessSaveFeedItems() {
         
+        var realmFeedItems: Results<RealmFeedItem>?
+        
         let testFeedItems: [FeedItem] = [FeedItem(title: "title", url: "https://", pubDate: "2022/01/01", star: false, read: false, afterRead: false)]
         
-        let testData = collectionDependency.testModel.realm?.objects(RealmFeedItem.self)
-        XCTAssertEqual(testData!.count, 0)
+        realmFeedItems = collectionDependency.testModel.realm?.objects(RealmFeedItem.self)
+        XCTAssertEqual(realmFeedItems!.count, 0)
         
         collectionDependency.testModel.saveFeedItems(feedItems: testFeedItems)
         
-        let AfterTestData = collectionDependency.testModel.realm?.objects(RealmFeedItem.self)
-        XCTAssertEqual(AfterTestData!.count, 1)
+        realmFeedItems = collectionDependency.testModel.realm?.objects(RealmFeedItem.self)
+        XCTAssertEqual(realmFeedItems!.count, 1)
         
-        AfterTestData?.forEach({ item in
+        realmFeedItems?.forEach({ item in
             XCTAssertEqual(item.title, "title")
             XCTAssertEqual(item.url, "https://")
             XCTAssertEqual(item.pubDate, "2022/01/01")
@@ -89,6 +91,8 @@ class CollectionUnitTest: XCTestCase {
     
     func testIsFailSaveFeedItems() {
         
+        var realmFeedItems: Results<RealmFeedItem>?
+        
         let testFeedItems: [[FeedItem]] = [
             [FeedItem(title: "", url: "https://", pubDate: "2022/01/01", star: false, read: false, afterRead: false)],
             [FeedItem(title: "title", url: "", pubDate: "2022/01/01", star: false, read: false, afterRead: false)],
@@ -96,46 +100,33 @@ class CollectionUnitTest: XCTestCase {
             [FeedItem(title: "Yahoo!ニュース・トピックス", url: "https://", pubDate: "2022/01/01", star: false, read: false, afterRead: false)]
         ]
         
-        let testData = collectionDependency.testModel.realm?.objects(RealmFeedItem.self)
-        XCTAssertEqual(testData!.count, 0)
+        realmFeedItems = collectionDependency.testModel.realm?.objects(RealmFeedItem.self)
+        XCTAssertEqual(realmFeedItems!.count, 0)
         
         testFeedItems.forEach { feedItem in
             
             collectionDependency.testModel.saveFeedItems(feedItems: feedItem)
             
-            let AfterTestData = collectionDependency.testModel.realm?.objects(RealmFeedItem.self)
-            XCTAssertNotEqual(AfterTestData!.count, 1)
+            let realmFeedItems = collectionDependency.testModel.realm?.objects(RealmFeedItem.self)
+            XCTAssertNotEqual(realmFeedItems!.count, 1)
         }
     }
     
     func testIsGetFeedUrl() {
         
-        let topics: [String] = ["主要", "国内", "国際", "経済", "エンタメ", "スポーツ", "IT", "科学", "地域"]
-        let topicsUrls: [String] = [
-            "https://news.yahoo.co.jp/rss/topics/top-picks.xml",
-            "https://news.yahoo.co.jp/rss/topics/domestic.xml",
-            "https://news.yahoo.co.jp/rss/topics/world.xml",
-            "https://news.yahoo.co.jp/rss/topics/business.xml",
-            "https://news.yahoo.co.jp/rss/topics/entertainment.xml",
-            "https://news.yahoo.co.jp/rss/topics/sports.xml",
-            "https://news.yahoo.co.jp/rss/topics/it.xml",
-            "https://news.yahoo.co.jp/rss/topics/science.xml",
-            "https://news.yahoo.co.jp/rss/topics/local.xml"
-        ]
-        
-        for (index, value) in topics.enumerated()  {
+        for (index, value) in collectionDependency.topics.enumerated()  {
             
             collectionDependency.testModel.getFeedUrl(value)
             
             let feedUrl = collectionDependency.testModel.feedUrl
-            XCTAssertEqual(feedUrl, topicsUrls[index])
+            XCTAssertEqual(feedUrl, collectionDependency.topicsUrls[index])
         }
     }
     
     func testIsFailFetchStoredFeedData() {
         
-        let testData = collectionDependency.testModel.realm?.objects(RealmFeedItem.self)
-        XCTAssertEqual(testData!.count, 0)
+        let realmFeedItems = collectionDependency.testModel.realm?.objects(RealmFeedItem.self)
+        XCTAssertEqual(realmFeedItems!.count, 0)
         
         collectionDependency.testModel.fetchFeedDate()
         
@@ -147,7 +138,7 @@ class CollectionUnitTest: XCTestCase {
         
         var testFeedItems: [FeedItem] = []
         
-        collectionDependency.setUpRealmData()
+        collectionDependency.setUpSingleRealmData()
         
         testFeedItems = collectionDependency.testModel.filterFeedItems
         XCTAssertEqual(testFeedItems.count, 0)
@@ -205,24 +196,146 @@ class CollectionUnitTest: XCTestCase {
         }
     }
     
-    func testIsSaveStarFavoriteItems() {
+    func testIsChangeSelectedSituationItems() {
         
-        collectionDependency.setupFilterFeedItems()
+        var testTitle: String = ""
+        var predicate: NSPredicate?
+        var realmFeedItemObject: Results<RealmFeedItem>?
         
-        collectionDependency.testModel.saveStar(title: "title2")
+        collectionDependency.setupRealmFeedItems()
         
+        let testAfterRead = collectionDependency.testModel.filterFeedItems[1].read
+        XCTAssertFalse(testAfterRead!)
         
+        testTitle = collectionDependency.testModel.filterFeedItems[1].title
+        predicate = NSPredicate(format: "title == %@", "\(testTitle)")
+        realmFeedItemObject = collectionDependency.testModel.realm?.objects(RealmFeedItem.self).filter(predicate!)
+        XCTAssertFalse(realmFeedItemObject![0].read)
+        
+        collectionDependency.testModel.saveSelected(index: 1)
+        
+        realmFeedItemObject = collectionDependency.testModel.realm?.objects(RealmFeedItem.self).filter(predicate!)
+        XCTAssertTrue(realmFeedItemObject![0].read)
     }
     
+    func testIsChangeStarSitiationItems() {
+        
+        collectionDependency.setupRealmFeedItems()
+        
+        let testTitle: String = "title2"
+        let predicate = NSPredicate(format: "title == %@", "\(testTitle)")
+        let realmFeedItem = collectionDependency.testModel.realm?.objects(RealmFeedItem.self).filter(predicate)
+   
+        if let currentStar = realmFeedItem?[0].star {
+            XCTAssertFalse(currentStar)
+        }
+        
+        collectionDependency.testModel.saveStar(title: "\(testTitle)")
+        
+        if let currentStar = realmFeedItem?[0].star {
+            XCTAssertTrue(currentStar)
+        }
+    }
+    
+    func testIsChangeReadSituationItems() {
+        
+        collectionDependency.setupRealmFeedItems()
+        
+        let testTitle: String = "title2"
+        let predicate = NSPredicate(format: "title == %@", "\(testTitle)")
+        let realmFeedItem = collectionDependency.testModel.realm?.objects(RealmFeedItem.self).filter(predicate)
+        
+        if let currentRead = realmFeedItem?[0].afterRead {
+            XCTAssertFalse(currentRead)
+        }
+        
+        collectionDependency.testModel.saveAfterRead(title: "\(testTitle)")
+        
+        if let currentRead = realmFeedItem?[0].afterRead {
+            XCTAssertTrue(currentRead)
+        }
+    }
+    
+    func testIsFilterStarItems() {
+        
+        var realmObject: Results<RealmFeedItem>?
+        var realmObjectCount: Int = 0
+        var filterFeedItemsCount: Int = 0
+ 
+        collectionDependency.setupRealmFeedItems()
+        
+        realmObject = collectionDependency.testModel.realm?.objects(RealmFeedItem.self)
+        
+        realmObjectCount = realmObject!.count
+        XCTAssertEqual(realmObjectCount, 6)
+        filterFeedItemsCount = collectionDependency.testModel.filterFeedItems.count
+        XCTAssertEqual(filterFeedItemsCount, 5)
+        
+        collectionDependency.testModel.filterStar(isStarFilter: true, buttonTitle: "New")
+        
+        filterFeedItemsCount = collectionDependency.testModel.filterFeedItems.count
+        XCTAssertEqual(filterFeedItemsCount, 3)
+        
+        let itemIsStar = collectionDependency.testModel.filterFeedItems[0].star
+        XCTAssertTrue(itemIsStar!)
+    }
+    
+    func testIsFilterReadItems() {
+        
+        var realmObject: Results<RealmFeedItem>?
+        var realmObjectCount: Int = 0
+        var filterFeedItems: Int = 0
+ 
+        collectionDependency.setupRealmFeedItems()
+        
+        realmObject = collectionDependency.testModel.realm?.objects(RealmFeedItem.self)
+        
+        realmObjectCount = realmObject!.count
+        XCTAssertEqual(realmObjectCount, 6)
+        filterFeedItems = collectionDependency.testModel.filterFeedItems.count
+        XCTAssertEqual(filterFeedItems, 5)
+        
+        collectionDependency.testModel.filterRead(isReadFilter: true, buttonTitle: "New")
+        
+        filterFeedItems = collectionDependency.testModel.filterFeedItems.count
+        XCTAssertEqual(filterFeedItems, 3)
+        
+        let itemIsRead = collectionDependency.testModel.filterFeedItems[0].read
+        XCTAssertTrue(itemIsRead!)
+    }
+    
+    func testIsFilterAfterReadItems() {
+        
+        var realmObject: Results<RealmFeedItem>?
+        var realmObjectCount: Int = 0
+        var filterFeedItems: Int = 0
+ 
+        collectionDependency.setupRealmFeedItems()
+        
+        realmObject = collectionDependency.testModel.realm?.objects(RealmFeedItem.self)
+        
+        realmObjectCount = realmObject!.count
+        XCTAssertEqual(realmObjectCount, 6)
+        filterFeedItems = collectionDependency.testModel.filterFeedItems.count
+        XCTAssertEqual(filterFeedItems, 5)
+        
+        collectionDependency.testModel.filterAfterReadAction(isAfterReadFilter: true, buttonTitle: "New")
+        
+        filterFeedItems = collectionDependency.testModel.filterFeedItems.count
+        XCTAssertEqual(filterFeedItems, 3)
+        
+        let itemIsAfterRead = collectionDependency.testModel.filterFeedItems[0].afterRead
+        XCTAssertTrue(itemIsAfterRead!)
+    }
+
     func testIsChangeFilterFeedItemsNewOrder() {
         
-        collectionDependency.setupFilterFeedItems()
+        collectionDependency.setupRealmFeedItems()
         
         let beforeTestFeedItems = collectionDependency.testModel.filterFeedItems
         
         for (index, _) in beforeTestFeedItems.enumerated()  {
             
-            print(index)
             if index < beforeTestFeedItems.count - 1 {
                 XCTAssertLessThan(beforeTestFeedItems[index].pubDate, beforeTestFeedItems[index + 1].pubDate)
             }
@@ -233,8 +346,7 @@ class CollectionUnitTest: XCTestCase {
         let afterTestFeedItems = collectionDependency.testModel.filterFeedItems
         
         for (index, _) in afterTestFeedItems.enumerated()  {
-            
-            print(index)
+          
             if index < afterTestFeedItems.count - 1 {
                 XCTAssertGreaterThan(afterTestFeedItems[index].pubDate, afterTestFeedItems[index + 1].pubDate)
             }
@@ -272,7 +384,7 @@ class CollectionUnitTest: XCTestCase {
         }
     }
     
-    func testGetXMLData() {
+    func testIsGetXMLData() {
         
         let testData = collectionDependency.testModel.realm?.objects(RealmFeedItem.self)
         XCTAssertNotEqual(testData!.count, 8)
@@ -284,6 +396,10 @@ class CollectionUnitTest: XCTestCase {
         
         let afterTestData = collectionDependency.testModel.realm?.objects(RealmFeedItem.self)
         XCTAssertEqual(afterTestData!.count, 8)
+        
+        let filterFeedItems = collectionDependency.testModel.filterFeedItems
+        //+1は処理の順番がrealmDatabaseへ追加、Unitテスト終了、Updateとなっているため。
+        XCTAssertEqual(filterFeedItems.count + 1, 8)
     }
 }
 
@@ -297,6 +413,19 @@ extension CollectionUnitTest {
         var testUser = User(id: "1111", password: "11111111", feed: "テスト", login: false, accessTokeValue: "", subscription: false, subsciptInterval: 1.0)
         var testLineUser = User(id: "", password: "", feed: "テスト", login: false, accessTokeValue: "11111111", subscription: false, subsciptInterval: 1.0)
         var realm: Realm?
+        
+        let topics: [String] = ["主要", "国内", "国際", "経済", "エンタメ", "スポーツ", "IT", "科学", "地域"]
+        let topicsUrls: [String] = [
+            "https://news.yahoo.co.jp/rss/topics/top-picks.xml",
+            "https://news.yahoo.co.jp/rss/topics/domestic.xml",
+            "https://news.yahoo.co.jp/rss/topics/world.xml",
+            "https://news.yahoo.co.jp/rss/topics/business.xml",
+            "https://news.yahoo.co.jp/rss/topics/entertainment.xml",
+            "https://news.yahoo.co.jp/rss/topics/sports.xml",
+            "https://news.yahoo.co.jp/rss/topics/it.xml",
+            "https://news.yahoo.co.jp/rss/topics/science.xml",
+            "https://news.yahoo.co.jp/rss/topics/local.xml"
+        ]
         
         init() {
             
@@ -337,7 +466,7 @@ extension CollectionUnitTest {
             }
         }
         
-        func setUpRealmData() {
+        func setUpSingleRealmData() {
             
             let realmFeedItem = RealmFeedItem()
             realmFeedItem.title = "title"
@@ -349,15 +478,16 @@ extension CollectionUnitTest {
             })
         }
         
-        func setupFilterFeedItems() {
+        func setupRealmFeedItems() {
             
             let testFeedItems = [
-                FeedItem(title: "title1", url: "https://", pubDate: "2022/01/01", star: false, read: false, afterRead: false),
-                FeedItem(title: "title2", url: "https://", pubDate: "2022/01/02", star: false, read: false, afterRead: false),
-                FeedItem(title: "title3", url: "https://", pubDate: "2022/01/03", star: false, read: false, afterRead: false)
+                FeedItem(title: "title1", url: "https://111", pubDate: "2022/01/01", star: false, read: false, afterRead: false),
+                FeedItem(title: "title2", url: "https://222", pubDate: "2022/01/02", star: false, read: false, afterRead: false),
+                FeedItem(title: "title3", url: "https://333", pubDate: "2022/01/03", star: false, read: false, afterRead: false),
+                FeedItem(title: "title4", url: "https://444", pubDate: "2022/01/04", star: true, read: true, afterRead: true),
+                FeedItem(title: "title5", url: "https://555", pubDate: "2022/01/05", star: true, read: true, afterRead: true),
+                FeedItem(title: "title6", url: "https://666", pubDate: "2022/01/06", star: true, read: true, afterRead: true),
             ]
-            
-//            self.testModel.filterFeedItems = testFeedItems
             
             testFeedItems.forEach { feeditem in
                 
@@ -365,6 +495,9 @@ extension CollectionUnitTest {
                 realmFeedItem.title = feeditem.title
                 realmFeedItem.url = feeditem.url
                 realmFeedItem.pubDate = feeditem.pubDate
+                realmFeedItem.read = feeditem.read
+                realmFeedItem.afterRead = feeditem.read
+                realmFeedItem.star = feeditem.star
                 
                 try! self.testModel.realm?.write({
                     self.testModel.realm?.add(realmFeedItem)

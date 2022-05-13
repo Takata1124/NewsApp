@@ -52,7 +52,7 @@ class CollectionModel: NSObject {
         fetchUserFeed()
         getFeedUrl(self.selectFeed)
         notificationAlert()
-        setupRealmFeedItem()
+        setupRealmFeedItems()
     }
     
     func deleteTableItems() {
@@ -60,60 +60,65 @@ class CollectionModel: NSObject {
         self.filterFeedItems = []
     }
     
-    func setupRealmFeedItem() {
+    func setupRealmFeedItems() {
         
         realmFeedItem = realm?.objects(RealmFeedItem.self)
         
         notificationToken = realmFeedItem?.observe{ [unowned self] changes in
+            
             switch changes {
                 
             case .initial(let items):
                 
                 if items.count > 0 {
+                    
                     items.forEach { item in
-                        if !filterFeedItems.contains(where: { feed in
-                            feed.title == item.title
-                        }) {
+                        
+                        if queryConfirmAlreadyItem(item: item) {
+                            
                             let newFeedItem = FeedItem(title: item.title, url: item.url, pubDate: item.pubDate, star: item.star, read: item.read, afterRead: item.afterRead)
                             self.filterFeedItems.append(newFeedItem)
                         }
                     }
                 }
                 
-            case .update(let items, let deletions, let insertions, let modifications):
+            case .update(let items, _, _, let modifications):
                 
-                if modifications == [] {
-                    if items.count > 0 {
-                        items.forEach { item in
-                            if !filterFeedItems.contains(where: { feed in
-                                feed.title == item.title
-                            }) {
-                                let newFeedItem = FeedItem(title: item.title, url: item.url, pubDate: item.pubDate, star: item.star, read: item.read, afterRead: item.afterRead)
-                                self.filterFeedItems.append(newFeedItem)
-                            }
+                if modifications == [] && items.count > 0 {
+                    
+                    items.forEach { item in
+                        
+                        if queryConfirmAlreadyItem(item: item) {
+                            
+                            let newFeedItem = FeedItem(title: item.title, url: item.url, pubDate: item.pubDate, star: item.star, read: item.read, afterRead: item.afterRead)
+                            self.filterFeedItems.append(newFeedItem)
+//                            print(filterFeedItems)
                         }
                     }
                 }
-                //更新処理
+                
                 if modifications != [] {
+                    
                     let index = filterFeedItems.firstIndex { item in
                         item.title == realmFeedItem?[modifications[0]].title
                     }
                     
-                    guard let index = index else { return }
-                    
-                    let newFeedItem = FeedItem(
-                        title: realmFeedItem?[modifications[0]].title ?? "",
-                        url: realmFeedItem?[modifications[0]].url ?? "",
-                        pubDate: realmFeedItem?[modifications[0]].pubDate ?? "",
-                        star: realmFeedItem?[modifications[0]].star ?? false,
-                        read: realmFeedItem?[modifications[0]].read ?? false,
-                        afterRead: realmFeedItem?[modifications[0]].afterRead ?? false)
-                    
-                    self.filterFeedItems[index] = newFeedItem
+                    if let index = index {
+                        
+                        let newFeedItem = FeedItem(
+                            title: realmFeedItem?[modifications[0]].title ?? "",
+                            url: realmFeedItem?[modifications[0]].url ?? "",
+                            pubDate: realmFeedItem?[modifications[0]].pubDate ?? "",
+                            star: realmFeedItem?[modifications[0]].star ?? false,
+                            read: realmFeedItem?[modifications[0]].read ?? false,
+                            afterRead: realmFeedItem?[modifications[0]].afterRead ?? false)
+                        
+                        self.filterFeedItems[index] = newFeedItem
+                    }
                 }
                 
             case .error(let error):
+                
                 fatalError("\(error)")
             }
         }
@@ -132,7 +137,7 @@ class CollectionModel: NSObject {
         feedItems.forEach { feed in
             
             if queryFilterSaveData(title: feed.title, url: feed.url, pubDate: feed.pubDate) {
-          
+                
                 let realmFeedItem = RealmFeedItem()
                 realmFeedItem.title = feed.title
                 realmFeedItem.url = feed.url
@@ -221,7 +226,7 @@ class CollectionModel: NSObject {
         
         var tempFeedItems: [FeedItem] = []
         let tempStoreFeedItems: [FeedItem] = feedItems
-
+        
         for (index, storeItem) in tempStoreFeedItems.enumerated() {
             
             if queryCompareFeedItemsForSave(item: storeItem) {
@@ -237,25 +242,25 @@ class CollectionModel: NSObject {
     }
     
     func queryCompareFeedItemsForSave(item: FeedItem)  -> Bool {
-
+        
         if self.filterFeedItems.contains(where: { filteritem in
             filteritem.title == item.title
         }) || item.title == "Yahoo!ニュース・トピックス" || item.title == "" {
             return false
         }
-
+        
         return true
     }
     
     func deleteStoredFeedItems() {
-
+        
         userDefaults?.removeObject(forKey: "StoreFeedItems")
         self.notificationAlert()
     }
     
-    func saveSelected(indexPath: IndexPath) {
+    func saveSelected(index: Int) {
         
-        let selectedTitle: String = self.filterFeedItems[indexPath.row].title
+        let selectedTitle: String = self.filterFeedItems[index].title
         let predicate = NSPredicate(format: "title == %@", "\(selectedTitle)")
         let result = realm?.objects(RealmFeedItem.self).filter(predicate)
         
@@ -301,59 +306,58 @@ class CollectionModel: NSObject {
     }
     
     func filterStar(isStarFilter: Bool, buttonTitle: String)  {
-        
+
         if isStarFilter {
-            
+
             let result = realm?.objects(RealmFeedItem.self).filter("star = true")
             var temporaryArray: [FeedItem] = []
+
             result?.forEach { item in
                 temporaryArray.append(FeedItem(title: item.title, url: item.url, pubDate: item.pubDate, star: item.star, read: item.read, afterRead: item.afterRead))
+                self.filterFeedItems = temporaryArray
             }
-            self.filterFeedItems = temporaryArray
-            
         } else {
-            
+
             self.deleteTableItems()
             self.fetchFeedDate()
         }
-        
-        nowfilterFeedItemOrder(buttonTitle: buttonTitle)
     }
     
     func filterRead(isReadFilter: Bool, buttonTitle: String) {
-        
+
         if isReadFilter {
-            
+
             let result = realm?.objects(RealmFeedItem.self).filter("read = true")
             var temporaryArray: [FeedItem] = []
+
             result?.forEach { item in
                 temporaryArray.append(FeedItem(title: item.title, url: item.url, pubDate: item.pubDate, star: item.star, read: item.read, afterRead: item.afterRead))
+                self.filterFeedItems = temporaryArray
             }
-            
-            self.filterFeedItems = temporaryArray
-            
         } else {
-            
+
             self.deleteTableItems()
             self.fetchFeedDate()
         }
-        
-        nowfilterFeedItemOrder(buttonTitle: buttonTitle)
     }
     
     func filterAfterReadAction(isAfterReadFilter: Bool, buttonTitle: String) {
-        
+
         if isAfterReadFilter {
-            let filterArray = self.filterFeedItems.filter { item in
-                item.afterRead == true
+            
+            let result = realm?.objects(RealmFeedItem.self).filter("afterRead = true")
+            var temporaryArray: [FeedItem] = []
+
+            result?.forEach { item in
+                temporaryArray.append(FeedItem(title: item.title, url: item.url, pubDate: item.pubDate, star: item.star, read: item.read, afterRead: item.afterRead))
+                self.filterFeedItems = temporaryArray
             }
-            self.filterFeedItems = filterArray
+
         } else {
+
             self.deleteTableItems()
             self.fetchFeedDate()
         }
-        
-        nowfilterFeedItemOrder(buttonTitle: buttonTitle)
     }
     
     func makingNewOrder(buttonTitle: String) -> String {
@@ -374,15 +378,18 @@ class CollectionModel: NSObject {
     func nowfilterFeedItemOrder(buttonTitle: String) {
         
         if buttonTitle == "New" {
+            
             filterFeedItems.sort { item_1, item_2 in
                 item_1.pubDate > item_2.pubDate
             }
+            
             return
         }
         
         filterFeedItems.sort { item_1, item_2 in
             item_1.pubDate < item_2.pubDate
         }
+        
         return
     }
 }

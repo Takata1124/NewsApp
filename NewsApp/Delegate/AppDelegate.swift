@@ -88,9 +88,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         store?.forEach({ item in
             storedFeedItems.append(item)
         })
-        
-//        print(storedFeedItems)
-        
+
         return true
     }
     

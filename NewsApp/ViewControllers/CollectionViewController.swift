@@ -243,7 +243,7 @@ class CollectionViewController: UIViewController {
         
         self.isStarFilter.toggle()
         collectionModel?.filterStar(isStarFilter: isStarFilter, buttonTitle: buttonTitle)
-        
+        collectionModel?.nowfilterFeedItemOrder(buttonTitle: buttonTitle)
     }
     
     @IBAction func goSetting(_ sender: Any) {
@@ -272,6 +272,7 @@ class CollectionViewController: UIViewController {
   
         self.isReadFilter.toggle()
         collectionModel?.filterRead(isReadFilter: isReadFilter, buttonTitle: buttonTitle)
+        collectionModel?.nowfilterFeedItemOrder(buttonTitle: buttonTitle)
     }
     
     @IBAction func filterAfterRead(_ sender: Any) {
@@ -280,6 +281,7 @@ class CollectionViewController: UIViewController {
     
         self.isAfterReadFilter.toggle()
         collectionModel?.filterAfterReadAction(isAfterReadFilter: isAfterReadFilter, buttonTitle: buttonTitle)
+        collectionModel?.nowfilterFeedItemOrder(buttonTitle: buttonTitle)
     }
 }
 
@@ -309,7 +311,7 @@ extension CollectionViewController: UICollectionViewDataSource, UICollectionView
         self.titleName = filterFeedItems[indexPath.row].title
         self.indexPathRow = indexPath.row
         
-        self.collectionModel?.saveSelected(indexPath: indexPath)
+        self.collectionModel?.saveSelected(index: indexPath.row)
         
         performSegue(withIdentifier: "goArticle", sender: nil)
     }
