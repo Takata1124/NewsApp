@@ -92,7 +92,6 @@ class CollectionModel: NSObject {
                             
                             let newFeedItem = FeedItem(title: item.title, url: item.url, pubDate: item.pubDate, star: item.star, read: item.read, afterRead: item.afterRead)
                             self.filterFeedItems.append(newFeedItem)
-//                            print(filterFeedItems)
                         }
                     }
                 }
@@ -216,8 +215,10 @@ class CollectionModel: NSObject {
     func notificationAlert() {
         
         if appDelegate.storedFeedItems != [] {
+            
             self.notificationCenter.post(name: Notification.Name(CollectionModel.notificationAlertName), object: nil, userInfo: ["alert": true])
         } else {
+            
             self.notificationCenter.post(name: Notification.Name(CollectionModel.notificationAlertName), object: nil, userInfo: ["alert": false])
         }
     }

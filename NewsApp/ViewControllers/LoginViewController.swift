@@ -21,10 +21,17 @@ class LoginViewController: UIViewController, UITextFieldDelegate, LoginButtonDel
     private let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
     private var user: User?
     
+    var lineLoginButton: LoginButton?
+    
     private var errorMessage: String = "" {
         didSet {
             errorLabel.isHidden = errorMessage.isEmpty
             errorLabel.text = errorMessage
+            
+            if errorMessage != "ユーザー情報がありません" && errorMessage != "Lineでログインしてください" {
+                
+                self.lineLoginButton?.isEnabled = false
+            }
         }
     }
     
@@ -76,13 +83,13 @@ class LoginViewController: UIViewController, UITextFieldDelegate, LoginButtonDel
         
         transSignUpButton.accessibilityIdentifier = "transSignUpButton"
         
-        let lineLoginButton = LoginButton()
-        lineLoginButton.delegate = self
-        lineLoginButton.permissions = [.profile]
-        lineLoginButton.presentingViewController = self
-        lineLoginButton.accessibilityIdentifier = "lineButton"
+        self.lineLoginButton = LoginButton()
+        lineLoginButton?.delegate = self
+        lineLoginButton?.permissions = [.profile]
+        lineLoginButton?.presentingViewController = self
+        lineLoginButton!.accessibilityIdentifier = "lineButton"
 
-        lineView.addSubview(lineLoginButton)
+        lineView.addSubview(self.lineLoginButton!)
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -170,8 +177,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate, LoginButtonDel
     @IBAction func goSignUpView(_ sender: Any) {
         
         LoginModel.shared.confirmUser { success in
+            
             if success {
-                
                 let alert = UIAlertController(title: "確認", message: "ユーザー情報が存在します。消去して新規ユーザー情報を作成しますか？", preferredStyle: .alert)
                 
                 let addActionAlert: UIAlertAction = UIAlertAction(title: "YES", style: .default, handler: { Void in

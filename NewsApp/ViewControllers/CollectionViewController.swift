@@ -47,7 +47,6 @@ class CollectionViewController: UIViewController {
     
     var articleUrl: String = ""
     var titleName: String = ""
-    var star: Bool = false
     var indexPathRow: Int = 0
     
     var buttonTitle: String = "Random" {

@@ -19,7 +19,6 @@ class LoginModel {
     let userDefaults: UserDefaults
     var user: User?
 
-    
     var errorMessage: String = "" {
         didSet {
             notificationCenter.post(name: .init(rawValue: LoginModel.notificationName), object: errorMessage)
