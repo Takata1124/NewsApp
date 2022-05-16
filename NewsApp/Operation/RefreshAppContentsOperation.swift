@@ -169,7 +169,7 @@ class getXMLDataOperation: Operation, XMLParserDelegate, UNUserNotificationCente
         if let data = try? jsonEncoder.encode(temporaryFeedItem) {
             
             userdefaults.set(data, forKey: "StoreFeedItems")
-            print("saveData")
+//            print("saveData")
         }
     }
 }
