@@ -80,14 +80,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                 self.scheduleAppRefresh()
             }
         }
-        
-        let jsonDecoder = JSONDecoder()
-        guard let data = userdefaults.data(forKey: "StoreFeedItems") else { return true }
-        let store = try? jsonDecoder.decode([FeedItem].self, from: data)
-        
-        store?.forEach({ item in
-            storedFeedItems.append(item)
-        })
 
         return true
     }
@@ -217,7 +209,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         guard let data = userdefaults.data(forKey: "StoreFeedItems") else { return }
         let store = try? jsonDecoder.decode([FeedItem].self, from: data)
         
-        self.realmMigration()
+        realmMigration()
         self.realm = try! Realm()
         
         var tempRealmFeedItem: [FeedItem] = []
