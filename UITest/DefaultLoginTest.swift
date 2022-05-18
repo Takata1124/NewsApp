@@ -28,21 +28,21 @@ class DefaultLoginTest: XCTestCase {
 
     func testDefaultLogin() throws {
         
-        let idText = "1111"
-        let passwordText = "11111111"
-       
-        let app = XCUIApplication()
-        
-        let idTextField = app.textFields["idTextField"]
-        XCTAssertTrue(idTextField.exists)
-        idTextField.tap()
-        idTextField.typeText(idText)
-    
-        let passwordTextField = app.textFields["passwordTextField"]
-        XCTAssertTrue(passwordTextField.exists)
-        passwordTextField.tap()
-        passwordTextField.typeText(passwordText)
-        
-        app.buttons["defaultLoginButton"].tap()
+//        let idText = "1111"
+//        let passwordText = "11111111"
+//       
+//        let app = XCUIApplication()
+//        
+//        let idTextField = app.textFields["idTextField"]
+//        XCTAssertTrue(idTextField.exists)
+//        idTextField.tap()
+//        idTextField.typeText(idText)
+//    
+//        let passwordTextField = app.textFields["passwordTextField"]
+//        XCTAssertTrue(passwordTextField.exists)
+//        passwordTextField.tap()
+//        passwordTextField.typeText(passwordText)
+//        
+//        app.buttons["defaultLoginButton"].tap()
     }
 }

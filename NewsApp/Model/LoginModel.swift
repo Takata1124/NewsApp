@@ -18,7 +18,7 @@ class LoginModel {
     
     let userDefaults: UserDefaults
     var user: User?
-
+    
     var errorMessage: String = "" {
         didSet {
             notificationCenter.post(name: .init(rawValue: LoginModel.notificationName), object: errorMessage)
@@ -26,16 +26,16 @@ class LoginModel {
     }
     
     var realm: Realm?
-
+    
     init(userDefaults: UserDefaults = UserDefaults.standard, realm: Realm = try! Realm()) {
         
         self.userDefaults = userDefaults
         self.realm = realm
-
+        
     }
     
     func setupStoredUserInformation() {
-
+        
         if let data: Data = userDefaults.value(forKey: "User") as? Data {
             self.user = try! JSONDecoder().decode(User.self, from: data)
         }
@@ -43,7 +43,7 @@ class LoginModel {
     
     func confirmUser(completion: @escaping(Bool) -> Void) {
         
-        if let data: Data = userDefaults.value(forKey: "User") as? Data {
+        if let _ = userDefaults.value(forKey: "User") as? Data {
             completion(true)
         } else {
             completion(false)
@@ -54,23 +54,19 @@ class LoginModel {
         
         userDefaults.removeObject(forKey: "userLogin")
         userDefaults.removeObject(forKey: "User")
-       
+        
         deleteStoreArticleData { success in
             if success {
                 completion(true)
-            } else {
-                completion(false)
             }
         }
     }
-
+    
     func confirmLogin(completion: @escaping(Bool) -> Void) {
         
         if userDefaults.bool(forKey: "userLogin") {
-            
             completion(true)
         } else {
-            
             completion(false)
         }
     }
@@ -82,8 +78,6 @@ class LoginModel {
                 self.realm?.delete(results)
                 completion(true)
             }
-        } else {
-            completion(false)
         }
     }
     
@@ -151,31 +145,34 @@ class LoginModel {
     }
     
     func lineLoginAction(accessToken: String, completion: @escaping(Int) -> Void) {
-
-        guard let id = self.user?.id else {
-            completion(2)
-            return
-        }
-        
-        if id != "" {
-            errorMessage = "ID, Passwordでログインしてください"
-            completion(0)
-            return
-        }
         
         if let data: Data = userDefaults.value(forKey: "User") as? Data {
             
             let user: User = try! JSONDecoder().decode(User.self, from: data)
+            
+            
+            if user.id != "" {
+                errorMessage = "ID, Passwordでログインしてください"
+                completion(0)
+                return
+            }
+            
             
             if accessToken == user.accessTokeValue {
                 
                 userDefaults.setValue(true, forKey: "userLogin")
                 completion(1)
                 return
+                
+            } else {
+                
+                completion(2)
             }
+  
+        } else {
+            
+            completion(2)
         }
-        
-        completion(2)
     }
 }
 

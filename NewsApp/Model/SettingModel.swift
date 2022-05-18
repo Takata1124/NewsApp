@@ -36,12 +36,10 @@ class SettingModel {
         let results = realm.objects(RealmFeedItem.self)
         
         do {
-            try realm.write {
+            try? realm.write {
                 realm.delete(results)
                 completion()
             }
-        } catch {
-            fatalError("エラーが発生")
         }
     }
     

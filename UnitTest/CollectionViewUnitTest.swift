@@ -216,6 +216,7 @@ class CollectionUnitTest: XCTestCase {
         
         realmFeedItemObject = collectionDependency.testModel.realm?.objects(RealmFeedItem.self).filter(predicate!)
         XCTAssertTrue(realmFeedItemObject![0].read)
+        
     }
     
     func testIsChangeStarSitiationItems() {
@@ -234,6 +235,12 @@ class CollectionUnitTest: XCTestCase {
         
         if let currentStar = realmFeedItem?[0].star {
             XCTAssertTrue(currentStar)
+        }
+        
+        collectionDependency.testModel.saveStar(title: "\(testTitle)")
+        
+        if let currentStar = realmFeedItem?[0].star {
+            XCTAssertFalse(currentStar)
         }
     }
     
@@ -254,9 +261,15 @@ class CollectionUnitTest: XCTestCase {
         if let currentRead = realmFeedItem?[0].afterRead {
             XCTAssertTrue(currentRead)
         }
+        
+        collectionDependency.testModel.saveAfterRead(title: "\(testTitle)")
+        
+        if let currentRead = realmFeedItem?[0].afterRead {
+            XCTAssertFalse(currentRead)
+        }
     }
     
-    func testIsFilterStarItems() {
+    func testIsChangeFilterStarItems() {
         
         var realmObject: Results<RealmFeedItem>?
         var realmObjectCount: Int = 0
@@ -278,9 +291,14 @@ class CollectionUnitTest: XCTestCase {
         
         let itemIsStar = collectionDependency.testModel.filterFeedItems[0].star
         XCTAssertTrue(itemIsStar!)
+        
+        collectionDependency.testModel.filterStar(isStarFilter: false, buttonTitle: "New")
+        
+        filterFeedItemsCount = collectionDependency.testModel.filterFeedItems.count
+        XCTAssertEqual(filterFeedItemsCount, 6)
     }
     
-    func testIsFilterReadItems() {
+    func testIsChangeFilterReadItems() {
         
         var realmObject: Results<RealmFeedItem>?
         var realmObjectCount: Int = 0
@@ -302,6 +320,11 @@ class CollectionUnitTest: XCTestCase {
         
         let itemIsRead = collectionDependency.testModel.filterFeedItems[0].read
         XCTAssertTrue(itemIsRead!)
+        
+        collectionDependency.testModel.filterRead(isReadFilter: false, buttonTitle: "New")
+        
+        filterFeedItems = collectionDependency.testModel.filterFeedItems.count
+        XCTAssertEqual(filterFeedItems, 6)
     }
     
     func testIsFilterAfterReadItems() {
@@ -326,34 +349,43 @@ class CollectionUnitTest: XCTestCase {
         
         let itemIsAfterRead = collectionDependency.testModel.filterFeedItems[0].afterRead
         XCTAssertTrue(itemIsAfterRead!)
+        
+        collectionDependency.testModel.filterAfterReadAction(isAfterReadFilter: false, buttonTitle: "New")
+        
+        filterFeedItems = collectionDependency.testModel.filterFeedItems.count
+        XCTAssertEqual(filterFeedItems, 6)
     }
 
     func testIsChangeFilterFeedItemsNewOrder() {
         
+        var currentTestFeedItems: [FeedItem] = []
+        
         collectionDependency.setupRealmFeedItems()
         
-        let beforeTestFeedItems = collectionDependency.testModel.filterFeedItems
+        currentTestFeedItems = collectionDependency.testModel.filterFeedItems
         
-        for (index, _) in beforeTestFeedItems.enumerated()  {
+        for (index, _) in currentTestFeedItems.enumerated()  {
             
-            if index < beforeTestFeedItems.count - 1 {
-                XCTAssertLessThan(beforeTestFeedItems[index].pubDate, beforeTestFeedItems[index + 1].pubDate)
+            if index < currentTestFeedItems.count - 1 {
+                XCTAssertLessThan(currentTestFeedItems[index].pubDate, currentTestFeedItems[index + 1].pubDate)
             }
         }
         
         collectionDependency.testModel.makingNewOrder(buttonTitle: "Old")
         
-        let afterTestFeedItems = collectionDependency.testModel.filterFeedItems
+       currentTestFeedItems = collectionDependency.testModel.filterFeedItems
         
-        for (index, _) in afterTestFeedItems.enumerated()  {
+        for (index, _) in currentTestFeedItems.enumerated()  {
           
-            if index < afterTestFeedItems.count - 1 {
-                XCTAssertGreaterThan(afterTestFeedItems[index].pubDate, afterTestFeedItems[index + 1].pubDate)
+            if index < currentTestFeedItems.count - 1 {
+                XCTAssertGreaterThan(currentTestFeedItems[index].pubDate, currentTestFeedItems[index + 1].pubDate)
             }
         }
     }
     
     func testIsChangeFilterFeedItemsOldOrder() {
+        
+        var currentTestFeedItems: [FeedItem] = []
         
         let testFeedItems = [
             FeedItem(title: "title3", url: "https://", pubDate: "2022/01/03", star: false, read: false, afterRead: false),
@@ -363,31 +395,71 @@ class CollectionUnitTest: XCTestCase {
         
         collectionDependency.testModel.filterFeedItems = testFeedItems
         
-        let beforeTestFeedItems = collectionDependency.testModel.filterFeedItems
+        currentTestFeedItems = collectionDependency.testModel.filterFeedItems
         
-        for (index, _) in beforeTestFeedItems.enumerated()  {
+        for (index, _) in currentTestFeedItems.enumerated()  {
             
-            if index < beforeTestFeedItems.count - 1 {
-                XCTAssertGreaterThan(beforeTestFeedItems[index].pubDate, beforeTestFeedItems[index + 1].pubDate)
+            if index < currentTestFeedItems.count - 1 {
+                XCTAssertGreaterThan(currentTestFeedItems[index].pubDate, currentTestFeedItems[index + 1].pubDate)
             }
         }
         
         collectionDependency.testModel.makingNewOrder(buttonTitle: "New")
         
-        let afterTestFeedItems = collectionDependency.testModel.filterFeedItems
+        currentTestFeedItems = collectionDependency.testModel.filterFeedItems
         
-        for (index, _) in afterTestFeedItems.enumerated()  {
+        for (index, _) in currentTestFeedItems.enumerated()  {
             
-            if index < afterTestFeedItems.count - 1 {
-                XCTAssertLessThan(afterTestFeedItems[index].pubDate, afterTestFeedItems[index + 1].pubDate)
+            if index < currentTestFeedItems.count - 1 {
+                XCTAssertLessThan(currentTestFeedItems[index].pubDate, currentTestFeedItems[index + 1].pubDate)
             }
         }
     }
     
-    func testIsGetXMLData() {
+    func testIsNowFilterFeedItemOrder() {
         
-        let testData = collectionDependency.testModel.realm?.objects(RealmFeedItem.self)
-        XCTAssertNotEqual(testData!.count, 8)
+        var currentTestFeedItems: [FeedItem] = []
+        
+        collectionDependency.setupRealmFeedItems()
+        
+        collectionDependency.testModel.nowfilterFeedItemOrder(buttonTitle: "New")
+        
+        currentTestFeedItems = collectionDependency.testModel.filterFeedItems
+        
+        for (index, _) in currentTestFeedItems.enumerated()  {
+            
+            if index < currentTestFeedItems.count - 1 {
+                XCTAssertGreaterThan(currentTestFeedItems[index].pubDate, currentTestFeedItems[index + 1].pubDate)
+            }
+        }
+        
+        collectionDependency.testModel.nowfilterFeedItemOrder(buttonTitle: "Old")
+        
+        currentTestFeedItems = collectionDependency.testModel.filterFeedItems
+        
+        for (index, _) in currentTestFeedItems.enumerated()  {
+            
+            if index < currentTestFeedItems.count - 1 {
+                XCTAssertLessThan(currentTestFeedItems[index].pubDate, currentTestFeedItems[index + 1].pubDate)
+            }
+        }
+        
+    }
+    
+//    func testIsNoAlertImage() {
+//
+//        DispatchQueue.main.async {
+//
+//            let collectionViewController = CollectionViewController()
+//            collectionViewController.collectionModel = self.collectionDependency.testModel
+//
+//            self.collectionDependency.testModel.notificationAlert()
+//            print(collectionViewController.dataAlert)
+//
+//        }
+//    }
+    
+    func testIsGetXMLData() {
         
         let articleUrl: String = "https://news.yahoo.co.jp/rss/topics/top-picks.xml"
         
@@ -398,8 +470,24 @@ class CollectionUnitTest: XCTestCase {
         XCTAssertEqual(afterTestData!.count, 8)
         
         let filterFeedItems = collectionDependency.testModel.filterFeedItems
-        //+1は処理の順番がrealmDatabaseへ追加、Unitテスト終了、Updateとなっているため。
-        XCTAssertEqual(filterFeedItems.count + 1, 8)
+      
+        XCTAssertEqual(filterFeedItems.count, 7)
+    }
+    
+    func testIsFailGetXMLData() {
+        
+        var testFeedItems: [FeedItem] = []
+        
+        testFeedItems = collectionDependency.testModel.filterFeedItems
+        XCTAssertEqual(testFeedItems.count, 0)
+        
+        let articleUrl: String = ""
+        
+        collectionDependency.testModel.feedUrl = articleUrl
+        collectionDependency.testModel.getXMLData()
+        
+        testFeedItems = collectionDependency.testModel.filterFeedItems
+        XCTAssertEqual(testFeedItems.count, 0)
     }
 }
 

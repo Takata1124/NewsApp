@@ -30,9 +30,6 @@ class RssModel {
             self.userDefaults.setValue(true, forKey: "userLogin")
             self.userDefaults.setValue(data, forKey: "User")
             completion(true)
-            
-        } else {
-            completion(false)
         }
     }
 }

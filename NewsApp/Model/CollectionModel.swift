@@ -43,6 +43,12 @@ class CollectionModel: NSObject {
     
     var updateData: Bool = false
     
+    var storeFeedItem: [FeedItem] {
+        get {
+            return appDelegate.storedFeedItems
+        }
+    }
+    
     init(userDefaults: UserDefaults = UserDefaults.standard, realm: Realm = try! Realm()) {
         super.init()
         
@@ -151,9 +157,9 @@ class CollectionModel: NSObject {
     
     func queryFilterSaveData(title: String, url: String, pubDate: String)  -> Bool {
         
-        return title != "" && url != "" && pubDate != "" && !title.contains("Yahoo!ニュース・トピックス") && !(realmFeedItem?.contains(where: { feeditem in
+        return title != "" && url != "" && pubDate != "" && !title.contains("Yahoo!ニュース・トピックス") && !((realmFeedItem?.contains(where: { feeditem in
             feeditem.title == title
-        }) ?? false)
+        }))!)
     }
     
     func getFeedUrl(_ selectFeed: String) {
@@ -214,9 +220,10 @@ class CollectionModel: NSObject {
     //更新データの有無を通知
     func notificationAlert() {
         
-        if appDelegate.storedFeedItems != [] {
+        if storeFeedItem != [] {
             
             self.notificationCenter.post(name: Notification.Name(CollectionModel.notificationAlertName), object: nil, userInfo: ["alert": true])
+            
         } else {
             
             self.notificationCenter.post(name: Notification.Name(CollectionModel.notificationAlertName), object: nil, userInfo: ["alert": false])
@@ -266,11 +273,9 @@ class CollectionModel: NSObject {
         let result = realm?.objects(RealmFeedItem.self).filter(predicate)
         
         do {
-            try realm?.write{
+            try? realm?.write{
                 result?[0].read = true
             }
-        } catch {
-            print("Error \(error)")
         }
     }
     
@@ -318,7 +323,7 @@ class CollectionModel: NSObject {
                 self.filterFeedItems = temporaryArray
             }
         } else {
-
+            
             self.deleteTableItems()
             self.fetchFeedDate()
         }
@@ -412,8 +417,6 @@ extension CollectionModel: XMLParserDelegate {
             self.parser = parser
             self.parser?.delegate = self
             self.parser?.parse()
-        } else {
-            print("failed to parse XML")
         }
     }
     
@@ -468,9 +471,9 @@ extension CollectionModel: XMLParserDelegate {
         self.currrentElementName = nil
     }
     
-    func parser(_ parser: XMLParser, parseErrorOccurred parseError: Error) {
-        print("エラー:" + parseError.localizedDescription)
-    }
+//    func parser(_ parser: XMLParser, parseErrorOccurred parseError: Error) {
+//        print("エラー:" + parseError.localizedDescription)
+//    }
     
     func parserDidEndDocument(_ parser: XMLParser) {
         print("end")

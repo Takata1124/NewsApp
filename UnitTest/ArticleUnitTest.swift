@@ -70,6 +70,12 @@ class ArticleUnitTest: XCTestCase {
         filteredRealmObject = articleDependency.testModel.realm?.objects(RealmFeedItem.self).filter(predicate!)
         isStar = filteredRealmObject?[0].star
         XCTAssertTrue(isStar!)
+        
+        articleDependency.testModel.saveStar(title: testTitle)
+        
+        filteredRealmObject = articleDependency.testModel.realm?.objects(RealmFeedItem.self).filter(predicate!)
+        isStar = filteredRealmObject?[0].star
+        XCTAssertFalse(isStar!)
     }
 }
 

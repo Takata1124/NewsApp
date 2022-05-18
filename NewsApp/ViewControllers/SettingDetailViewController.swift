@@ -18,6 +18,7 @@ class SettingDetailViewController: UIViewController {
     }
     
     var selectCell: String = ""
+    var user: User?
     
     private var currentValue: String = "" {
         didSet {
@@ -69,9 +70,14 @@ class SettingDetailViewController: UIViewController {
         }
         
         model.notificationCenter.addObserver(forName: .init(rawValue: SettingDetailModel.userNotificationName), object: nil, queue: nil) { notification in
-            let user: User = notification.userInfo?["user"] as! User
-            self.settingDetailView.user = user
+            self.user = notification.userInfo?["user"] as? User
+            self.settingDetailView.user = self.user
         }
+    }
+    
+    static func setupTestMock(notificationCenter: NotificationCenter) {
+        
+        
     }
 
     @objc func modeChange(sender: UISwitch) {

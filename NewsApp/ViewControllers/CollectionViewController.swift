@@ -24,12 +24,14 @@ class CollectionViewController: UIViewController {
     private let bounds = UIScreen.main.bounds
     private let nib = UINib(nibName: "CollectionViewCell", bundle: nil)
     
-    private var dataAlert: Bool = false {
+    var dataAlert: Bool = false {
         didSet {
-            if dataAlert {
-                nortificationButton.image = UIImage(systemName: "bell.fill")
-            } else {
-                nortificationButton.image = UIImage(systemName: "bell")
+            DispatchQueue.main.async {
+                if self.dataAlert {
+                    self.nortificationButton.image = UIImage(systemName: "bell.fill")
+                } else {
+                    self.nortificationButton.image = UIImage(systemName: "bell")
+                }
             }
         }
     }
@@ -174,6 +176,7 @@ class CollectionViewController: UIViewController {
         }
         
         model.notificationCenter.addObserver(forName: Notification.Name(CollectionModel.notificationAlertName), object: nil, queue: nil) { notification in
+            
             if let alert = notification.userInfo?["alert"] as? Bool {
                 self.dataAlert = alert
             }

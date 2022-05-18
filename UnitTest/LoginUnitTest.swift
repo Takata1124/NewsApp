@@ -122,7 +122,7 @@ class LoginUnitTest: XCTestCase {
         }
     }
     
-    func testIsMissId() {
+    func testIsFailId() {
         
         loginDependency.setupUserInformation()
         loginDependency.testModel.setupStoredUserInformation()
@@ -135,7 +135,7 @@ class LoginUnitTest: XCTestCase {
         }
     }
     
-    func testIsMissPassword() {
+    func testIsFailPassword() {
         
         loginDependency.setupUserInformation()
         loginDependency.testModel.setupStoredUserInformation()
@@ -214,6 +214,13 @@ class LoginUnitTest: XCTestCase {
         }
     }
     
+    func testIsFailConfirmUserLogin() {
+        
+        loginDependency.testModel.confirmLogin { success in
+            XCTAssertFalse(success)
+        }
+    }
+    
     func testIsDeleteStoredArticleData() {
         
         loginDependency.setUpRealmData()
@@ -245,6 +252,14 @@ class LoginUnitTest: XCTestCase {
             
             let currentLoginSituation = self.loginDependency.testModel.userDefaults.bool(forKey: "userLogin")
             XCTAssertTrue(currentLoginSituation)
+        }
+    }
+    
+    func testIsFailLineLogin() {
+        
+        loginDependency.testModel.lineLoginAction(accessToken: "11111111") { success in
+            XCTAssertEqual(success, 2)
+
         }
     }
     
@@ -305,6 +320,8 @@ class LoginUnitTest: XCTestCase {
             XCTAssertEqual(errorMessage, "ユーザー情報がありません")
         }
     }
+    
+    
 }
 
 extension LoginUnitTest {
