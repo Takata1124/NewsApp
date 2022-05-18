@@ -79,7 +79,7 @@ class LoginUnitTest: XCTestCase {
             XCTAssertFalse(success)
             
             let errorMessage = self.loginDependency.testModel.errorMessage
-            XCTAssertEqual(errorMessage, "idを入力してください")
+            XCTAssertEqual(errorMessage, "IDを入力してください")
         }
     }
     
@@ -92,7 +92,7 @@ class LoginUnitTest: XCTestCase {
             XCTAssertFalse(success)
             
             let errorMessage = self.loginDependency.testModel.errorMessage
-            XCTAssertEqual(errorMessage, "idは4文字で入力してください")
+            XCTAssertEqual(errorMessage, "IDは4文字で入力してください")
         }
     }
     
@@ -105,7 +105,7 @@ class LoginUnitTest: XCTestCase {
             XCTAssertFalse(success)
             
             let errorMessage = self.loginDependency.testModel.errorMessage
-            XCTAssertEqual(errorMessage, "パスワードを入力してください")
+            XCTAssertEqual(errorMessage, "Passwordを入力してください")
         }
     }
     
@@ -118,7 +118,7 @@ class LoginUnitTest: XCTestCase {
             XCTAssertFalse(success)
             
             let errorMessage = self.loginDependency.testModel.errorMessage
-            XCTAssertEqual(errorMessage, "パスワードは8文字で入力してください")
+            XCTAssertEqual(errorMessage, "Passwordは8文字で入力してください")
         }
     }
     
