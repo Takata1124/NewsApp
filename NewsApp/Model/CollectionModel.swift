@@ -43,21 +43,20 @@ class CollectionModel: NSObject {
     
     var updateData: Bool = false
     
-    var storeFeedItem: [FeedItem] {
-        get {
-            return appDelegate.storedFeedItems
-        }
-    }
+    var storeFeedItem: [FeedItem] = []
     
     init(userDefaults: UserDefaults = UserDefaults.standard, realm: Realm = try! Realm()) {
         super.init()
         
         self.userDefaults = userDefaults
         self.realm = realm
-        
+       
         fetchUserFeed()
         getFeedUrl(self.selectFeed)
+        
+        self.storeFeedItem = appDelegate.storedFeedItems
         notificationAlert()
+        
         setupRealmFeedItems()
     }
     
@@ -71,7 +70,7 @@ class CollectionModel: NSObject {
         realmFeedItem = realm?.objects(RealmFeedItem.self)
         
         notificationToken = realmFeedItem?.observe{ [unowned self] changes in
-            
+         
             switch changes {
                 
             case .initial(let items):
@@ -110,20 +109,21 @@ class CollectionModel: NSObject {
                     
                     if let index = index {
                         
-                        let newFeedItem = FeedItem(
-                            title: realmFeedItem?[modifications[0]].title ?? "",
-                            url: realmFeedItem?[modifications[0]].url ?? "",
-                            pubDate: realmFeedItem?[modifications[0]].pubDate ?? "",
-                            star: realmFeedItem?[modifications[0]].star ?? false,
-                            read: realmFeedItem?[modifications[0]].read ?? false,
-                            afterRead: realmFeedItem?[modifications[0]].afterRead ?? false)
+                        guard let title = realmFeedItem?[modifications[0]].title else { return }
+                        guard let url = realmFeedItem?[modifications[0]].url else { return }
+                        guard let pubDate = realmFeedItem?[modifications[0]].pubDate else { return }
+                        guard let star = realmFeedItem?[modifications[0]].star else { return }
+                        guard let read = realmFeedItem?[modifications[0]].read else { return }
+                        guard let afterRead = realmFeedItem?[modifications[0]].afterRead else { return }
+                        
+                        let newFeedItem = FeedItem(title: title,url: url,pubDate: pubDate, star: star, read: read,afterRead: afterRead)
                         
                         self.filterFeedItems[index] = newFeedItem
                     }
                 }
                 
             case .error(let error):
-                
+
                 fatalError("\(error)")
             }
         }
@@ -157,9 +157,11 @@ class CollectionModel: NSObject {
     
     func queryFilterSaveData(title: String, url: String, pubDate: String)  -> Bool {
         
-        return title != "" && url != "" && pubDate != "" && !title.contains("Yahoo!ニュース・トピックス") && !((realmFeedItem?.contains(where: { feeditem in
+        let isSuccessRegister = title != "" && url != "" && pubDate != "" && !title.contains("Yahoo!ニュース・トピックス") && !((realmFeedItem?.contains(where: { feeditem in
             feeditem.title == title
         }))!)
+        
+        return isSuccessRegister
     }
     
     func getFeedUrl(_ selectFeed: String) {
@@ -340,6 +342,7 @@ class CollectionModel: NSObject {
                 temporaryArray.append(FeedItem(title: item.title, url: item.url, pubDate: item.pubDate, star: item.star, read: item.read, afterRead: item.afterRead))
                 self.filterFeedItems = temporaryArray
             }
+            
         } else {
 
             self.deleteTableItems()

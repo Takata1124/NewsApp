@@ -259,7 +259,15 @@ class LoginUnitTest: XCTestCase {
         
         loginDependency.testModel.lineLoginAction(accessToken: "11111111") { success in
             XCTAssertEqual(success, 2)
-
+        }
+    }
+    
+    func testIsFailLineLoginAndFailAccessToken() {
+        
+        loginDependency.setupLineUserLoginInformation()
+        
+        loginDependency.testModel.lineLoginAction(accessToken: "1111") { success in
+            print(success)
         }
     }
     

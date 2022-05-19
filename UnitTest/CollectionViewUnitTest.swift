@@ -52,7 +52,7 @@ class CollectionUnitTest: XCTestCase {
         testFeedItems = collectionDependency.testModel.filterFeedItems
         XCTAssertEqual(testFeedItems.count, 0)
     }
-
+    
     func testIsFetchUserFeed() {
         
         var selectedFeed: String = ""
@@ -216,7 +216,6 @@ class CollectionUnitTest: XCTestCase {
         
         realmFeedItemObject = collectionDependency.testModel.realm?.objects(RealmFeedItem.self).filter(predicate!)
         XCTAssertTrue(realmFeedItemObject![0].read)
-        
     }
     
     func testIsChangeStarSitiationItems() {
@@ -226,7 +225,7 @@ class CollectionUnitTest: XCTestCase {
         let testTitle: String = "title2"
         let predicate = NSPredicate(format: "title == %@", "\(testTitle)")
         let realmFeedItem = collectionDependency.testModel.realm?.objects(RealmFeedItem.self).filter(predicate)
-   
+        
         if let currentStar = realmFeedItem?[0].star {
             XCTAssertFalse(currentStar)
         }
@@ -274,7 +273,7 @@ class CollectionUnitTest: XCTestCase {
         var realmObject: Results<RealmFeedItem>?
         var realmObjectCount: Int = 0
         var filterFeedItemsCount: Int = 0
- 
+        
         collectionDependency.setupRealmFeedItems()
         
         realmObject = collectionDependency.testModel.realm?.objects(RealmFeedItem.self)
@@ -303,7 +302,7 @@ class CollectionUnitTest: XCTestCase {
         var realmObject: Results<RealmFeedItem>?
         var realmObjectCount: Int = 0
         var filterFeedItems: Int = 0
- 
+        
         collectionDependency.setupRealmFeedItems()
         
         realmObject = collectionDependency.testModel.realm?.objects(RealmFeedItem.self)
@@ -332,7 +331,7 @@ class CollectionUnitTest: XCTestCase {
         var realmObject: Results<RealmFeedItem>?
         var realmObjectCount: Int = 0
         var filterFeedItems: Int = 0
- 
+        
         collectionDependency.setupRealmFeedItems()
         
         realmObject = collectionDependency.testModel.realm?.objects(RealmFeedItem.self)
@@ -355,7 +354,7 @@ class CollectionUnitTest: XCTestCase {
         filterFeedItems = collectionDependency.testModel.filterFeedItems.count
         XCTAssertEqual(filterFeedItems, 6)
     }
-
+    
     func testIsChangeFilterFeedItemsNewOrder() {
         
         var currentTestFeedItems: [FeedItem] = []
@@ -373,10 +372,10 @@ class CollectionUnitTest: XCTestCase {
         
         collectionDependency.testModel.makingNewOrder(buttonTitle: "Old")
         
-       currentTestFeedItems = collectionDependency.testModel.filterFeedItems
+        currentTestFeedItems = collectionDependency.testModel.filterFeedItems
         
         for (index, _) in currentTestFeedItems.enumerated()  {
-          
+            
             if index < currentTestFeedItems.count - 1 {
                 XCTAssertGreaterThan(currentTestFeedItems[index].pubDate, currentTestFeedItems[index + 1].pubDate)
             }
@@ -443,21 +442,37 @@ class CollectionUnitTest: XCTestCase {
                 XCTAssertLessThan(currentTestFeedItems[index].pubDate, currentTestFeedItems[index + 1].pubDate)
             }
         }
-        
     }
     
-//    func testIsNoAlertImage() {
-//
-//        DispatchQueue.main.async {
-//
-//            let collectionViewController = CollectionViewController()
-//            collectionViewController.collectionModel = self.collectionDependency.testModel
-//
-//            self.collectionDependency.testModel.notificationAlert()
-//            print(collectionViewController.dataAlert)
-//
-//        }
-//    }
+    func testIsAlertImage() {
+        
+        let collectionViewController = CollectionViewController()
+        collectionViewController.collectionModel = self.collectionDependency.testModel
+        
+        self.collectionDependency.testModel.notificationAlert()
+        
+        XCTAssertFalse(collectionViewController.dataAlert)
+        
+        collectionDependency.testModel.storeFeedItem += [FeedItem(title: "title1", url: "https://111", pubDate: "2022/01/01", star: false, read: false, afterRead: false)]
+        
+        self.collectionDependency.testModel.notificationAlert()
+        
+        XCTAssertTrue(collectionViewController.dataAlert)
+    }
+    
+    func testIsModifiedFilterFeeedItem() {
+        
+        var currentTestFeedItems: [FeedItem] = []
+        
+        collectionDependency.setupRealmFeedItems()
+        
+        currentTestFeedItems = collectionDependency.testModel.filterFeedItems
+        
+        if let selectedTitle = currentTestFeedItems[3].title {
+            
+            collectionDependency.testModel.saveStar(title: selectedTitle)
+        }
+    }
     
     func testIsGetXMLData() {
         
@@ -470,7 +485,7 @@ class CollectionUnitTest: XCTestCase {
         XCTAssertEqual(afterTestData!.count, 8)
         
         let filterFeedItems = collectionDependency.testModel.filterFeedItems
-      
+        
         XCTAssertEqual(filterFeedItems.count, 7)
     }
     
@@ -516,7 +531,6 @@ extension CollectionUnitTest {
         ]
         
         init() {
-            
             self.userDefaults = UserDefaults(suiteName: CollectionUnitTest.CollectionDependency.suitName)!
             
             let configuration = Realm.Configuration(inMemoryIdentifier: "TestLoginModel")

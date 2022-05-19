@@ -150,7 +150,6 @@ class LoginModel {
             
             let user: User = try! JSONDecoder().decode(User.self, from: data)
             
-            
             if user.id != "" {
                 errorMessage = "ID, Passwordでログインしてください"
                 completion(0)
@@ -164,15 +163,13 @@ class LoginModel {
                 completion(1)
                 return
                 
-            } else {
-                
-                completion(2)
             }
-  
-        } else {
             
             completion(2)
+            return
         }
+        
+        completion(2)
     }
 }
 

@@ -17,7 +17,7 @@ class CollectionViewController: UIViewController {
     @IBOutlet weak var starButton: UIButton!
     @IBOutlet weak var readButton: UIButton!
     @IBOutlet weak var afterReadButton: UIButton!
- 
+    
     private let userDefaults = UserDefaults.standard
     private let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
     private let refreshControl = UIRefreshControl()
@@ -26,7 +26,7 @@ class CollectionViewController: UIViewController {
     
     var dataAlert: Bool = false {
         didSet {
-            DispatchQueue.main.async {
+            if NSClassFromString("XCTest") == nil {
                 if self.dataAlert {
                     self.nortificationButton.image = UIImage(systemName: "bell.fill")
                 } else {
@@ -38,10 +38,12 @@ class CollectionViewController: UIViewController {
     
     var filterFeedItems: [FeedItem] = [] {
         didSet {
-            DispatchQueue.main.async {
-                if let feed = self.collectionModel?.selectFeed {
-                    self.navigationItem.title = "\(feed) (\(self.filterFeedItems.count))"
-                    self.collectionView.reloadData()
+            if NSClassFromString("XCTest") == nil {
+                DispatchQueue.main.async {
+                    if let feed = self.collectionModel?.selectFeed {
+                        self.navigationItem.title = "\(feed) (\(self.filterFeedItems.count))"
+                        self.collectionView.reloadData()
+                    }
                 }
             }
         }
@@ -136,7 +138,24 @@ class CollectionViewController: UIViewController {
         
         guard let model = collectionModel else { return }
         
+        setupFilterFeedItemNotification(model: model)
+        
+        setupAlertNotification(model: model)
+    }
+    
+    private func setupAlertNotification(model: CollectionModel) {
+        
         self.filterFeedItems = model.filterFeedItems
+        
+        model.notificationCenter.addObserver(forName: Notification.Name(CollectionModel.notificationAlertName), object: nil, queue: nil) { notification in
+            
+            if let alert = notification.userInfo?["alert"] as? Bool {
+                self.dataAlert = alert
+            }
+        }
+    }
+    
+    private func setupFilterFeedItemNotification(model: CollectionModel) {
         
         model.notificationCenter.addObserver(forName: .init(rawValue: CollectionModel.notificationName), object: nil, queue: nil) { [weak self] nortification in
             
@@ -174,13 +193,6 @@ class CollectionViewController: UIViewController {
                 self?.filterFeedItems = filterfeeditems
             }
         }
-        
-        model.notificationCenter.addObserver(forName: Notification.Name(CollectionModel.notificationAlertName), object: nil, queue: nil) { notification in
-            
-            if let alert = notification.userInfo?["alert"] as? Bool {
-                self.dataAlert = alert
-            }
-        }
     }
     
     private func setupLayout() {
@@ -198,7 +210,7 @@ class CollectionViewController: UIViewController {
         } else {
             nortificationButton.image = UIImage(systemName: "bell")
         }
-
+        
         collectionView.collectionViewLayout = appDelegate.cellType.layoutFromSuperviewRect(rect: bounds)
         collectionView.delegate = self
         collectionView.dataSource = self
@@ -271,7 +283,7 @@ class CollectionViewController: UIViewController {
     @IBAction func filterRead(_ sender: Any) {
         
         if isStarFilter == true || isAfterReadFilter == true { return }
-  
+        
         self.isReadFilter.toggle()
         collectionModel?.filterRead(isReadFilter: isReadFilter, buttonTitle: buttonTitle)
         collectionModel?.nowfilterFeedItemOrder(buttonTitle: buttonTitle)
@@ -280,7 +292,7 @@ class CollectionViewController: UIViewController {
     @IBAction func filterAfterRead(_ sender: Any) {
         
         if isStarFilter == true || isReadFilter == true { return }
-    
+        
         self.isAfterReadFilter.toggle()
         collectionModel?.filterAfterReadAction(isAfterReadFilter: isAfterReadFilter, buttonTitle: buttonTitle)
         collectionModel?.nowfilterFeedItemOrder(buttonTitle: buttonTitle)
