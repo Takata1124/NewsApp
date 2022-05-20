@@ -37,7 +37,7 @@ class SettingDetailModel {
         
         if let data: Data = userDefaults.value(forKey: "User") as? Data {
             let user: User = try! JSONDecoder().decode(User.self, from: data)
-            print(user)
+            
             notificationCenter.post(name: .init(rawValue: SettingDetailModel.userNotificationName), object: nil, userInfo: ["user": user])
         }
     }

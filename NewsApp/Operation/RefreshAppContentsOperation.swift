@@ -8,10 +8,15 @@
 import Foundation
 import RealmSwift
 
-class getXMLDataOperation: Operation, XMLParserDelegate, UNUserNotificationCenterDelegate {
+protocol getXMLDataProtocol {
+    
+    func getXMLData(urlString: String)
+}
+
+class getXMLDataOperation: Operation, XMLParserDelegate {
     
     private var currrentElementName: String?
-    private let userdefaults = UserDefaults.standard
+    private var userDefaults: UserDefaults?
     
     let usernotificationCenter = UNUserNotificationCenter.current()
     var window: UIWindow?
@@ -27,26 +32,29 @@ class getXMLDataOperation: Operation, XMLParserDelegate, UNUserNotificationCente
   
     private var parser: XMLParser?
     
-    override init() {
-        super.init()
+    init(userDefaults: UserDefaults = UserDefaults.standard) {
+        
+        self.userDefaults = userDefaults
     }
     
     override func main() {
         
         self.usergetFeed()
         self.getFeedUrl(self.selectFeed)
+        
         self.getXMLData(urlString: self.feedUrl)
         self.saveXMLData(feeditems: self.feedItems)
     }
     
     private func usergetFeed() {
         
-        guard let data: Data = userdefaults.value(forKey: "User") as? Data else { return }
-        let user: User = try! JSONDecoder().decode(User.self, from: data)
-        self.selectFeed = user.feed
+        if let data: Data = userDefaults?.value(forKey: "User") as? Data {
+            let user: User = try! JSONDecoder().decode(User.self, from: data)
+            self.selectFeed = user.feed
+        }
     }
     
-    private func getXMLData(urlString: String) {
+    func getXMLData(urlString: String) {
         
         guard let url = URL(string: urlString) else {
             return
@@ -148,27 +156,23 @@ class getXMLDataOperation: Operation, XMLParserDelegate, UNUserNotificationCente
         print("エラー:" + parseError.localizedDescription)
     }
     
-    func parserDidEndDocument(_ parser: XMLParser) {
-    }
+    func parserDidEndDocument(_ parser: XMLParser) {}
     
     private func saveXMLData(feeditems: [FeedItem]) {
         
         var temporaryFeedItem: [FeedItem] = []
         temporaryFeedItem += feeditems
 
-        if let data = userdefaults.data(forKey: "StoreFeedItems") {
-            
-            let jsonDecoder = JSONDecoder()
-            if let storeData = try? jsonDecoder.decode([FeedItem].self, from: data) {
+        if let data = userDefaults?.data(forKey: "StoreFeedItems") {
+        
+            if let storeData = try? JSONDecoder().decode([FeedItem].self, from: data) {
                 temporaryFeedItem += storeData
             }
         }
 
-        let jsonEncoder = JSONEncoder()
-        
-        if let data = try? jsonEncoder.encode(temporaryFeedItem) {
+        if let data = try? JSONEncoder().encode(temporaryFeedItem) {
             
-            userdefaults.set(data, forKey: "StoreFeedItems")
+            userDefaults?.set(data, forKey: "StoreFeedItems")
         }
     }
 }

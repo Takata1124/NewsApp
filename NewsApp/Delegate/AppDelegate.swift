@@ -17,33 +17,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     var letterSize: Int = 13
     var cellType: CellType = .List
     
+    var appDelegateModel: AppDelegateModel? {
+        
+        didSet {
+            registerModel()
+        }
+    }
+    
     var subscription: Bool = false {
         didSet {
-            if let data: Data = userdefaults.value(forKey: "User") as? Data {
-                let user: User = try! JSONDecoder().decode(User.self, from: data)
-                let recodeUser: User = User(id: user.id, password: user.password, feed: user.feed, login: user.login, accessTokeValue: user.accessTokeValue, subscription: self.subscription, subsciptInterval: user.subsciptInterval)
-                guard let data: Data = try? JSONEncoder().encode(recodeUser) else { return }
-                userdefaults.set(data, forKey: "User")
-                
-                if subscription == false {
-                    BGTaskScheduler.shared.cancelAllTaskRequests()
-                }
-            }
+            appDelegateModel?.saveUserSubscription(subscription: self.subscription)
         }
     }
     
-    var InterbalTime: Double = 1 {
+    var interbalTime: Double = 1 {
         didSet {
-            if let data: Data = userdefaults.value(forKey: "User") as? Data {
-                let user: User = try! JSONDecoder().decode(User.self, from: data)
-                let recodeUser: User = User(id: user.id, password: user.password, feed: user.feed, login: user.login, accessTokeValue: user.accessTokeValue, subscription: user.subscription, subsciptInterval: self.InterbalTime)
-                guard let data: Data = try? JSONEncoder().encode(recodeUser) else { return }
-                userdefaults.set(data, forKey: "User")
-            }
+            appDelegateModel?.saveUserInterbalTime(interbalTime: interbalTime)
         }
     }
     
-    let userdefaults = UserDefaults.standard
     var storedFeedItems: [FeedItem] = []
     var navigationController: UINavigationController?
     let unuserNotificationCenter = UNUserNotificationCenter.current()
@@ -53,32 +45,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     
     func application(_ : UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
-        self.realmMigration()
-        self.realm = try! Realm()
-
         UINavigationBar.appearance().tintColor = UIColor.modeTextColor
         UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: UIColor.modeTextColor]
         
         LoginManager.shared.setup(channelID: "1657027285", universalLinkURL: nil)
+ 
+        self.realmMigration()
+        
+        self.appDelegateModel = AppDelegateModel()
         
         BGTaskScheduler.shared.register(forTaskWithIdentifier: "com.MeasurementSample.refresh", using: nil) { task in
-            self.handleAppRefresh(task: task as! BGAppRefreshTask)
-        }
- 
-        if let data: Data = userdefaults.value(forKey: "User") as? Data {
-            let user: User = try! JSONDecoder().decode(User.self, from: data)
-            self.subscription = user.subscription
-            self.InterbalTime = user.subsciptInterval
-        }
-        //購読設定なしでリターン
-        if !subscription { return true }
-        
-        BGTaskScheduler.shared.getPendingTaskRequests { requests in
-            
-            print(requests)
-            if requests == [] {
-                self.scheduleAppRefresh()
-            }
+            self.appDelegateModel?.handleAppRefresh(task: task as! BGAppRefreshTask)
         }
 
         return true
@@ -89,21 +66,50 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         UIApplication.shared.applicationIconBadgeNumber = 0
     }
     
+    private func registerModel() {
+        
+        if let model = appDelegateModel {
+            
+            model.notificationCenter.addObserver(forName: .init(rawValue: AppDelegateModel.notificationSubscriptionName), object: nil, queue: nil) { notification in
+                
+                if let subscription = notification.userInfo?["subscription"] as? Bool {
+                    self.subscription = subscription
+                }
+            }
+            
+            model.notificationCenter.addObserver(forName: .init(rawValue: AppDelegateModel.notificationInterbalTimeName), object: nil, queue: nil) { notification in
+                
+                if let interbalTime = notification.userInfo?["interbalTime"] as? Double {
+                    self.interbalTime = interbalTime
+                }
+            }
+            
+            model.notificationCenter.addObserver(forName: .init(rawValue: AppDelegateModel.notificationAlertName), object: nil, queue: nil) { notification in
+                if let alert = notification.userInfo?["alert"] as? Bool {
+                    
+                    if alert {
+                        self.notificationAlert()
+                    }
+                }
+            }
+        }
+    }
+    
     private func realmMigration() {
-        
+
         let nextSchemaVersion = 2
-        
+
         let config = Realm.Configuration(
             schemaVersion: UInt64(nextSchemaVersion),
             migrationBlock: { migration, oldSchemaVersion in
                 if (oldSchemaVersion < nextSchemaVersion) {
                 }
             })
-        
+
         Realm.Configuration.defaultConfiguration = config
     }
     
-    private func notificationAlert() {
+    func notificationAlert() {
         
         if #available (iOS 10.0, *) {
             
@@ -142,6 +148,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                     UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
                     
                 } else {
+                    
                     let ac = UIAlertController(title: "プッシュ通知が使用できません", message: "設定画面よりアプリのプッシュ通知をONにしてください", preferredStyle: .alert)
                     let goToSettings = UIAlertAction(title: title, style: .default) { _ in
                         guard let settingsURL = URL(string: UIApplication.openSettingsURLString) else { return }
@@ -156,90 +163,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                     self.window?.rootViewController?.present(ac, animated: true, completion: nil)
                 }
             }
-        }
-    }
-    
-    private func handleAppRefresh(task: BGAppRefreshTask) {
-        
-        print("Call to task")
-        
-        scheduleAppRefresh()
-        
-        let operationQueue = OperationQueue()
-        operationQueue.maxConcurrentOperationCount = 1
-        
-        let operation = getXMLDataOperation()
-        
-        task.expirationHandler = {
-            operationQueue.cancelAllOperations()
-        }
-        
-        operation.completionBlock = {
-            task.setTaskCompleted(success: !operation.isCancelled)
-        }
-        
-        operationQueue.addOperation(operation)
-    }
-    
-    func scheduleAppRefresh() {
-        
-        if let data: Data = userdefaults.value(forKey: "User") as? Data {
-            
-            let user: User = try! JSONDecoder().decode(User.self, from: data)
-            self.subscription = user.subscription
-            self.InterbalTime = user.subsciptInterval
-            
-            let request = BGAppRefreshTaskRequest(identifier: "com.MeasurementSample.refresh")
-            
-            request.earliestBeginDate = Date(timeIntervalSinceNow: self.InterbalTime * 60)
-            
-            do {
-                try BGTaskScheduler.shared.submit(request)
-                compareStoreAlert()
-            } catch {
-                print("Could not schedule app refresh: \(error)")
-            }
-        }
-    }
-    
-    private func compareStoreAlert() {
-        
-        var notContain: Bool = false
-        let jsonDecoder = JSONDecoder()
-        guard let data = userdefaults.data(forKey: "StoreFeedItems") else { return }
-        let store = try? jsonDecoder.decode([FeedItem].self, from: data)
-        
-        realmMigration()
-        self.realm = try! Realm()
-        
-        var tempRealmFeedItem: [FeedItem] = []
-        let result = realm?.objects(RealmFeedItem.self)
-        
-        result?.forEach { item in
-            if !item.title.contains("Yahoo!ニュース・トピックス") {
-                
-                let feeditem = FeedItem(title: item.title, url: item.url, pubDate: item.pubDate, star: item.star, read: item.read, afterRead: item.afterRead)
-                
-                guard let title = feeditem.title else { return }
-                
-                if title != "" {
-                    tempRealmFeedItem.append(feeditem)
-                }
-            }
-        }
-        
-        store?.forEach({ storeItem in
-            if tempRealmFeedItem.contains(where: { realmItem in
-                realmItem.title == storeItem.title
-            }) {
-                return
-            } else {
-                notContain = true
-            }
-        })
-        
-        if notContain {
-            notificationAlert()
         }
     }
     

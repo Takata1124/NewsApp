@@ -6,11 +6,13 @@
 //
 
 import UIKit
+import PKHUD
 
 class SettingDetailViewController: UIViewController {
 
     private let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
     private let appDelegateWindow = UIApplication.shared.windows.first
+
     private var timeArray: [String] = [] {
         didSet {
             settingDetailView.timePickerView.reloadAllComponents()
@@ -31,6 +33,13 @@ class SettingDetailViewController: UIViewController {
     var settingDetailModel: SettingDetailModel? {
         didSet {
             registerModel()
+        }
+    }
+    
+    var currentSubscriptionMode: Bool = false {
+        
+        didSet {
+            self.settingDetailView.subscriptionSelect = currentSubscriptionMode
         }
     }
     
@@ -57,6 +66,8 @@ class SettingDetailViewController: UIViewController {
         
         guard let model = settingDetailModel else { return }
         
+        setupNotificationCenter(model: model)
+        
         settingDetailView.confirmSelectCell(selectCell: self.selectCell)
         settingDetailView.letterSlider.addTarget(self, action: #selector(onStartPointlabel(_:)), for: .valueChanged)
         settingDetailView.modeSwitch.addTarget(self, action: #selector(modeChange), for: UIControl.Event.valueChanged)
@@ -64,6 +75,9 @@ class SettingDetailViewController: UIViewController {
         settingDetailView.subscriptSwitch.addTarget(self, action: #selector(subscriptionChange(sender:)), for: UIControl.Event.valueChanged)
         settingDetailView.timePickerView.delegate = self
         settingDetailView.timePickerView.dataSource = self
+    }
+    
+    private func setupNotificationCenter(model: SettingDetailModel) {
         
         model.notificationCenter.addObserver(forName: .init(rawValue: SettingDetailModel.timeArrayNotificationName), object: nil, queue: nil) { notification in
             self.timeArray = notification.userInfo?["timeArray"] as! [String]
@@ -72,12 +86,8 @@ class SettingDetailViewController: UIViewController {
         model.notificationCenter.addObserver(forName: .init(rawValue: SettingDetailModel.userNotificationName), object: nil, queue: nil) { notification in
             self.user = notification.userInfo?["user"] as? User
             self.settingDetailView.user = self.user
+            self.settingDetailView.subscriptionSelect = self.user!.subscription
         }
-    }
-    
-    static func setupTestMock(notificationCenter: NotificationCenter) {
-        
-        
     }
 
     @objc func modeChange(sender: UISwitch) {
@@ -101,10 +111,18 @@ class SettingDetailViewController: UIViewController {
         
         if onCheck {
             appDelegate.subscription = true
-            settingDetailView.subscriptionSelect = true
+            HUD.show(.progress, onView: self.settingDetailView)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 7, execute: {
+                self.currentSubscriptionMode = true
+                HUD.hide()
+            })
         } else {
             appDelegate.subscription = false
-            settingDetailView.subscriptionSelect = false
+            HUD.show(.progress, onView: self.settingDetailView)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 7, execute: {
+                self.currentSubscriptionMode = false
+                HUD.hide()
+            })
         }
     }
     
@@ -143,7 +161,7 @@ extension SettingDetailViewController: UIPickerViewDelegate, UIPickerViewDataSou
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        appDelegate.InterbalTime = Double(timeArray[row])!
-        settingDetailView.timeLabelText = appDelegate.InterbalTime
+        appDelegate.interbalTime = Double(timeArray[row])!
+        settingDetailView.timeLabelText = appDelegate.interbalTime
     }
 }
